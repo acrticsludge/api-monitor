@@ -14,6 +14,7 @@
 
 import { createClient } from "../../lib/supabase-server";
 import AutoRefresh from "./AutoRefresh";
+import ThemeToggle from "../../../components/ThemeToggle";
 
 type Ping = {
   monitor_id: string;
@@ -22,9 +23,9 @@ type Ping = {
 };
 
 function uptimeColor(pct: number): string {
-  if (pct === 100) return "text-[#00ff87]";
-  if (pct >= 90) return "text-yellow-400";
-  return "text-red-400";
+  if (pct === 100) return "text-[#00cc6a] dark:text-[#00ff87]";
+  if (pct >= 90) return "text-yellow-500 dark:text-yellow-400";
+  return "text-red-500 dark:text-red-400";
 }
 
 export default async function StatusPage({
@@ -90,7 +91,7 @@ export default async function StatusPage({
 
   return (
     <div
-      className="min-h-screen bg-[#080808] text-white"
+      className="min-h-screen bg-[#f8f8f8] dark:bg-[#080808] text-[#080808] dark:text-white"
       style={{ fontFamily: "'Syne', sans-serif" }}
     >
       <AutoRefresh />
@@ -100,13 +101,21 @@ export default async function StatusPage({
       />
 
       <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_40%_at_50%_-10%,rgba(0,255,135,0.06),transparent)]" />
+        <div className="absolute inset-0 opacity-0 dark:opacity-100 bg-[radial-gradient(ellipse_80%_40%_at_50%_-10%,rgba(0,255,135,0.06),transparent)]" />
+        <div
+          className="absolute inset-0 opacity-[0.018] dark:opacity-[0.025]"
+          style={{
+            backgroundImage:
+              "linear-gradient(rgba(0,0,0,0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.8) 1px, transparent 1px)",
+            backgroundSize: "40px 40px",
+          }}
+        />
       </div>
 
-      <header className="sticky top-0 z-50 border-b border-white/[0.06] bg-[#080808]/80 backdrop-blur-xl">
+      <header className="sticky top-0 z-50 border-b border-black/[0.06] dark:border-white/[0.06] bg-[#f8f8f8]/80 dark:bg-[#080808]/80 backdrop-blur-xl">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-lg bg-[#00ff87] flex items-center justify-center shadow-[0_0_16px_rgba(0,255,135,0.35)]">
+            <div className="w-7 h-7 rounded-lg bg-[#00cc6a] dark:bg-[#00ff87] flex items-center justify-center shadow-[0_0_16px_rgba(0,204,106,0.35)] dark:shadow-[0_0_16px_rgba(0,255,135,0.35)]">
               <svg
                 className="w-3.5 h-3.5 text-black"
                 fill="none"
@@ -121,26 +130,29 @@ export default async function StatusPage({
                 />
               </svg>
             </div>
-            <span className="text-sm font-bold tracking-[0.08em] uppercase text-white">
+            <span className="text-sm font-bold tracking-[0.08em] uppercase text-[#080808] dark:text-white">
               Pulse
             </span>
           </div>
-          <p
-            className="text-[11px] text-neutral-500"
-            style={{ fontFamily: "'DM Mono', monospace" }}
-          >
-            Status Page
-          </p>
+          <div className="flex items-center gap-3">
+            <p
+              className="text-[11px] text-neutral-400 dark:text-neutral-500"
+              style={{ fontFamily: "'DM Mono', monospace" }}
+            >
+              Status Page
+            </p>
+            <ThemeToggle />
+          </div>
         </div>
       </header>
 
       <main className="relative max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-4">
         {/* Overall status banner */}
         {overallStatus === "operational" && (
-          <div className="flex items-center gap-4 bg-[#00ff87]/[0.06] border border-[#00ff87]/20 rounded-2xl px-5 py-5">
-            <div className="w-10 h-10 rounded-xl bg-[#00ff87]/10 border border-[#00ff87]/20 flex items-center justify-center shrink-0">
+          <div className="flex items-center gap-4 bg-[#00cc6a]/[0.06] dark:bg-[#00ff87]/[0.06] border border-[#00cc6a]/20 dark:border-[#00ff87]/20 rounded-2xl px-5 py-5">
+            <div className="w-10 h-10 rounded-xl bg-[#00cc6a]/10 dark:bg-[#00ff87]/10 border border-[#00cc6a]/20 dark:border-[#00ff87]/20 flex items-center justify-center shrink-0">
               <svg
-                className="w-5 h-5 text-[#00ff87]"
+                className="w-5 h-5 text-[#00cc6a] dark:text-[#00ff87]"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -154,7 +166,7 @@ export default async function StatusPage({
               </svg>
             </div>
             <div>
-              <p className="text-base font-bold text-[#00ff87]">
+              <p className="text-base font-bold text-[#00cc6a] dark:text-[#00ff87]">
                 All Systems Operational
               </p>
               <p
@@ -172,7 +184,7 @@ export default async function StatusPage({
           <div className="flex items-center gap-4 bg-yellow-400/[0.06] border border-yellow-400/20 rounded-2xl px-5 py-5">
             <div className="w-10 h-10 rounded-xl bg-yellow-400/10 border border-yellow-400/20 flex items-center justify-center shrink-0">
               <svg
-                className="w-5 h-5 text-yellow-400"
+                className="w-5 h-5 text-yellow-500 dark:text-yellow-400"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -186,7 +198,7 @@ export default async function StatusPage({
               </svg>
             </div>
             <div>
-              <p className="text-base font-bold text-yellow-400">
+              <p className="text-base font-bold text-yellow-500 dark:text-yellow-400">
                 Degraded Performance
               </p>
               <p
@@ -204,7 +216,7 @@ export default async function StatusPage({
           <div className="flex items-center gap-4 bg-red-400/[0.06] border border-red-400/20 rounded-2xl px-5 py-5">
             <div className="w-10 h-10 rounded-xl bg-red-400/10 border border-red-400/20 flex items-center justify-center shrink-0">
               <svg
-                className="w-5 h-5 text-red-400"
+                className="w-5 h-5 text-red-500 dark:text-red-400"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -218,7 +230,7 @@ export default async function StatusPage({
               </svg>
             </div>
             <div>
-              <p className="text-base font-bold text-red-400">Major Outage</p>
+              <p className="text-base font-bold text-red-500 dark:text-red-400">Major Outage</p>
               <p
                 className="text-xs text-neutral-500 mt-0.5"
                 style={{ fontFamily: "'DM Mono', monospace" }}
@@ -230,13 +242,13 @@ export default async function StatusPage({
         )}
 
         {overallStatus === "unknown" && (
-          <div className="flex items-center gap-4 bg-white/[0.03] border border-white/[0.06] rounded-2xl px-5 py-5">
+          <div className="flex items-center gap-4 bg-black/[0.03] dark:bg-white/[0.03] border border-black/[0.06] dark:border-white/[0.06] rounded-2xl px-5 py-5">
             <div>
-              <p className="text-base font-bold text-neutral-400">
+              <p className="text-base font-bold text-neutral-500 dark:text-neutral-400">
                 No Data Available
               </p>
               <p
-                className="text-xs text-neutral-600 mt-0.5"
+                className="text-xs text-neutral-400 dark:text-neutral-600 mt-0.5"
                 style={{ fontFamily: "'DM Mono', monospace" }}
               >
                 No active endpoints to display
@@ -248,37 +260,37 @@ export default async function StatusPage({
         {/* Summary strip */}
         {checkedMonitors.length > 0 && (
           <div className="grid grid-cols-3 gap-3">
-            <div className="bg-[#0f0f0f] border border-white/[0.06] rounded-2xl px-4 py-3 text-center">
+            <div className="bg-white dark:bg-[#0f0f0f] border border-black/[0.06] dark:border-white/[0.06] rounded-2xl px-4 py-3 text-center shadow-[0_1px_3px_rgba(0,0,0,0.04)] dark:shadow-none">
               <p
-                className="text-[10px] tracking-[0.12em] uppercase text-neutral-500 mb-1"
+                className="text-[10px] tracking-[0.12em] uppercase text-neutral-400 dark:text-neutral-500 mb-1"
                 style={{ fontFamily: "'DM Mono', monospace" }}
               >
                 Total
               </p>
-              <p className="text-2xl font-extrabold text-white tabular-nums">
+              <p className="text-2xl font-extrabold text-[#080808] dark:text-white tabular-nums">
                 {monitorList.length}
               </p>
             </div>
-            <div className="bg-[#0f0f0f] border border-white/[0.06] rounded-2xl px-4 py-3 text-center">
+            <div className="bg-white dark:bg-[#0f0f0f] border border-black/[0.06] dark:border-white/[0.06] rounded-2xl px-4 py-3 text-center shadow-[0_1px_3px_rgba(0,0,0,0.04)] dark:shadow-none">
               <p
-                className="text-[10px] tracking-[0.12em] uppercase text-neutral-500 mb-1"
+                className="text-[10px] tracking-[0.12em] uppercase text-neutral-400 dark:text-neutral-500 mb-1"
                 style={{ fontFamily: "'DM Mono', monospace" }}
               >
                 Online
               </p>
-              <p className="text-2xl font-extrabold text-[#00ff87] tabular-nums">
+              <p className="text-2xl font-extrabold text-[#00cc6a] dark:text-[#00ff87] tabular-nums">
                 {upCount}
               </p>
             </div>
-            <div className="bg-[#0f0f0f] border border-white/[0.06] rounded-2xl px-4 py-3 text-center">
+            <div className="bg-white dark:bg-[#0f0f0f] border border-black/[0.06] dark:border-white/[0.06] rounded-2xl px-4 py-3 text-center shadow-[0_1px_3px_rgba(0,0,0,0.04)] dark:shadow-none">
               <p
-                className="text-[10px] tracking-[0.12em] uppercase text-neutral-500 mb-1"
+                className="text-[10px] tracking-[0.12em] uppercase text-neutral-400 dark:text-neutral-500 mb-1"
                 style={{ fontFamily: "'DM Mono', monospace" }}
               >
                 Down
               </p>
               <p
-                className={`text-2xl font-extrabold tabular-nums ${downCount > 0 ? "text-red-400" : "text-neutral-600"}`}
+                className={`text-2xl font-extrabold tabular-nums ${downCount > 0 ? "text-red-500 dark:text-red-400" : "text-neutral-400 dark:text-neutral-600"}`}
               >
                 {downCount}
               </p>
@@ -288,31 +300,31 @@ export default async function StatusPage({
 
         {/* Monitor list */}
         {monitorStats.length > 0 && (
-          <div className="bg-[#0f0f0f] rounded-2xl border border-white/[0.06] overflow-hidden">
-            <div className="px-5 py-4 border-b border-white/[0.06]">
+          <div className="bg-white dark:bg-[#0f0f0f] rounded-2xl border border-black/[0.06] dark:border-white/[0.06] overflow-hidden shadow-[0_1px_3px_rgba(0,0,0,0.04)] dark:shadow-none">
+            <div className="px-5 py-4 border-b border-black/[0.06] dark:border-white/[0.06]">
               <p
-                className="text-[10px] tracking-[0.12em] uppercase text-neutral-500"
+                className="text-[10px] tracking-[0.12em] uppercase text-neutral-400 dark:text-neutral-500"
                 style={{ fontFamily: "'DM Mono', monospace" }}
               >
                 Endpoints
               </p>
-              <p className="text-sm font-semibold text-white mt-0.5">
+              <p className="text-sm font-semibold text-[#080808] dark:text-white mt-0.5">
                 {monitorList.length} monitored
               </p>
             </div>
 
-            <div className="divide-y divide-white/[0.04]">
+            <div className="divide-y divide-black/[0.04] dark:divide-white/[0.04]">
               {monitorStats.map((monitor) => (
                 <div
                   key={monitor.id}
                   className="px-5 py-4 flex items-center justify-between gap-4"
                 >
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm font-semibold text-white truncate">
+                    <p className="text-sm font-semibold text-[#080808] dark:text-white truncate">
                       {monitor.name}
                     </p>
                     <p
-                      className="text-xs text-neutral-500 truncate mt-0.5"
+                      className="text-xs text-neutral-400 dark:text-neutral-500 truncate mt-0.5"
                       style={{ fontFamily: "'DM Mono', monospace" }}
                     >
                       {monitor.url}
@@ -323,7 +335,7 @@ export default async function StatusPage({
                     {monitor.uptimePct !== null && (
                       <div className="text-right hidden sm:block">
                         <p
-                          className="text-[10px] tracking-[0.1em] uppercase text-neutral-600 mb-0.5"
+                          className="text-[10px] tracking-[0.1em] uppercase text-neutral-400 dark:text-neutral-600 mb-0.5"
                           style={{ fontFamily: "'DM Mono', monospace" }}
                         >
                           Uptime
@@ -339,29 +351,29 @@ export default async function StatusPage({
 
                     {monitor.latestStatus === "up" ? (
                       <span
-                        className="inline-flex items-center gap-1.5 text-[11px] font-medium text-[#00ff87]"
+                        className="inline-flex items-center gap-1.5 text-[11px] font-medium text-[#00cc6a] dark:text-[#00ff87]"
                         style={{ fontFamily: "'DM Mono', monospace" }}
                       >
                         <span className="relative flex w-1.5 h-1.5">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00ff87] opacity-50" />
-                          <span className="relative inline-flex rounded-full w-1.5 h-1.5 bg-[#00ff87]" />
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00cc6a] dark:bg-[#00ff87] opacity-50" />
+                          <span className="relative inline-flex rounded-full w-1.5 h-1.5 bg-[#00cc6a] dark:bg-[#00ff87]" />
                         </span>
                         UP
                       </span>
                     ) : monitor.latestStatus === "down" ? (
                       <span
-                        className="inline-flex items-center gap-1.5 text-[11px] font-medium text-red-400"
+                        className="inline-flex items-center gap-1.5 text-[11px] font-medium text-red-500 dark:text-red-400"
                         style={{ fontFamily: "'DM Mono', monospace" }}
                       >
-                        <span className="w-1.5 h-1.5 rounded-full bg-red-400" />
+                        <span className="w-1.5 h-1.5 rounded-full bg-red-500 dark:bg-red-400" />
                         DOWN
                       </span>
                     ) : (
                       <span
-                        className="inline-flex items-center gap-1.5 text-[11px] font-medium text-neutral-500"
+                        className="inline-flex items-center gap-1.5 text-[11px] font-medium text-neutral-400 dark:text-neutral-500"
                         style={{ fontFamily: "'DM Mono', monospace" }}
                       >
-                        <span className="w-1.5 h-1.5 rounded-full bg-neutral-600" />
+                        <span className="w-1.5 h-1.5 rounded-full bg-neutral-400 dark:bg-neutral-600" />
                         PENDING
                       </span>
                     )}
@@ -373,7 +385,7 @@ export default async function StatusPage({
         )}
 
         <p
-          className="text-center text-[10px] text-neutral-700 tracking-[0.1em] uppercase pt-4"
+          className="text-center text-[10px] text-neutral-400 dark:text-neutral-700 tracking-[0.1em] uppercase pt-4"
           style={{ fontFamily: "'DM Mono', monospace" }}
         >
           Powered by Pulse · Auto-refreshes every 60s

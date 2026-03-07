@@ -21,16 +21,16 @@ export default function StatusPageLink({ userId }: { userId: string }) {
   }
 
   return (
-    <div className="flex items-center gap-3 bg-[#0f0f0f] border border-white/[0.06] rounded-2xl px-5 py-4">
+    <div className="flex items-center gap-3 bg-white dark:bg-[#0f0f0f] border border-black/[0.06] dark:border-white/[0.06] rounded-2xl px-5 py-4 shadow-[0_1px_3px_rgba(0,0,0,0.04)] dark:shadow-none">
       <div className="flex-1 min-w-0">
         <p
-          className="text-[10px] tracking-[0.12em] uppercase text-neutral-500 mb-1"
+          className="text-[10px] tracking-[0.12em] uppercase text-neutral-400 dark:text-neutral-500 mb-1"
           style={{ fontFamily: "'DM Mono', monospace" }}
         >
           Status Page
         </p>
         <p
-          className="text-xs text-neutral-300 truncate"
+          className="text-xs text-neutral-600 dark:text-neutral-300 truncate"
           style={{ fontFamily: "'DM Mono', monospace" }}
         >
           {displayUrl}
@@ -38,12 +38,12 @@ export default function StatusPageLink({ userId }: { userId: string }) {
       </div>
       <button
         onClick={handleCopy}
-        className="inline-flex items-center gap-1.5 text-[11px] font-semibold tracking-[0.06em] uppercase border rounded-lg px-3 py-1.5 transition-all duration-150 shrink-0"
-        style={{
-          fontFamily: "'DM Mono', monospace",
-          color: copied ? "#00ff87" : undefined,
-          borderColor: copied ? "rgba(0,255,135,0.3)" : "rgba(255,255,255,0.08)",
-        }}
+        className={`inline-flex items-center gap-1.5 text-[11px] font-semibold tracking-[0.06em] uppercase border rounded-lg px-3 py-1.5 transition-all duration-150 shrink-0 ${
+          copied
+            ? "text-[#00cc6a] dark:text-[#00ff87] border-[#00cc6a]/30 dark:border-[#00ff87]/30"
+            : "text-neutral-500 dark:text-neutral-400 border-black/[0.08] dark:border-white/[0.08] hover:text-[#080808] dark:hover:text-white hover:border-black/[0.16] dark:hover:border-white/[0.16]"
+        }`}
+        style={{ fontFamily: "'DM Mono', monospace" }}
       >
         {copied ? (
           <>
