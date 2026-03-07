@@ -37,6 +37,7 @@ export default async function DashboardPage() {
     .select(
       "id, name, url, method, check_interval_minutes, is_active, created_at",
     )
+    .eq("user_id", user.id)
     .order("created_at", { ascending: false });
 
   const monitorList: Monitor[] = monitors ?? [];
