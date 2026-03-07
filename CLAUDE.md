@@ -320,7 +320,8 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=
 - [x] webhook_url column added to DB
 - [x] Webhook URL field in AddMonitorForm
 - [x] Public status page /status/[userId]
-- [x]Share status page link + copy button on dashboard
+- [x] Share status page link + copy button on dashboard
+- [x] Method to Login using Google
 - [ ] Resend email alerts (pending domain setup)
 - [ ] Deploy worker to Railway
 - [ ] Deploy frontend to Vercel
