@@ -298,76 +298,131 @@ export default async function MonitorDetailPage({
               </p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-black/[0.04] dark:border-white/[0.04]">
-                    {[
-                      "Checked At",
-                      "Status",
-                      "Response Time",
-                      "Status Code",
-                    ].map((h) => (
-                      <th
-                        key={h}
-                        className="px-5 py-3 text-left text-[10px] font-semibold tracking-[0.1em] uppercase text-neutral-400 dark:text-neutral-500"
-                        style={{ fontFamily: "'DM Mono', monospace" }}
-                      >
-                        {h}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {recentPings.map((ping) => (
-                    <tr
-                      key={ping.id}
-                      className="border-b border-black/[0.03] dark:border-white/[0.03] hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors"
-                    >
-                      <td
-                        className="px-5 py-3 text-xs text-neutral-500 dark:text-neutral-400"
+            <>
+              {/* Mobile card view */}
+              <div className="sm:hidden divide-y divide-black/[0.04] dark:divide-white/[0.04]">
+                {recentPings.map((ping) => (
+                  <div
+                    key={ping.id}
+                    className="px-4 py-3.5 flex items-center justify-between gap-3"
+                  >
+                    <div className="min-w-0">
+                      {ping.status === "up" ? (
+                        <span
+                          className="inline-flex items-center gap-1.5 text-[11px] font-medium text-[#00cc6a] dark:text-[#00ff87] mb-1"
+                          style={{ fontFamily: "'DM Mono', monospace" }}
+                        >
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#00cc6a] dark:bg-[#00ff87]" />
+                          UP
+                        </span>
+                      ) : (
+                        <span
+                          className="inline-flex items-center gap-1.5 text-[11px] font-medium text-red-500 dark:text-red-400 mb-1"
+                          style={{ fontFamily: "'DM Mono', monospace" }}
+                        >
+                          <span className="w-1.5 h-1.5 rounded-full bg-red-500 dark:bg-red-400" />
+                          DOWN
+                        </span>
+                      )}
+                      <p
+                        className="text-[10px] text-neutral-400 dark:text-neutral-500 truncate"
                         style={{ fontFamily: "'DM Mono', monospace" }}
                       >
                         {new Date(ping.checked_at).toLocaleString()}
-                      </td>
-                      <td className="px-5 py-3">
-                        {ping.status === "up" ? (
-                          <span
-                            className="inline-flex items-center gap-1.5 text-[11px] font-medium text-[#00cc6a] dark:text-[#00ff87]"
-                            style={{ fontFamily: "'DM Mono', monospace" }}
-                          >
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#00cc6a] dark:bg-[#00ff87]" />
-                            UP
-                          </span>
-                        ) : (
-                          <span
-                            className="inline-flex items-center gap-1.5 text-[11px] font-medium text-red-500 dark:text-red-400"
-                            style={{ fontFamily: "'DM Mono', monospace" }}
-                          >
-                            <span className="w-1.5 h-1.5 rounded-full bg-red-500 dark:bg-red-400" />
-                            DOWN
-                          </span>
-                        )}
-                      </td>
-                      <td
-                        className={`px-5 py-3 text-xs font-medium ${responseTimeColor(ping.response_time_ms)}`}
+                      </p>
+                    </div>
+                    <div className="text-right shrink-0">
+                      <p
+                        className={`text-sm font-semibold tabular-nums ${responseTimeColor(ping.response_time_ms)}`}
                         style={{ fontFamily: "'DM Mono', monospace" }}
                       >
                         {ping.response_time_ms != null
                           ? `${ping.response_time_ms}ms`
                           : "—"}
-                      </td>
-                      <td
-                        className="px-5 py-3 text-xs text-neutral-500 dark:text-neutral-400"
+                      </p>
+                      <p
+                        className="text-[10px] text-neutral-400 dark:text-neutral-500 mt-0.5"
                         style={{ fontFamily: "'DM Mono', monospace" }}
                       >
                         {ping.status_code ?? "—"}
-                      </td>
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Desktop table */}
+              <div className="hidden sm:block overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-black/[0.04] dark:border-white/[0.04]">
+                      {[
+                        "Checked At",
+                        "Status",
+                        "Response Time",
+                        "Status Code",
+                      ].map((h) => (
+                        <th
+                          key={h}
+                          className="px-5 py-3 text-left text-[10px] font-semibold tracking-[0.1em] uppercase text-neutral-400 dark:text-neutral-500"
+                          style={{ fontFamily: "'DM Mono', monospace" }}
+                        >
+                          {h}
+                        </th>
+                      ))}
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {recentPings.map((ping) => (
+                      <tr
+                        key={ping.id}
+                        className="border-b border-black/[0.03] dark:border-white/[0.03] hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors"
+                      >
+                        <td
+                          className="px-5 py-3 text-xs text-neutral-500 dark:text-neutral-400"
+                          style={{ fontFamily: "'DM Mono', monospace" }}
+                        >
+                          {new Date(ping.checked_at).toLocaleString()}
+                        </td>
+                        <td className="px-5 py-3">
+                          {ping.status === "up" ? (
+                            <span
+                              className="inline-flex items-center gap-1.5 text-[11px] font-medium text-[#00cc6a] dark:text-[#00ff87]"
+                              style={{ fontFamily: "'DM Mono', monospace" }}
+                            >
+                              <span className="w-1.5 h-1.5 rounded-full bg-[#00cc6a] dark:bg-[#00ff87]" />
+                              UP
+                            </span>
+                          ) : (
+                            <span
+                              className="inline-flex items-center gap-1.5 text-[11px] font-medium text-red-500 dark:text-red-400"
+                              style={{ fontFamily: "'DM Mono', monospace" }}
+                            >
+                              <span className="w-1.5 h-1.5 rounded-full bg-red-500 dark:bg-red-400" />
+                              DOWN
+                            </span>
+                          )}
+                        </td>
+                        <td
+                          className={`px-5 py-3 text-xs font-medium ${responseTimeColor(ping.response_time_ms)}`}
+                          style={{ fontFamily: "'DM Mono', monospace" }}
+                        >
+                          {ping.response_time_ms != null
+                            ? `${ping.response_time_ms}ms`
+                            : "—"}
+                        </td>
+                        <td
+                          className="px-5 py-3 text-xs text-neutral-500 dark:text-neutral-400"
+                          style={{ fontFamily: "'DM Mono', monospace" }}
+                        >
+                          {ping.status_code ?? "—"}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
           )}
         </div>
 

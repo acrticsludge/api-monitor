@@ -34,38 +34,34 @@ export default function AddMonitorForm({
 
   return (
     <>
-      <button
-        onClick={() => !atLimit && setOpen(true)}
-        disabled={atLimit}
-        title={
-          atLimit ? `Free plan limit: ${FREE_TIER_LIMIT} monitors` : undefined
-        }
-        className="inline-flex items-center gap-1.5 bg-[#00cc6a] dark:bg-[#00ff87] hover:bg-[#00b85f] dark:hover:bg-[#00f080] disabled:opacity-40 disabled:cursor-not-allowed text-black text-xs font-bold tracking-[0.06em] uppercase px-3.5 py-2 rounded-lg transition-all duration-150 shadow-[0_0_16px_rgba(0,204,106,0.25)] dark:shadow-[0_0_16px_rgba(0,255,135,0.25)] hover:shadow-[0_0_24px_rgba(0,204,106,0.4)] dark:hover:shadow-[0_0_24px_rgba(0,255,135,0.4)]"
-      >
-        <svg
-          className="w-3.5 h-3.5"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          strokeWidth={2.5}
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M12 4v16m8-8H4"
-          />
-        </svg>
-        Add Monitor
-      </button>
-
-      {atLimit && (
-        <p
-          className="text-[10px] text-neutral-400 dark:text-neutral-500 mt-1 text-right"
+      {atLimit ? (
+        <span
+          className="inline-flex items-center gap-1.5 text-[10px] font-medium text-neutral-400 dark:text-neutral-500 border border-black/[0.06] dark:border-white/[0.06] rounded-lg px-3 py-2"
           style={{ fontFamily: "'DM Mono', monospace" }}
         >
-          Free limit reached ·{" "}
-          <span className="text-[#00cc6a] dark:text-[#00ff87]">Upgrade for more</span>
-        </p>
+          {FREE_TIER_LIMIT}/{FREE_TIER_LIMIT} used ·{" "}
+          <span className="text-[#00cc6a] dark:text-[#00ff87]">Upgrade</span>
+        </span>
+      ) : (
+        <button
+          onClick={() => setOpen(true)}
+          className="inline-flex items-center gap-1.5 bg-[#00cc6a] dark:bg-[#00ff87] hover:bg-[#00b85f] dark:hover:bg-[#00f080] text-black text-xs font-bold tracking-[0.06em] uppercase px-3.5 py-2 rounded-lg transition-all duration-150 shadow-[0_0_16px_rgba(0,204,106,0.25)] dark:shadow-[0_0_16px_rgba(0,255,135,0.25)] hover:shadow-[0_0_24px_rgba(0,204,106,0.4)] dark:hover:shadow-[0_0_24px_rgba(0,255,135,0.4)]"
+        >
+          <svg
+            className="w-3.5 h-3.5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2.5}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M12 4v16m8-8H4"
+            />
+          </svg>
+          Add Monitor
+        </button>
       )}
 
       {open && (
@@ -75,7 +71,7 @@ export default function AddMonitorForm({
             onClick={() => setOpen(false)}
           />
 
-          <div className="relative w-full max-w-sm bg-white dark:bg-[#111111] border border-black/[0.08] dark:border-white/[0.08] rounded-2xl shadow-[0_8px_40px_rgba(0,0,0,0.15)] dark:shadow-[0_0_80px_rgba(0,0,0,0.8)] overflow-hidden">
+          <div className="relative w-full max-w-sm max-h-[90vh] overflow-y-auto bg-white dark:bg-[#111111] border border-black/[0.08] dark:border-white/[0.08] rounded-2xl shadow-[0_8px_40px_rgba(0,0,0,0.15)] dark:shadow-[0_0_80px_rgba(0,0,0,0.8)]">
             <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00cc6a]/40 dark:via-[#00ff87]/40 to-transparent" />
 
             <div className="px-5 pt-5 pb-4 border-b border-black/[0.06] dark:border-white/[0.06]">
