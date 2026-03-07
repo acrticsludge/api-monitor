@@ -1,7 +1,8 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "../lib/supabase-server";
 import { logout } from "../auth/actions";
-import { deleteMonitor } from "./actions";
+import { deleteMonitor, toggleMonitor } from "./actions";
 import AddMonitorForm from "./AddMonitorForm";
 
 type Monitor = {
@@ -27,7 +28,6 @@ export default async function DashboardPage() {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-
   if (!user) redirect("/login");
 
   const { data: monitors } = await supabase
@@ -79,7 +79,7 @@ export default async function DashboardPage() {
       />
 
       <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_40%_at_50%_-10%,rgba(0,255,135,0.05),transparent)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_40%_at_50%_-10%,rgba(0,255,135,0.06),transparent)]" />
       </div>
 
       <header className="sticky top-0 z-50 border-b border-white/[0.06] bg-[#080808]/80 backdrop-blur-xl">
@@ -104,10 +104,9 @@ export default async function DashboardPage() {
               Pulse
             </span>
           </div>
-
           <div className="flex items-center gap-4">
             <span
-              className="hidden sm:block text-[11px] text-neutral-500"
+              className="hidden sm:block text-xs text-neutral-400"
               style={{ fontFamily: "'DM Mono', monospace" }}
             >
               {user.email}
@@ -115,7 +114,7 @@ export default async function DashboardPage() {
             <form action={logout}>
               <button
                 type="submit"
-                className="text-[11px] font-semibold tracking-[0.08em] uppercase text-neutral-500 border border-white/[0.08] rounded-md px-3 py-1.5 hover:text-white hover:border-white/20 transition-all duration-150"
+                className="text-[11px] font-semibold tracking-[0.08em] uppercase text-neutral-400 border border-white/[0.08] rounded-md px-3 py-1.5 hover:text-white hover:border-white/20 transition-all duration-150"
               >
                 Logout
               </button>
@@ -127,7 +126,7 @@ export default async function DashboardPage() {
       <main className="relative max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-10 space-y-5">
         <div className="mb-6">
           <p
-            className="text-[11px] font-mono tracking-[0.15em] uppercase text-[#00ff87] mb-1"
+            className="text-[11px] tracking-[0.15em] uppercase text-[#00ff87] mb-1.5 font-medium"
             style={{ fontFamily: "'DM Mono', monospace" }}
           >
             Overview
@@ -135,6 +134,14 @@ export default async function DashboardPage() {
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
             Your Monitors
           </h1>
+          <p
+            className="text-sm text-neutral-400 mt-1"
+            style={{ fontFamily: "'DM Mono', monospace" }}
+          >
+            {monitorList.length === 0
+              ? "No endpoints configured yet"
+              : `Watching ${monitorList.length} endpoint${monitorList.length !== 1 ? "s" : ""}`}
+          </p>
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -145,12 +152,20 @@ export default async function DashboardPage() {
         </div>
 
         <div className="flex items-center gap-4 bg-[#0f0f0f] border border-white/[0.06] rounded-2xl px-5 py-4">
-          <p
-            className="text-[10px] tracking-[0.12em] uppercase text-neutral-500 whitespace-nowrap"
-            style={{ fontFamily: "'DM Mono', monospace" }}
-          >
-            Uptime
-          </p>
+          <div className="flex flex-col gap-0.5">
+            <p
+              className="text-[10px] tracking-[0.12em] uppercase text-neutral-500 whitespace-nowrap"
+              style={{ fontFamily: "'DM Mono', monospace" }}
+            >
+              Overall Uptime
+            </p>
+            <p
+              className="text-xs text-neutral-400"
+              style={{ fontFamily: "'DM Mono', monospace" }}
+            >
+              Current session
+            </p>
+          </div>
           <div className="flex-1 h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
             <div
               className="h-full bg-[#00ff87] rounded-full shadow-[0_0_8px_rgba(0,255,135,0.5)] transition-all duration-700"
@@ -165,7 +180,7 @@ export default async function DashboardPage() {
           </p>
         </div>
 
-        <div className="bg-[#0f0f0f] rounded-2xl border border-white/[0.06] overflow-hidden">
+        <div className="bg-[#0f0f0f] rounded-2xl border border-white/[0.06]">
           <div className="flex items-center justify-between px-5 py-4 border-b border-white/[0.06]">
             <div>
               <p
@@ -178,14 +193,14 @@ export default async function DashboardPage() {
                 {monitorList.length} configured
               </p>
             </div>
-            <AddMonitorForm />
+            <AddMonitorForm monitorCount={monitorList.length} />
           </div>
 
           {monitorList.length === 0 ? (
             <div className="px-6 py-20 text-center">
               <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-white/[0.04] border border-white/[0.06] mb-5">
                 <svg
-                  className="w-6 h-6 text-neutral-600"
+                  className="w-6 h-6 text-neutral-500"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -198,10 +213,10 @@ export default async function DashboardPage() {
                   />
                 </svg>
               </div>
-              <p className="text-sm font-semibold text-neutral-300">
+              <p className="text-sm font-semibold text-neutral-200">
                 No monitors yet
               </p>
-              <p className="text-xs text-neutral-600 mt-1.5">
+              <p className="text-xs text-neutral-500 mt-1.5">
                 Add your first endpoint to start tracking uptime.
               </p>
             </div>
@@ -222,7 +237,7 @@ export default async function DashboardPage() {
                       ].map((h) => (
                         <th
                           key={h}
-                          className="px-5 py-3 text-left text-[10px] font-medium tracking-[0.1em] uppercase text-neutral-600"
+                          className="px-5 py-3 text-left text-[10px] font-semibold tracking-[0.1em] uppercase text-neutral-500"
                           style={{ fontFamily: "'DM Mono', monospace" }}
                         >
                           {h}
@@ -236,15 +251,20 @@ export default async function DashboardPage() {
                       return (
                         <tr
                           key={monitor.id}
-                          className="border-b border-white/[0.03] hover:bg-white/[0.02] transition-colors duration-100 group"
+                          className={`border-b border-white/[0.03] hover:bg-white/[0.02] transition-colors duration-100 group ${!monitor.is_active ? "opacity-40" : ""}`}
                           style={{ animationDelay: `${i * 40}ms` }}
                         >
-                          <td className="px-5 py-4 text-sm font-semibold text-white">
-                            {monitor.name}
+                          <td className="px-5 py-4 text-sm font-semibold">
+                            <Link
+                              href={`/dashboard/monitors/${monitor.id}`}
+                              className="text-white hover:text-[#00ff87] transition-colors duration-150"
+                            >
+                              {monitor.name}
+                            </Link>
                           </td>
                           <td className="px-5 py-4 max-w-[180px]">
                             <span
-                              className="block truncate text-[11px] text-neutral-500"
+                              className="block truncate text-xs text-neutral-400"
                               style={{ fontFamily: "'DM Mono', monospace" }}
                               title={monitor.url}
                             >
@@ -252,14 +272,24 @@ export default async function DashboardPage() {
                             </span>
                           </td>
                           <td className="px-5 py-4">
-                            <StatusBadge
-                              status={ping?.status}
-                              statusCode={ping?.status_code}
-                            />
+                            {!monitor.is_active ? (
+                              <span
+                                className="inline-flex items-center gap-1.5 text-[11px] font-medium text-neutral-600"
+                                style={{ fontFamily: "'DM Mono', monospace" }}
+                              >
+                                <span className="w-1.5 h-1.5 rounded-full bg-neutral-700" />
+                                PAUSED
+                              </span>
+                            ) : (
+                              <StatusBadge
+                                status={ping?.status}
+                                statusCode={ping?.status_code}
+                              />
+                            )}
                           </td>
                           <td className="px-5 py-4">
                             <span
-                              className="text-[11px] text-neutral-400"
+                              className={`text-xs font-medium ${responseTimeColor(ping?.response_time_ms ?? null)}`}
                               style={{ fontFamily: "'DM Mono', monospace" }}
                             >
                               {ping?.response_time_ms != null
@@ -269,7 +299,7 @@ export default async function DashboardPage() {
                           </td>
                           <td className="px-5 py-4">
                             <span
-                              className="text-[11px] text-neutral-500"
+                              className="text-xs text-neutral-400"
                               style={{ fontFamily: "'DM Mono', monospace" }}
                             >
                               {ping
@@ -279,26 +309,46 @@ export default async function DashboardPage() {
                           </td>
                           <td className="px-5 py-4">
                             <span
-                              className="text-[11px] text-neutral-600"
+                              className="text-xs text-neutral-500"
                               style={{ fontFamily: "'DM Mono', monospace" }}
                             >
                               {monitor.check_interval_minutes ?? "—"}m
                             </span>
                           </td>
                           <td className="px-5 py-4">
-                            <form action={deleteMonitor}>
-                              <input
-                                type="hidden"
-                                name="id"
-                                value={monitor.id}
-                              />
-                              <button
-                                type="submit"
-                                className="text-[11px] font-medium text-neutral-700 hover:text-red-400 transition-colors duration-150 opacity-0 group-hover:opacity-100"
-                              >
-                                Remove
-                              </button>
-                            </form>
+                            <div className="flex items-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
+                              <form action={toggleMonitor}>
+                                <input
+                                  type="hidden"
+                                  name="id"
+                                  value={monitor.id}
+                                />
+                                <input
+                                  type="hidden"
+                                  name="is_active"
+                                  value={monitor.is_active ? "false" : "true"}
+                                />
+                                <button
+                                  type="submit"
+                                  className="text-xs font-medium text-neutral-400 hover:text-[#00ff87] transition-colors duration-150"
+                                >
+                                  {monitor.is_active ? "Pause" : "Resume"}
+                                </button>
+                              </form>
+                              <form action={deleteMonitor}>
+                                <input
+                                  type="hidden"
+                                  name="id"
+                                  value={monitor.id}
+                                />
+                                <button
+                                  type="submit"
+                                  className="text-xs font-medium text-neutral-600 hover:text-red-400 transition-colors duration-150"
+                                >
+                                  Remove
+                                </button>
+                              </form>
+                            </div>
                           </td>
                         </tr>
                       );
@@ -311,34 +361,50 @@ export default async function DashboardPage() {
                 {monitorList.map((monitor) => {
                   const ping = latestPings.get(monitor.id);
                   return (
-                    <div key={monitor.id} className="px-4 py-4 space-y-3">
+                    <div
+                      key={monitor.id}
+                      className={`px-4 py-4 space-y-3 ${!monitor.is_active ? "opacity-40" : ""}`}
+                    >
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0">
-                          <p className="text-sm font-semibold text-white truncate">
+                          <Link
+                            href={`/dashboard/monitors/${monitor.id}`}
+                            className="block text-sm font-semibold text-white truncate hover:text-[#00ff87] transition-colors"
+                          >
                             {monitor.name}
-                          </p>
+                          </Link>
                           <p
-                            className="text-[11px] text-neutral-500 truncate mt-0.5"
+                            className="text-xs text-neutral-400 truncate mt-0.5"
                             style={{ fontFamily: "'DM Mono', monospace" }}
                           >
                             {monitor.url}
                           </p>
                         </div>
-                        <StatusBadge
-                          status={ping?.status}
-                          statusCode={ping?.status_code}
-                        />
+                        {!monitor.is_active ? (
+                          <span
+                            className="inline-flex items-center gap-1.5 text-[11px] font-medium text-neutral-600 shrink-0"
+                            style={{ fontFamily: "'DM Mono', monospace" }}
+                          >
+                            <span className="w-1.5 h-1.5 rounded-full bg-neutral-700" />
+                            PAUSED
+                          </span>
+                        ) : (
+                          <StatusBadge
+                            status={ping?.status}
+                            statusCode={ping?.status_code}
+                          />
+                        )}
                       </div>
                       <div className="flex items-center gap-4">
                         <div>
                           <p
-                            className="text-[10px] uppercase tracking-widest text-neutral-600 mb-0.5"
+                            className="text-[10px] uppercase tracking-widest text-neutral-500 mb-0.5"
                             style={{ fontFamily: "'DM Mono', monospace" }}
                           >
                             Response
                           </p>
                           <p
-                            className="text-[11px] text-neutral-400"
+                            className={`text-xs font-medium ${responseTimeColor(ping?.response_time_ms ?? null)}`}
                             style={{ fontFamily: "'DM Mono', monospace" }}
                           >
                             {ping?.response_time_ms != null
@@ -348,24 +414,38 @@ export default async function DashboardPage() {
                         </div>
                         <div>
                           <p
-                            className="text-[10px] uppercase tracking-widest text-neutral-600 mb-0.5"
+                            className="text-[10px] uppercase tracking-widest text-neutral-500 mb-0.5"
                             style={{ fontFamily: "'DM Mono', monospace" }}
                           >
                             Interval
                           </p>
                           <p
-                            className="text-[11px] text-neutral-400"
+                            className="text-xs text-neutral-400"
                             style={{ fontFamily: "'DM Mono', monospace" }}
                           >
                             {monitor.check_interval_minutes ?? "—"}m
                           </p>
                         </div>
-                        <div className="ml-auto">
+                        <div className="ml-auto flex items-center gap-3">
+                          <form action={toggleMonitor}>
+                            <input type="hidden" name="id" value={monitor.id} />
+                            <input
+                              type="hidden"
+                              name="is_active"
+                              value={monitor.is_active ? "false" : "true"}
+                            />
+                            <button
+                              type="submit"
+                              className="text-xs font-medium text-neutral-400 hover:text-[#00ff87] transition-colors"
+                            >
+                              {monitor.is_active ? "Pause" : "Resume"}
+                            </button>
+                          </form>
                           <form action={deleteMonitor}>
                             <input type="hidden" name="id" value={monitor.id} />
                             <button
                               type="submit"
-                              className="text-[11px] font-medium text-neutral-700 hover:text-red-400 transition-colors"
+                              className="text-xs font-medium text-neutral-600 hover:text-red-400 transition-colors"
                             >
                               Remove
                             </button>
@@ -382,6 +462,13 @@ export default async function DashboardPage() {
       </main>
     </div>
   );
+}
+
+function responseTimeColor(ms: number | null): string {
+  if (ms === null) return "text-neutral-600";
+  if (ms < 300) return "text-[#00ff87]";
+  if (ms < 1000) return "text-yellow-400";
+  return "text-red-400";
 }
 
 function StatCard({
@@ -416,7 +503,7 @@ function StatCard({
       className={`bg-[#0f0f0f] border border-white/[0.06] rounded-2xl px-4 py-4 hover:border-white/[0.1] transition-all duration-200 ${glowColor}`}
     >
       <p
-        className="text-[10px] tracking-[0.12em] uppercase text-neutral-600 mb-2"
+        className="text-[10px] tracking-[0.12em] uppercase text-neutral-500 mb-2"
         style={{ fontFamily: "'DM Mono', monospace" }}
       >
         {label}
@@ -438,10 +525,10 @@ function StatusBadge({
   if (!status) {
     return (
       <span
-        className="inline-flex items-center gap-1.5 text-[11px] font-medium text-neutral-600"
+        className="inline-flex items-center gap-1.5 text-[11px] font-medium text-neutral-500"
         style={{ fontFamily: "'DM Mono', monospace" }}
       >
-        <span className="w-1.5 h-1.5 rounded-full bg-neutral-700" />
+        <span className="w-1.5 h-1.5 rounded-full bg-neutral-600" />
         PENDING
       </span>
     );

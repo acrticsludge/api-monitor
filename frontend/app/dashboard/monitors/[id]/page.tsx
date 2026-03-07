@@ -1,0 +1,473 @@
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import { createClient } from "../../../lib/supabase-server";
+import CheckNowButton from "./CheckNowButton";
+
+function responseTimeColor(ms: number | null): string {
+  if (ms === null) return "text-neutral-600";
+  if (ms < 300) return "text-[#00ff87]";
+  if (ms < 1000) return "text-yellow-400";
+  return "text-red-400";
+}
+
+export default async function MonitorDetailPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  const { data: monitor } = await supabase
+    .from("monitors")
+    .select("*")
+    .eq("id", id)
+    .eq("user_id", user.id)
+    .single();
+
+  if (!monitor) redirect("/dashboard");
+
+  const { data: pings } = await supabase
+    .from("pings")
+    .select("id, status, status_code, response_time_ms, checked_at")
+    .eq("monitor_id", id)
+    .order("checked_at", { ascending: false })
+    .limit(100);
+
+  const { data: alerts } = await supabase
+    .from("alerts")
+    .select("id, type, sent_at")
+    .eq("monitor_id", id)
+    .order("sent_at", { ascending: false });
+
+  const pingList = pings ?? [];
+  const upCount = pingList.filter((p) => p.status === "up").length;
+  const uptimePct =
+    pingList.length > 0 ? Math.round((upCount / pingList.length) * 100) : 100;
+  const latestPing = pingList[0];
+  const recentPings = pingList.slice(0, 20);
+
+  const avgResponse =
+    pingList.length > 0
+      ? Math.round(
+          pingList
+            .filter((p) => p.response_time_ms != null)
+            .reduce((acc, p) => acc + (p.response_time_ms ?? 0), 0) /
+            pingList.filter((p) => p.response_time_ms != null).length,
+        )
+      : null;
+
+  return (
+    <div
+      className="min-h-screen bg-[#080808] text-white"
+      style={{ fontFamily: "'Syne', sans-serif" }}
+    >
+      <link
+        href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+      />
+
+      <div className="fixed inset-0 pointer-events-none">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_40%_at_50%_-10%,rgba(0,255,135,0.06),transparent)]" />
+      </div>
+
+      <header className="sticky top-0 z-50 border-b border-white/[0.06] bg-[#080808]/80 backdrop-blur-xl">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <div className="w-7 h-7 rounded-lg bg-[#00ff87] flex items-center justify-center shadow-[0_0_16px_rgba(0,255,135,0.35)]">
+              <svg
+                className="w-3.5 h-3.5 text-black"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2.5}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </div>
+            <span className="text-sm font-bold tracking-[0.08em] uppercase text-white">
+              Pulse
+            </span>
+          </div>
+          <Link
+            href="/dashboard"
+            className="inline-flex items-center gap-1.5 text-xs tracking-[0.08em] uppercase text-neutral-400 hover:text-white border border-white/[0.08] hover:border-white/[0.16] rounded-md px-3 py-1.5 transition-all duration-150 hover:bg-white/[0.03]"
+            style={{ fontFamily: "'DM Mono', monospace" }}
+          >
+            <svg
+              className="w-3 h-3"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M10 19l-7-7m0 0l7-7m-7 7h18"
+              />
+            </svg>
+            Dashboard
+          </Link>
+        </div>
+      </header>
+
+      <main className="relative max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-10 space-y-5">
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+          <div>
+            <p
+              className="text-[11px] tracking-[0.15em] uppercase text-[#00ff87] mb-1.5 font-medium"
+              style={{ fontFamily: "'DM Mono', monospace" }}
+            >
+              Monitor
+            </p>
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
+              {monitor.name}
+            </h1>
+            <p
+              className="text-xs text-neutral-400 mt-1.5 break-all"
+              style={{ fontFamily: "'DM Mono', monospace" }}
+            >
+              {monitor.url}
+            </p>
+          </div>
+          <div className="flex items-center gap-3 shrink-0">
+            {!monitor.is_active && (
+              <span
+                className="inline-flex items-center gap-1.5 text-[11px] font-medium text-neutral-500 border border-white/[0.08] rounded-md px-2.5 py-1.5"
+                style={{ fontFamily: "'DM Mono', monospace" }}
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-neutral-600" />
+                PAUSED
+              </span>
+            )}
+            <CheckNowButton monitorId={id} />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <StatCard
+            label="Uptime"
+            value={`${uptimePct}%`}
+            sub={`${pingList.length} pings`}
+            color="green"
+          />
+          <StatCard
+            label="Status"
+            value={
+              latestPing ? (latestPing.status === "up" ? "UP" : "DOWN") : "—"
+            }
+            color={
+              latestPing?.status === "up"
+                ? "green"
+                : latestPing?.status === "down"
+                  ? "red"
+                  : undefined
+            }
+          />
+          <StatCard
+            label="Last Response"
+            value={
+              latestPing?.response_time_ms != null
+                ? `${latestPing.response_time_ms}`
+                : "—"
+            }
+            sub={latestPing?.response_time_ms != null ? "ms" : undefined}
+            responseMs={latestPing?.response_time_ms ?? null}
+          />
+          <StatCard
+            label="Avg Response"
+            value={avgResponse != null ? `${avgResponse}` : "—"}
+            sub={avgResponse != null ? "ms" : undefined}
+            responseMs={avgResponse}
+          />
+        </div>
+
+        <div className="bg-[#0f0f0f] border border-white/[0.06] rounded-2xl px-5 py-4 grid grid-cols-2 sm:grid-cols-4 gap-4">
+          {[
+            { label: "Method", value: monitor.method || "GET" },
+            {
+              label: "Expected Status",
+              value: String(monitor.expected_status_code || 200),
+            },
+            {
+              label: "Interval",
+              value: `${monitor.check_interval_minutes ?? "—"}m`,
+            },
+            {
+              label: "Added",
+              value: new Date(monitor.created_at).toLocaleDateString(),
+            },
+          ].map(({ label, value }) => (
+            <div key={label}>
+              <p
+                className="text-[10px] tracking-[0.1em] uppercase text-neutral-500 mb-1.5"
+                style={{ fontFamily: "'DM Mono', monospace" }}
+              >
+                {label}
+              </p>
+              <p
+                className="text-sm font-medium text-neutral-200"
+                style={{ fontFamily: "'DM Mono', monospace" }}
+              >
+                {value}
+              </p>
+            </div>
+          ))}
+        </div>
+
+        <div className="flex items-center gap-4 bg-[#0f0f0f] border border-white/[0.06] rounded-2xl px-5 py-4">
+          <div className="flex flex-col gap-0.5">
+            <p
+              className="text-[10px] tracking-[0.12em] uppercase text-neutral-500 whitespace-nowrap"
+              style={{ fontFamily: "'DM Mono', monospace" }}
+            >
+              Uptime
+            </p>
+            <p
+              className="text-[10px] text-neutral-600"
+              style={{ fontFamily: "'DM Mono', monospace" }}
+            >
+              Last {pingList.length} checks
+            </p>
+          </div>
+          <div className="flex-1 h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
+            <div
+              className="h-full bg-[#00ff87] rounded-full shadow-[0_0_8px_rgba(0,255,135,0.5)] transition-all duration-700"
+              style={{ width: `${uptimePct}%` }}
+            />
+          </div>
+          <p
+            className="text-sm font-bold text-[#00ff87] tabular-nums"
+            style={{ fontFamily: "'DM Mono', monospace" }}
+          >
+            {uptimePct}%
+          </p>
+        </div>
+
+        <div className="bg-[#0f0f0f] rounded-2xl border border-white/[0.06] overflow-hidden">
+          <div className="px-5 py-4 border-b border-white/[0.06]">
+            <p
+              className="text-[10px] tracking-[0.12em] uppercase text-neutral-500"
+              style={{ fontFamily: "'DM Mono', monospace" }}
+            >
+              Ping History
+            </p>
+            <p className="text-sm font-semibold text-white mt-0.5">
+              Last {recentPings.length} checks
+            </p>
+          </div>
+
+          {recentPings.length === 0 ? (
+            <div className="px-5 py-12 text-center">
+              <p
+                className="text-xs text-neutral-500"
+                style={{ fontFamily: "'DM Mono', monospace" }}
+              >
+                No pings yet — worker will check this on its next cycle.
+              </p>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-white/[0.04]">
+                    {[
+                      "Checked At",
+                      "Status",
+                      "Response Time",
+                      "Status Code",
+                    ].map((h) => (
+                      <th
+                        key={h}
+                        className="px-5 py-3 text-left text-[10px] font-semibold tracking-[0.1em] uppercase text-neutral-500"
+                        style={{ fontFamily: "'DM Mono', monospace" }}
+                      >
+                        {h}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {recentPings.map((ping) => (
+                    <tr
+                      key={ping.id}
+                      className="border-b border-white/[0.03] hover:bg-white/[0.02] transition-colors"
+                    >
+                      <td
+                        className="px-5 py-3 text-xs text-neutral-400"
+                        style={{ fontFamily: "'DM Mono', monospace" }}
+                      >
+                        {new Date(ping.checked_at).toLocaleString()}
+                      </td>
+                      <td className="px-5 py-3">
+                        {ping.status === "up" ? (
+                          <span
+                            className="inline-flex items-center gap-1.5 text-[11px] font-medium text-[#00ff87]"
+                            style={{ fontFamily: "'DM Mono', monospace" }}
+                          >
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#00ff87]" />
+                            UP
+                          </span>
+                        ) : (
+                          <span
+                            className="inline-flex items-center gap-1.5 text-[11px] font-medium text-red-400"
+                            style={{ fontFamily: "'DM Mono', monospace" }}
+                          >
+                            <span className="w-1.5 h-1.5 rounded-full bg-red-400" />
+                            DOWN
+                          </span>
+                        )}
+                      </td>
+                      <td
+                        className={`px-5 py-3 text-xs font-medium ${responseTimeColor(ping.response_time_ms)}`}
+                        style={{ fontFamily: "'DM Mono', monospace" }}
+                      >
+                        {ping.response_time_ms != null
+                          ? `${ping.response_time_ms}ms`
+                          : "—"}
+                      </td>
+                      <td
+                        className="px-5 py-3 text-xs text-neutral-400"
+                        style={{ fontFamily: "'DM Mono', monospace" }}
+                      >
+                        {ping.status_code ?? "—"}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+
+        <div className="bg-[#0f0f0f] rounded-2xl border border-white/[0.06] overflow-hidden">
+          <div className="px-5 py-4 border-b border-white/[0.06]">
+            <p
+              className="text-[10px] tracking-[0.12em] uppercase text-neutral-500"
+              style={{ fontFamily: "'DM Mono', monospace" }}
+            >
+              Incidents
+            </p>
+            <p className="text-sm font-semibold text-white mt-0.5">
+              Alert history
+            </p>
+          </div>
+
+          {!alerts || alerts.length === 0 ? (
+            <div className="px-5 py-12 text-center">
+              <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-[#00ff87]/[0.06] border border-[#00ff87]/10 mb-3">
+                <svg
+                  className="w-5 h-5 text-[#00ff87]"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={1.5}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+              </div>
+              <p className="text-xs text-neutral-400 font-medium">All clear</p>
+              <p
+                className="text-[11px] text-neutral-600 mt-1"
+                style={{ fontFamily: "'DM Mono', monospace" }}
+              >
+                No incidents recorded
+              </p>
+            </div>
+          ) : (
+            <div className="divide-y divide-white/[0.04]">
+              {alerts.map((alert) => (
+                <div
+                  key={alert.id}
+                  className="px-5 py-3.5 flex items-center justify-between gap-4 hover:bg-white/[0.02] transition-colors"
+                >
+                  <div className="flex items-center gap-2.5">
+                    {alert.type === "down" ? (
+                      <span className="w-1.5 h-1.5 rounded-full bg-red-400 shrink-0" />
+                    ) : (
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#00ff87] shrink-0" />
+                    )}
+                    <span
+                      className={`text-xs font-semibold ${alert.type === "down" ? "text-red-400" : "text-[#00ff87]"}`}
+                      style={{ fontFamily: "'DM Mono', monospace" }}
+                    >
+                      {alert.type === "down" ? "WENT DOWN" : "RECOVERED"}
+                    </span>
+                  </div>
+                  <span
+                    className="text-xs text-neutral-400"
+                    style={{ fontFamily: "'DM Mono', monospace" }}
+                  >
+                    {new Date(alert.sent_at).toLocaleString()}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </main>
+    </div>
+  );
+}
+
+function StatCard({
+  label,
+  value,
+  sub,
+  color,
+  responseMs,
+}: {
+  label: string;
+  value: string;
+  sub?: string;
+  color?: "green" | "red";
+  responseMs?: number | null;
+}) {
+  const valueColor =
+    responseMs != null
+      ? responseMs < 300
+        ? "text-[#00ff87]"
+        : responseMs < 1000
+          ? "text-yellow-400"
+          : "text-red-400"
+      : color === "green"
+        ? "text-[#00ff87]"
+        : color === "red"
+          ? "text-red-400"
+          : "text-white";
+
+  return (
+    <div className="bg-[#0f0f0f] border border-white/[0.06] rounded-2xl px-4 py-4 hover:border-white/[0.1] transition-all duration-200">
+      <p
+        className="text-[10px] tracking-[0.12em] uppercase text-neutral-500 mb-2"
+        style={{ fontFamily: "'DM Mono', monospace" }}
+      >
+        {label}
+      </p>
+      <p className={`text-3xl font-extrabold tabular-nums ${valueColor}`}>
+        {value}
+      </p>
+      {sub && (
+        <p
+          className="text-[10px] text-neutral-500 mt-1"
+          style={{ fontFamily: "'DM Mono', monospace" }}
+        >
+          {sub}
+        </p>
+      )}
+    </div>
+  );
+}

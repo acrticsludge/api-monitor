@@ -67,13 +67,11 @@ async function handleAlert(monitor, currentStatus) {
   const previousStatus = lastPings[1].status;
 
   if (previousStatus === "up" && currentStatus === "down") {
-    // await sendAlert(monitor, "down");
-    console.log(`ALERT: ${monitor.name} is DOWN`);
+    await sendAlert(monitor, "down");
   }
 
   if (previousStatus === "down" && currentStatus === "up") {
-    // await sendAlert(monitor, "recovered");
-    console.log(`ALERT: ${monitor.name} has RECOVERED`);
+    await sendAlert(monitor, "recovered");
   }
 }
 
