@@ -191,7 +191,7 @@ export default async function MonitorDetailPage({
           />
         </div>
 
-        <div className="bg-[#0f0f0f] border border-white/[0.06] rounded-2xl px-5 py-4 grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div className="bg-[#0f0f0f] border border-white/[0.06] rounded-2xl px-5 py-4 grid grid-cols-2 sm:grid-cols-3 gap-4">
           {[
             { label: "Method", value: monitor.method || "GET" },
             {
@@ -206,7 +206,19 @@ export default async function MonitorDetailPage({
               label: "Added",
               value: new Date(monitor.created_at).toLocaleDateString(),
             },
-          ].map(({ label, value }) => (
+            {
+              label: "Webhook",
+              value: monitor.webhook_url
+                ? monitor.webhook_url
+                    .replace(/^https?:\/\//, "")
+                    .slice(0, 28) +
+                  (monitor.webhook_url.length > 35 ? "…" : "")
+                : "Not configured",
+              valueClass: monitor.webhook_url
+                ? "text-[#00ff87]"
+                : "text-neutral-600",
+            },
+          ].map(({ label, value, valueClass }) => (
             <div key={label}>
               <p
                 className="text-[10px] tracking-[0.1em] uppercase text-neutral-500 mb-1.5"
@@ -215,7 +227,7 @@ export default async function MonitorDetailPage({
                 {label}
               </p>
               <p
-                className="text-sm font-medium text-neutral-200"
+                className={`text-sm font-medium ${valueClass ?? "text-neutral-200"}`}
                 style={{ fontFamily: "'DM Mono', monospace" }}
               >
                 {value}

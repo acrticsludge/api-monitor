@@ -28,6 +28,7 @@ export async function addMonitor(formData: FormData) {
 
   const method = (formData.get("method") as string) || "GET";
   const expected_status_code = parseInt(formData.get("expected_status_code") as string) || 200;
+  const webhook_url = (formData.get("webhook_url") as string) || null;
 
   const { error } = await supabase.from("monitors").insert({
     name,
@@ -37,6 +38,7 @@ export async function addMonitor(formData: FormData) {
     check_interval_minutes: interval,
     user_id: user.id,
     is_active: true,
+    webhook_url,
   });
 
   if (error) return { error: error.message };

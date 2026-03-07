@@ -197,6 +197,16 @@ export default function AddMonitorForm({
                 />
               </Field>
 
+              <Field label="Webhook URL (optional)">
+                <input
+                  name="webhook_url"
+                  type="url"
+                  placeholder="https://your-app.com/webhook"
+                  className="w-full bg-[#0a0a0a] border border-white/[0.1] rounded-xl px-3.5 py-2.5 text-white text-sm placeholder-neutral-600 focus:outline-none focus:border-[#00ff87]/50 focus:ring-2 focus:ring-[#00ff87]/10 transition-all duration-200"
+                  style={{ fontFamily: "'DM Mono', monospace" }}
+                />
+              </Field>
+
               <div className="flex gap-2 pt-1">
                 <button
                   type="button"

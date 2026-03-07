@@ -108,6 +108,21 @@ async function sendAlert(monitor, type) {
   });
 
   console.log(`Alert sent to ${user.user.email} — ${type}`);
+
+  if (monitor.webhook_url) {
+    try {
+      await axios.post(monitor.webhook_url, {
+        monitor_id: monitor.id,
+        monitor_name: monitor.name,
+        monitor_url: monitor.url,
+        type,
+        timestamp: new Date().toISOString(),
+      });
+      console.log(`Webhook sent to ${monitor.webhook_url}`);
+    } catch (err) {
+      console.error(`Webhook failed for ${monitor.webhook_url}:`, err.message);
+    }
+  }
 }
 
 // Main job — runs every 5 minutes

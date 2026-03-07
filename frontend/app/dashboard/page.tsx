@@ -4,6 +4,7 @@ import { createClient } from "../lib/supabase-server";
 import { logout } from "../auth/actions";
 import { deleteMonitor, toggleMonitor } from "./actions";
 import AddMonitorForm from "./AddMonitorForm";
+import StatusPageLink from "./StatusPageLink";
 
 type Monitor = {
   id: string;
@@ -179,6 +180,8 @@ export default async function DashboardPage() {
             {uptimePct}%
           </p>
         </div>
+
+        <StatusPageLink userId={user.id} />
 
         <div className="bg-[#0f0f0f] rounded-2xl border border-white/[0.06]">
           <div className="flex items-center justify-between px-5 py-4 border-b border-white/[0.06]">
