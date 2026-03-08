@@ -322,10 +322,11 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=
 - [x] Public status page /status/[userId]
 - [x] Share status page link + copy button on dashboard
 - [x] Method to Login using Google
-- [ ] Resend email alerts (pending domain setup)
 - [x] Deploy worker to Railway
 - [x] Deploy frontend to Vercel
 - [x] last 7-day Uptime display
+- [x] Docs page
+- [ ] Resend email alerts (pending domain setup) (V2)
 - [ ] Lemon Squeezy integration (V2)
 - [ ] SSL certificate expiry monitor (V2)
 - [ ] 30/90 day ping history retention (V2)

@@ -498,6 +498,13 @@ export default function LandingClient() {
             </div>
             <div className="flex items-center gap-5">
               <Link
+                href="/docs"
+                className="text-[11px] text-neutral-500 hover:text-[#080808] dark:hover:text-white transition-colors"
+                style={{ fontFamily: "'DM Mono', monospace" }}
+              >
+                Docs
+              </Link>
+              <Link
                 href="/login"
                 className="text-[11px] text-neutral-500 hover:text-[#080808] dark:hover:text-white transition-colors"
                 style={{ fontFamily: "'DM Mono', monospace" }}
