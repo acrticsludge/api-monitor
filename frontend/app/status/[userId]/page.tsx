@@ -48,19 +48,65 @@ export default async function StatusPage({
 
   const pingsByMonitor = new Map<string, Ping[]>();
 
-  if (monitorIds.length > 0) {
-    const { data: pings } = await supabase
-      .from("pings")
-      .select("monitor_id, status, checked_at")
-      .in("monitor_id", monitorIds)
-      .order("checked_at", { ascending: false })
-      .limit(500);
+  const sevenDaysAgo = new Date();
+  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+  sevenDaysAgo.setHours(0, 0, 0, 0);
 
-    for (const ping of pings ?? []) {
+  const weekPingsByMonitor = new Map<string, { status: string; checked_at: string }[]>();
+
+  if (monitorIds.length > 0) {
+    const [recentResult, weekResult] = await Promise.all([
+      supabase
+        .from("pings")
+        .select("monitor_id, status, checked_at")
+        .in("monitor_id", monitorIds)
+        .order("checked_at", { ascending: false })
+        .limit(500),
+      supabase
+        .from("pings")
+        .select("monitor_id, status, checked_at")
+        .in("monitor_id", monitorIds)
+        .gte("checked_at", sevenDaysAgo.toISOString()),
+    ]);
+
+    for (const ping of recentResult.data ?? []) {
       const list = pingsByMonitor.get(ping.monitor_id) ?? [];
       if (list.length < 100) list.push(ping);
       pingsByMonitor.set(ping.monitor_id, list);
     }
+
+    for (const ping of weekResult.data ?? []) {
+      const list = weekPingsByMonitor.get(ping.monitor_id) ?? [];
+      list.push(ping);
+      weekPingsByMonitor.set(ping.monitor_id, list);
+    }
+  }
+
+  const todayMidnight = new Date();
+  todayMidnight.setHours(0, 0, 0, 0);
+
+  // Returns 7 days × 4 buckets (6-hour periods) per day
+  function buildWeekDaySegments(monitorId: string): ("up" | "down" | null)[][] {
+    const pings = weekPingsByMonitor.get(monitorId) ?? [];
+    const BUCKETS = 4;
+    const bucketMs = 86400000 / BUCKETS;
+
+    return Array.from({ length: 7 }, (_, i) => {
+      const d = new Date(todayMidnight);
+      d.setDate(d.getDate() - (6 - i));
+      const dayStart = d.getTime();
+
+      return Array.from({ length: BUCKETS }, (_, b) => {
+        const bStart = dayStart + b * bucketMs;
+        const bEnd = bStart + bucketMs;
+        const bp = pings.filter((p) => {
+          const t = new Date(p.checked_at).getTime();
+          return t >= bStart && t < bEnd;
+        });
+        if (bp.length === 0) return null;
+        return bp.every((p) => p.status === "up") ? "up" : "down";
+      });
+    });
   }
 
   const monitorStats = monitorList.map((monitor) => {
@@ -69,7 +115,8 @@ export default async function StatusPage({
     const upCount = pings.filter((p) => p.status === "up").length;
     const uptimePct =
       pings.length > 0 ? Math.round((upCount / pings.length) * 100) : null;
-    return { ...monitor, latestStatus, uptimePct };
+    const weekDays = buildWeekDaySegments(monitor.id);
+    return { ...monitor, latestStatus, uptimePct, weekDays };
   });
 
   const checkedMonitors = monitorStats.filter((m) => m.latestStatus !== null);
@@ -329,6 +376,24 @@ export default async function StatusPage({
                     >
                       {monitor.url}
                     </p>
+                    <div className="flex gap-0.5 mt-2.5 max-w-[200px] sm:max-w-[300px]">
+                      {monitor.weekDays.map((daySegs, dayIdx) => (
+                        <div key={dayIdx} className="flex flex-1 gap-[1px]">
+                          {daySegs.map((seg, segIdx) => (
+                            <div
+                              key={segIdx}
+                              className={`flex-1 h-1.5 ${segIdx === 0 ? "rounded-l-sm" : ""} ${segIdx === 3 ? "rounded-r-sm" : ""} ${
+                                seg === "up"
+                                  ? "bg-[#00cc6a] dark:bg-[#00ff87]"
+                                  : seg === "down"
+                                    ? "bg-red-500 dark:bg-red-400"
+                                    : "bg-black/[0.08] dark:bg-white/[0.08]"
+                              }`}
+                            />
+                          ))}
+                        </div>
+                      ))}
+                    </div>
                   </div>
 
                   <div className="flex items-center gap-5 shrink-0">

@@ -4,6 +4,7 @@ import { createClient } from "../../../lib/supabase-server";
 import CheckNowButton from "./CheckNowButton";
 import ThemeToggle from "../../../../components/ThemeToggle";
 import EditMonitorModal from "../../../../components/EditMonitorModal";
+import UptimeHistory, { type DayData } from "./UptimeHistory";
 
 function responseTimeColor(ms: number | null): string {
   if (ms === null) return "text-neutral-400 dark:text-neutral-600";
@@ -45,6 +46,82 @@ export default async function MonitorDetailPage({
     .select("id, type, sent_at")
     .eq("monitor_id", id)
     .order("sent_at", { ascending: false });
+
+  const sevenDaysAgo = new Date();
+  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+  sevenDaysAgo.setHours(0, 0, 0, 0);
+
+  const { data: weekPings } = await supabase
+    .from("pings")
+    .select("status, checked_at")
+    .eq("monitor_id", id)
+    .gte("checked_at", sevenDaysAgo.toISOString())
+    .order("checked_at", { ascending: true });
+
+  const DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const FULL_DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const MONTH_NAMES = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+  const todayMidnight = new Date();
+  todayMidnight.setHours(0, 0, 0, 0);
+
+  const weekDays: DayData[] = Array.from({ length: 7 }, (_, i) => {
+    const d = new Date(todayMidnight);
+    d.setDate(d.getDate() - (6 - i));
+    const dateStr = d.toISOString().split("T")[0];
+    const isToday = i === 6;
+    const label = isToday ? "Today" : DAY_NAMES[d.getDay()];
+    const fullLabel = `${FULL_DAY_NAMES[d.getDay()]}, ${MONTH_NAMES[d.getMonth()]} ${d.getDate()}`;
+
+    const dayPings = (weekPings ?? []).filter((p) => {
+      const pingDay = new Date(p.checked_at);
+      pingDay.setHours(0, 0, 0, 0);
+      return pingDay.getTime() === d.getTime();
+    });
+
+    const totalChecks = dayPings.length;
+    const upCount = dayPings.filter((p) => p.status === "up").length;
+    const uptimePercent =
+      totalChecks > 0 ? Math.round((upCount / totalChecks) * 100) : 0;
+
+    // Calculate downtime from actual timestamps: sum time from first down ping
+    // to next up ping per incident (avoids inflating by check_interval_minutes)
+    let downtimeMs = 0;
+    let downStartMs: number | null = null;
+    for (const ping of dayPings) {
+      const t = new Date(ping.checked_at).getTime();
+      if (ping.status === "down" && downStartMs === null) {
+        downStartMs = t;
+      } else if (ping.status === "up" && downStartMs !== null) {
+        downtimeMs += t - downStartMs;
+        downStartMs = null;
+      }
+    }
+    if (downStartMs !== null && dayPings.length > 0) {
+      downtimeMs +=
+        new Date(dayPings[dayPings.length - 1].checked_at).getTime() -
+        downStartMs;
+    }
+    const downtimeMinutes = Math.round(downtimeMs / 60000);
+
+    return {
+      dateStr,
+      label,
+      fullLabel,
+      pings: dayPings.map((p) => ({ status: p.status })),
+      uptimePercent,
+      totalChecks,
+      downtimeMinutes,
+    };
+  });
+
+  const weekTotalPings = weekDays.reduce((acc, d) => acc + d.totalChecks, 0);
+  const weekTotalUp = weekDays.reduce(
+    (acc, d) => acc + d.pings.filter((p) => p.status === "up").length,
+    0,
+  );
+  const weekUptimePercent =
+    weekTotalPings > 0 ? Math.round((weekTotalUp / weekTotalPings) * 100) : 100;
 
   const pingList = pings ?? [];
   const upCount = pingList.filter((p) => p.status === "up").length;
@@ -276,6 +353,8 @@ export default async function MonitorDetailPage({
             {uptimePct}%
           </p>
         </div>
+
+        <UptimeHistory days={weekDays} overallUptimePercent={weekUptimePercent} />
 
         <div className="bg-white dark:bg-[#0f0f0f] rounded-2xl border border-black/[0.06] dark:border-white/[0.06] overflow-hidden">
           <div className="px-5 py-4 border-b border-black/[0.06] dark:border-white/[0.06]">

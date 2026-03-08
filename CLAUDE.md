@@ -325,6 +325,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=
 - [ ] Resend email alerts (pending domain setup)
 - [x] Deploy worker to Railway
 - [x] Deploy frontend to Vercel
+- [x] last 7-day Uptime display
 - [ ] Lemon Squeezy integration (V2)
 - [ ] SSL certificate expiry monitor (V2)
 - [ ] 30/90 day ping history retention (V2)
