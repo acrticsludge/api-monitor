@@ -6,6 +6,7 @@ import { deleteMonitor, toggleMonitor } from "./actions";
 import AddMonitorForm from "./AddMonitorForm";
 import StatusPageLink from "./StatusPageLink";
 import ThemeToggle from "../../components/ThemeToggle";
+import NotificationBell from "../../components/NotificationBell";
 
 type Monitor = {
   id: string;
@@ -123,6 +124,7 @@ export default async function DashboardPage() {
               {user.email}
             </span>
             <ThemeToggle />
+            <NotificationBell userId={user.id} />
             <form action={logout}>
               <button
                 type="submit"

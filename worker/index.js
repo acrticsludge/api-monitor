@@ -5,6 +5,8 @@ import { createClient } from "@supabase/supabase-js";
 import dotenv from "dotenv";
 dotenv.config();
 import { Resend } from "resend";
+import webpush from "web-push";
+
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 const app = express();
@@ -13,6 +15,12 @@ app.use(express.json());
 const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_SERVICE_ROLE_KEY,
+);
+
+webpush.setVapidDetails(
+  process.env.VAPID_EMAIL,
+  process.env.VAPID_PUBLIC_KEY,
+  process.env.VAPID_PRIVATE_KEY,
 );
 
 // Ping a single monitor
@@ -123,6 +131,40 @@ async function sendAlert(monitor, type) {
       console.error(`Webhook failed for ${monitor.webhook_url}:`, err.message);
     }
   }
+
+  await sendPushNotification(monitor, type);
+}
+
+// Send browser push notification to all subscribed devices for this monitor's owner
+async function sendPushNotification(monitor, type) {
+  const { data: subs } = await supabase
+    .from("push_subscriptions")
+    .select("id, subscription")
+    .eq("user_id", monitor.user_id);
+
+  if (!subs || subs.length === 0) return;
+
+  const isDown = type === "down";
+  const payload = JSON.stringify({
+    title: isDown ? `🔴 ${monitor.name} is down` : `🟢 ${monitor.name} recovered`,
+    body: isDown
+      ? `${monitor.url} is not responding`
+      : `${monitor.url} is back online`,
+    url: "/dashboard",
+  });
+
+  await Promise.allSettled(
+    subs.map(({ id, subscription }) =>
+      webpush.sendNotification(subscription, payload).catch((err) => {
+        // Subscription is expired or invalid — clean it up
+        if (err.statusCode === 404 || err.statusCode === 410) {
+          return supabase.from("push_subscriptions").delete().eq("id", id);
+        }
+      })
+    )
+  );
+
+  console.log(`Push notification sent — ${type} for ${monitor.name}`);
 }
 
 // Main job — runs every 5 minutes
