@@ -24,7 +24,10 @@ export async function addMonitor(formData: FormData) {
   const name = formData.get("name") as string;
   const url = formData.get("url") as string;
   // Free tier: minimum 5-minute interval
-  const interval = Math.max(5, parseInt(formData.get("interval") as string) || 5);
+  const interval = parseInt(formData.get("interval") as string) || 5;
+  if (interval < 5) {
+    return { error: "Minimum check interval is 5 minutes." };
+  }
 
   const method = (formData.get("method") as string) || "GET";
   const expected_status_code = parseInt(formData.get("expected_status_code") as string) || 200;
@@ -65,6 +68,55 @@ export async function toggleMonitor(formData: FormData) {
     .eq("user_id", user.id);
 
   revalidatePath("/dashboard");
+}
+
+export async function editMonitor(monitorId: string, formData: FormData) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return { error: "Not authenticated" };
+
+  const { data: existing } = await supabase
+    .from("monitors")
+    .select("id")
+    .eq("id", monitorId)
+    .eq("user_id", user.id)
+    .single();
+
+  if (!existing) return { error: "Monitor not found" };
+
+  const interval = parseInt(formData.get("interval") as string) || 5;
+  if (interval < 5) {
+    return { error: "Minimum check interval is 5 minutes." };
+  }
+
+  const name = formData.get("name") as string;
+  const url = formData.get("url") as string;
+  const method = (formData.get("method") as string) || "GET";
+  const expected_status_code =
+    parseInt(formData.get("expected_status_code") as string) || 200;
+  const webhook_url = (formData.get("webhook_url") as string) || null;
+
+  const { error } = await supabase
+    .from("monitors")
+    .update({
+      name,
+      url,
+      method,
+      expected_status_code,
+      check_interval_minutes: interval,
+      webhook_url,
+    })
+    .eq("id", monitorId)
+    .eq("user_id", user.id);
+
+  if (error) return { error: error.message };
+
+  revalidatePath("/dashboard");
+  revalidatePath(`/dashboard/monitors/${monitorId}`);
+  return {};
 }
 
 export async function deleteMonitor(formData: FormData) {

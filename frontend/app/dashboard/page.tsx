@@ -4,6 +4,7 @@ import { createClient } from "../lib/supabase-server";
 import { logout } from "../auth/actions";
 import { deleteMonitor, toggleMonitor } from "./actions";
 import AddMonitorForm from "./AddMonitorForm";
+import EditMonitorModal from "../../components/EditMonitorModal";
 import StatusPageLink from "./StatusPageLink";
 import ThemeToggle from "../../components/ThemeToggle";
 import NotificationBell from "../../components/NotificationBell";
@@ -13,7 +14,9 @@ type Monitor = {
   name: string;
   url: string;
   method: string | null;
+  expected_status_code: number | null;
   check_interval_minutes: number | null;
+  webhook_url: string | null;
   is_active: boolean;
   created_at: string;
 };
@@ -36,7 +39,7 @@ export default async function DashboardPage() {
   const { data: monitors } = await supabase
     .from("monitors")
     .select(
-      "id, name, url, method, check_interval_minutes, is_active, created_at",
+      "id, name, url, method, expected_status_code, check_interval_minutes, webhook_url, is_active, created_at",
     )
     .eq("user_id", user.id)
     .order("created_at", { ascending: false });
@@ -344,6 +347,7 @@ export default async function DashboardPage() {
                           </td>
                           <td className="px-5 py-4">
                             <div className="flex items-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
+                              <EditMonitorModal monitor={monitor} variant="icon" />
                               <form action={toggleMonitor}>
                                 <input
                                   type="hidden"
@@ -454,6 +458,7 @@ export default async function DashboardPage() {
                           </p>
                         </div>
                         <div className="ml-auto flex items-center gap-3">
+                          <EditMonitorModal monitor={monitor} variant="icon" />
                           <form action={toggleMonitor}>
                             <input type="hidden" name="id" value={monitor.id} />
                             <input

@@ -193,6 +193,23 @@ cron.schedule("*/5 * * * *", async () => {
   await Promise.all(monitors.map(pingMonitor));
 });
 
+// Daily job — delete pings older than 7 days
+cron.schedule("0 0 * * *", async () => {
+  const cutoff = new Date();
+  cutoff.setDate(cutoff.getDate() - 7);
+
+  const { error } = await supabase
+    .from("pings")
+    .delete()
+    .lt("checked_at", cutoff.toISOString());
+
+  if (error) {
+    console.error("Failed to clean old pings:", error);
+  } else {
+    console.log("Old pings cleaned up");
+  }
+});
+
 // Health check endpoint
 app.get("/", (req, res) => {
   res.json({ status: "worker running" });

@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "../../../lib/supabase-server";
 import CheckNowButton from "./CheckNowButton";
 import ThemeToggle from "../../../../components/ThemeToggle";
+import EditMonitorModal from "../../../../components/EditMonitorModal";
 
 function responseTimeColor(ms: number | null): string {
   if (ms === null) return "text-neutral-400 dark:text-neutral-600";
@@ -161,6 +162,7 @@ export default async function MonitorDetailPage({
                 PAUSED
               </span>
             )}
+            <EditMonitorModal monitor={monitor} variant="button" />
             <CheckNowButton monitorId={id} />
           </div>
         </div>
