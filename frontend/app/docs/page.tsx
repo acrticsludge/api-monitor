@@ -105,6 +105,11 @@ export default function DocsPage() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
+  const [origin, setOrigin] = useState("");
+
+  useEffect(() => {
+    setOrigin(window.location.origin);
+  }, []);
 
   useEffect(() => {
     setMounted(true);
