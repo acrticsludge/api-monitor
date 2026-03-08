@@ -1,0 +1,7 @@
+export default function sitemap() {
+  return [
+    { url: "https://api-monitor-seven.vercel.app", lastModified: new Date() },
+    { url: "https://api-monitor-seven.vercel.app/login", lastModified: new Date() },
+    { url: "https://api-monitor-seven.vercel.app/signup", lastModified: new Date() },
+  ]
+}

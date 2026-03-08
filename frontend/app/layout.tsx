@@ -3,8 +3,19 @@ import "./globals.css";
 import { ThemeProvider } from "next-themes";
 
 export const metadata: Metadata = {
-  title: "Pulse - API Monitor",
-  description: "Monitor your API endpoints uptime and response times",
+  title: "Pulse — Free API Uptime Monitor",
+  description:
+    "Monitor your APIs and get alerted instantly when something goes down. Free uptime monitoring for developers.",
+  keywords: "uptime monitor, API monitoring, free uptime checker",
+  openGraph: {
+    title: "Pulse — Free API Uptime Monitor",
+    description:
+      "Monitor your APIs and get alerted instantly when something goes down.",
+    url: "https://api-monitor-seven.vercel.app",
+  },
+  verification: {
+    google: "Zp52JvI0L79nRUCpzbY02TiXUvymszci4n6HP6o76QY",
+  },
 };
 
 export default function RootLayout({
