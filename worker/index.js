@@ -85,38 +85,40 @@ async function handleAlert(monitor, currentStatus) {
 
 // Send email alert via Resend
 async function sendAlert(monitor, type) {
-  const { data: user } = await supabase.auth.admin.getUserById(monitor.user_id);
-  if (!user?.user?.email) return;
-
-  const subject =
-    type === "down"
-      ? `🔴 ${monitor.name} is down`
-      : `🟢 ${monitor.name} has recovered`;
-
-  const html =
-    type === "down"
-      ? `<p>Your monitor <strong>${monitor.name}</strong> (<code>${monitor.url}</code>) is currently returning an unexpected response.</p>`
-      : `<p>Your monitor <strong>${monitor.name}</strong> (<code>${monitor.url}</code>) has recovered and is responding normally.</p>`;
-
-  const { error } = await resend.emails.send({
-    from: "onboarding@resend.dev",
-    to: user.user.email,
-    subject,
-    html,
-  });
-
-  if (error) {
-    console.error(`Failed to send alert:`, error);
-    return;
-  }
-
+  // Always record the alert first regardless of email/push success
   await supabase.from("alerts").insert({
     monitor_id: monitor.id,
     type,
   });
 
-  console.log(`Alert sent to ${user.user.email} — ${type}`);
+  // Then try email — failure won't affect alert recording
+  const { data: user } = await supabase.auth.admin.getUserById(monitor.user_id);
+  if (user?.user?.email) {
+    const subject =
+      type === "down"
+        ? `🔴 ${monitor.name} is down`
+        : `🟢 ${monitor.name} has recovered`;
 
+    const html =
+      type === "down"
+        ? `<p>Your monitor <strong>${monitor.name}</strong> (<code>${monitor.url}</code>) is currently returning an unexpected response.</p>`
+        : `<p>Your monitor <strong>${monitor.name}</strong> (<code>${monitor.url}</code>) has recovered and is responding normally.</p>`;
+
+    const { error } = await resend.emails.send({
+      from: "onboarding@resend.dev",
+      to: user.user.email,
+      subject,
+      html,
+    });
+
+    if (error) {
+      console.error(`Failed to send email alert:`, error);
+    } else {
+      console.log(`Alert sent to ${user.user.email} — ${type}`);
+    }
+  }
+
+  // Webhook
   if (monitor.webhook_url) {
     try {
       await axios.post(monitor.webhook_url, {
@@ -126,12 +128,12 @@ async function sendAlert(monitor, type) {
         type,
         timestamp: new Date().toISOString(),
       });
-      console.log(`Webhook sent to ${monitor.webhook_url}`);
     } catch (err) {
-      console.error(`Webhook failed for ${monitor.webhook_url}:`, err.message);
+      console.error(`Webhook failed:`, err.message);
     }
   }
 
+  // Push notification
   await sendPushNotification(monitor, type);
 }
 
@@ -146,7 +148,9 @@ async function sendPushNotification(monitor, type) {
 
   const isDown = type === "down";
   const payload = JSON.stringify({
-    title: isDown ? `🔴 ${monitor.name} is down` : `🟢 ${monitor.name} recovered`,
+    title: isDown
+      ? `🔴 ${monitor.name} is down`
+      : `🟢 ${monitor.name} recovered`,
     body: isDown
       ? `${monitor.url} is not responding`
       : `${monitor.url} is back online`,
@@ -160,8 +164,8 @@ async function sendPushNotification(monitor, type) {
         if (err.statusCode === 404 || err.statusCode === 410) {
           return supabase.from("push_subscriptions").delete().eq("id", id);
         }
-      })
-    )
+      }),
+    ),
   );
 
   console.log(`Push notification sent — ${type} for ${monitor.name}`);
