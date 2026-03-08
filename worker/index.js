@@ -119,19 +119,38 @@ async function sendAlert(monitor, type) {
   }
 
   // Webhook
-  if (monitor.webhook_url) {
-    try {
-      await axios.post(monitor.webhook_url, {
-        monitor_id: monitor.id,
-        monitor_name: monitor.name,
-        monitor_url: monitor.url,
-        type,
-        timestamp: new Date().toISOString(),
-      });
-    } catch (err) {
-      console.error(`Webhook failed:`, err.message);
-    }
+if (monitor.webhook_url) {
+  try {
+    const isDown = type === "down";
+    
+    // Detect if it's a Discord webhook
+    const isDiscord = monitor.webhook_url.includes("discord.com/api/webhooks");
+    
+    const body = isDiscord ? {
+      embeds: [{
+        title: isDown ? `🔴 ${monitor.name} is down` : `🟢 ${monitor.name} recovered`,
+        color: isDown ? 15158332 : 5763719,
+        fields: [
+          { name: "URL", value: monitor.url, inline: true },
+          { name: "Status", value: isDown ? "DOWN" : "RECOVERED", inline: true },
+          { name: "Time", value: new Date().toUTCString(), inline: false },
+        ],
+        footer: { text: "Pulse API Monitor" },
+      }],
+    } : {
+      monitor_id: monitor.id,
+      monitor_name: monitor.name,
+      monitor_url: monitor.url,
+      type,
+      timestamp: new Date().toISOString(),
+    };
+
+    await axios.post(monitor.webhook_url, body);
+    console.log(`Webhook sent to ${monitor.webhook_url}`);
+  } catch (err) {
+    console.error(`Webhook failed:`, err.message);
   }
+}
 
   // Push notification
   await sendPushNotification(monitor, type);
