@@ -150,25 +150,19 @@ export default function UptimeHistory({
                 </div>
 
                 {/* Column blocks */}
-                <div className="h-12 flex flex-col rounded-md overflow-hidden cursor-default gap-[1px]">
+                <div className="h-12 flex flex-col rounded-md overflow-hidden cursor-default">
                   {segments.map((seg, j) => (
                     <div
                       key={j}
-                      className="flex-1"
-                      style={{
-                        backgroundColor:
-                          seg === "up"
-                            ? "#00cc6a"
-                            : seg === "down"
-                              ? "#ef4444"
-                              : undefined,
-                      }}
-                      // dark mode handled via style — both use same hex but dark is brighter
+                      className={`flex-1 ${
+                        seg === "up"
+                          ? "bg-[#00cc6a] dark:bg-[#00ff87]"
+                          : seg === "down"
+                            ? "bg-red-500"
+                            : "bg-black/[0.06] dark:bg-neutral-800"
+                      }`}
                     />
                   ))}
-                  {segments.every((s) => s === null) && (
-                    <div className="flex-1 bg-black/[0.06] dark:bg-neutral-800 rounded-md" />
-                  )}
                 </div>
 
                 {/* Day label */}

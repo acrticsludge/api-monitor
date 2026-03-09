@@ -8,6 +8,7 @@ import EditMonitorModal from "../../components/EditMonitorModal";
 import StatusPageLink from "./StatusPageLink";
 import ThemeToggle from "../../components/ThemeToggle";
 import NotificationBell from "../../components/NotificationBell";
+import LocalTime from "../../components/LocalTime";
 
 type Monitor = {
   id: string;
@@ -340,7 +341,7 @@ export default async function DashboardPage() {
                               style={{ fontFamily: "'DM Mono', monospace" }}
                             >
                               {ping
-                                ? new Date(ping.checked_at).toLocaleString()
+                                ? <LocalTime iso={ping.checked_at} />
                                 : "—"}
                             </span>
                           </td>

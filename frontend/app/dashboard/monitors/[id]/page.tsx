@@ -5,6 +5,7 @@ import CheckNowButton from "./CheckNowButton";
 import ThemeToggle from "../../../../components/ThemeToggle";
 import EditMonitorModal from "../../../../components/EditMonitorModal";
 import UptimeHistory, { type DayData } from "./UptimeHistory";
+import LocalTime from "../../../../components/LocalTime";
 
 function responseTimeColor(ms: number | null): string {
   if (ms === null) return "text-neutral-400 dark:text-neutral-600";
@@ -409,7 +410,7 @@ export default async function MonitorDetailPage({
                         className="text-[10px] text-neutral-400 dark:text-neutral-500 truncate"
                         style={{ fontFamily: "'DM Mono', monospace" }}
                       >
-                        {new Date(ping.checked_at).toLocaleString()}
+                        <LocalTime iso={ping.checked_at} />
                       </p>
                     </div>
                     <div className="text-right shrink-0">
@@ -463,7 +464,7 @@ export default async function MonitorDetailPage({
                           className="px-5 py-3 text-xs text-neutral-500 dark:text-neutral-400"
                           style={{ fontFamily: "'DM Mono', monospace" }}
                         >
-                          {new Date(ping.checked_at).toLocaleString()}
+                          <LocalTime iso={ping.checked_at} />
                         </td>
                         <td className="px-5 py-3">
                           {ping.status === "up" ? (
