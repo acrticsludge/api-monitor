@@ -1,18 +1,27 @@
 /*
- * SQL — run these in the Supabase SQL editor before using this page:
+ * SQL — run these in the Supabase SQL editor if status page is blank for logged-out users:
  *
- * -- Allow public read on active monitors
- * CREATE POLICY "Public read active monitors"
+ * DROP POLICY IF EXISTS "Public read active monitors" ON monitors;
+ * DROP POLICY IF EXISTS "Anon read active monitors" ON monitors;
+ * DROP POLICY IF EXISTS "Public read pings" ON pings;
+ * DROP POLICY IF EXISTS "Anon read pings" ON pings;
+ *
+ * CREATE POLICY "Anon read active monitors"
  * ON monitors FOR SELECT
+ * TO anon
  * USING (is_active = true);
  *
- * -- Allow public read on pings
- * CREATE POLICY "Public read pings"
+ * CREATE POLICY "Anon read pings"
  * ON pings FOR SELECT
- * USING (true);
+ * TO anon
+ * USING (
+ *   monitor_id IN (
+ *     SELECT id FROM monitors WHERE is_active = true
+ *   )
+ * );
  */
 
-import { createClient } from "../../lib/supabase-server";
+import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import AutoRefresh from "./AutoRefresh";
 import ThemeToggle from "../../../components/ThemeToggle";
 
@@ -34,7 +43,11 @@ export default async function StatusPage({
   params: Promise<{ userId: string }>;
 }) {
   const { userId } = await params;
-  const supabase = await createClient();
+  // Use anon client so unauthenticated users can read public RLS policies
+  const supabase = createSupabaseClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+  );
 
   const { data: monitors } = await supabase
     .from("monitors")
@@ -134,6 +147,23 @@ export default async function StatusPage({
     overallStatus = "outage";
   } else {
     overallStatus = "degraded";
+  }
+
+  if (monitorList.length === 0) {
+    return (
+      <div
+        className="min-h-screen bg-[#080808] flex items-center justify-center"
+        style={{ fontFamily: "'DM Mono', monospace" }}
+      >
+        <link
+          href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet"
+        />
+        <p className="text-neutral-500 text-sm">
+          No monitors found for this status page.
+        </p>
+      </div>
+    );
   }
 
   return (

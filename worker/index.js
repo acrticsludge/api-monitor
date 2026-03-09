@@ -119,38 +119,54 @@ async function sendAlert(monitor, type) {
   }
 
   // Webhook
-if (monitor.webhook_url) {
-  try {
-    const isDown = type === "down";
-    
-    // Detect if it's a Discord webhook
-    const isDiscord = monitor.webhook_url.includes("discord.com/api/webhooks");
-    
-    const body = isDiscord ? {
-      embeds: [{
-        title: isDown ? `🔴 ${monitor.name} is down` : `🟢 ${monitor.name} recovered`,
-        color: isDown ? 15158332 : 5763719,
-        fields: [
-          { name: "URL", value: monitor.url, inline: true },
-          { name: "Status", value: isDown ? "DOWN" : "RECOVERED", inline: true },
-          { name: "Time", value: new Date().toUTCString(), inline: false },
-        ],
-        footer: { text: "Pulse API Monitor" },
-      }],
-    } : {
-      monitor_id: monitor.id,
-      monitor_name: monitor.name,
-      monitor_url: monitor.url,
-      type,
-      timestamp: new Date().toISOString(),
-    };
+  if (monitor.webhook_url) {
+    try {
+      const isDown = type === "down";
 
-    await axios.post(monitor.webhook_url, body);
-    console.log(`Webhook sent to ${monitor.webhook_url}`);
-  } catch (err) {
-    console.error(`Webhook failed:`, err.message);
+      // Detect if it's a Discord webhook
+      const isDiscord = monitor.webhook_url.includes(
+        "discord.com/api/webhooks",
+      );
+
+      const body = isDiscord
+        ? {
+            embeds: [
+              {
+                title: isDown
+                  ? `🔴 ${monitor.name} is down`
+                  : `🟢 ${monitor.name} recovered`,
+                color: isDown ? 15158332 : 5763719,
+                fields: [
+                  { name: "URL", value: monitor.url, inline: true },
+                  {
+                    name: "Status",
+                    value: isDown ? "DOWN" : "RECOVERED",
+                    inline: true,
+                  },
+                  {
+                    name: "Time",
+                    value: new Date().toUTCString(),
+                    inline: false,
+                  },
+                ],
+                footer: { text: "Pulse API Monitor" },
+              },
+            ],
+          }
+        : {
+            monitor_id: monitor.id,
+            monitor_name: monitor.name,
+            monitor_url: monitor.url,
+            type,
+            timestamp: new Date().toISOString(),
+          };
+
+      await axios.post(monitor.webhook_url, body);
+      console.log(`Webhook sent to ${monitor.webhook_url}`);
+    } catch (err) {
+      console.error(`Webhook failed:`, err.message);
+    }
   }
-}
 
   // Push notification
   await sendPushNotification(monitor, type);
@@ -190,8 +206,14 @@ async function sendPushNotification(monitor, type) {
   console.log(`Push notification sent — ${type} for ${monitor.name}`);
 }
 
+const WORKER_URL =
+  process.env.WORKER_URL || `http://localhost:${process.env.PORT || 3001}`;
+
+let lastPingTime = null;
+
 // Main job — runs every 5 minutes
 cron.schedule("*/5 * * * *", async () => {
+  lastPingTime = new Date().toISOString();
   console.log("Running monitor checks...");
 
   const { data: monitors, error } = await supabase
@@ -212,6 +234,16 @@ cron.schedule("*/5 * * * *", async () => {
   await Promise.all(monitors.map(pingMonitor));
 });
 
+// Keep-alive ping to prevent Railway hibernation
+cron.schedule("*/4 * * * *", async () => {
+  try {
+    await axios.get(`${WORKER_URL}/`);
+    console.log("[keep-alive] Worker pinged successfully");
+  } catch (err) {
+    console.error("[keep-alive] Self-ping failed:", err.message);
+  }
+});
+
 // Daily job — delete pings older than 7 days
 cron.schedule("0 0 * * *", async () => {
   const cutoff = new Date();
@@ -230,8 +262,12 @@ cron.schedule("0 0 * * *", async () => {
 });
 
 // Health check endpoint
-app.get("/", (req, res) => {
-  res.json({ status: "worker running" });
+app.get("/", (_req, res) => {
+  res.json({
+    status: "worker running",
+    lastPingCycle: lastPingTime,
+    uptime: process.uptime(),
+  });
 });
 
 const PORT = process.env.PORT || 3001;
