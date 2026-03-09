@@ -11,7 +11,11 @@ const mockMonitors = [
   { name: "cdn.assets.io/healthz", status: "up", ms: 34, uptime: "100%" },
 ];
 
-export default function LandingClient() {
+export default function LandingClient({
+  uniqueUsers,
+}: {
+  uniqueUsers: number;
+}) {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
@@ -52,11 +56,23 @@ export default function LandingClient() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="w-7 h-7 rounded-lg bg-[#00cc6a] dark:bg-[#00ff87] flex items-center justify-center shadow-[0_0_16px_rgba(0,204,106,0.3)] dark:shadow-[0_0_16px_rgba(0,255,135,0.35)]">
-              <svg className="w-3.5 h-3.5 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <svg
+                className="w-3.5 h-3.5 text-black"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2.5}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
               </svg>
             </div>
-            <span className="text-sm font-bold tracking-[0.08em] uppercase">Pulse</span>
+            <span className="text-sm font-bold tracking-[0.08em] uppercase">
+              Pulse
+            </span>
           </div>
           <div className="flex items-center gap-2">
             <ThemeToggle />
@@ -78,10 +94,12 @@ export default function LandingClient() {
         {/* Hero — split layout */}
         <section className="max-w-6xl mx-auto px-4 sm:px-6 pt-14 sm:pt-20 pb-16 sm:pb-24">
           <div className="grid lg:grid-cols-[1fr_440px] gap-10 lg:gap-16 items-center">
-
             {/* Left: Text */}
             <div>
-              <div className="flex items-center gap-2 mb-7 fade-up" style={{ animationDelay: "0s" }}>
+              <div
+                className="flex items-center gap-2 mb-7 fade-up"
+                style={{ animationDelay: "0s" }}
+              >
                 <span className="relative flex w-1.5 h-1.5">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00cc6a] dark:bg-[#00ff87] opacity-60" />
                   <span className="relative inline-flex rounded-full w-1.5 h-1.5 bg-[#00cc6a] dark:bg-[#00ff87]" />
@@ -103,18 +121,36 @@ export default function LandingClient() {
                 <br />
                 your APIs
                 <br />
-                <span className="text-[#00cc6a] dark:text-[#00ff87]">go down.</span>
+                <span className="text-[#00cc6a] dark:text-[#00ff87]">
+                  go down.
+                </span>
               </h1>
 
               <p
-                className="text-sm text-neutral-500 dark:text-neutral-400 leading-relaxed mb-8 max-w-md fade-up"
-                style={{ fontFamily: "'DM Mono', monospace", animationDelay: "0.16s" }}
+                className="text-sm text-neutral-500 dark:text-neutral-400 leading-relaxed max-w-md fade-up"
+                style={{
+                  fontFamily: "'DM Mono', monospace",
+                  animationDelay: "0.16s",
+                }}
               >
-                Add your endpoints. We ping them every 5 minutes, record response times, and fire an alert the moment something breaks — before your users ever notice.
+                Add your endpoints. We ping them every 5 minutes, record
+                response times, and fire an alert the moment something breaks —
+                before your users ever notice.
+              </p>
+
+              <p
+                className="text-xs text-neutral-600 mt-3 mb-8 fade-up"
+                style={{
+                  fontFamily: "'DM Mono', monospace",
+                  animationDelay: "0.2s",
+                }}
+              >
+                Built by a developer tired of finding out about downtime from
+                users, not alerts.
               </p>
 
               <div
-                className="flex flex-col sm:flex-row gap-3 mb-10 fade-up"
+                className="flex flex-col sm:flex-row gap-3 fade-up"
                 style={{ animationDelay: "0.24s" }}
               >
                 <Link
@@ -122,22 +158,40 @@ export default function LandingClient() {
                   className="inline-flex items-center justify-center gap-2 bg-[#00cc6a] dark:bg-[#00ff87] hover:bg-[#00b560] dark:hover:bg-[#00f080] text-black text-xs font-bold tracking-[0.08em] uppercase px-6 py-3.5 rounded-xl transition-all duration-150 shadow-[0_0_24px_rgba(0,204,106,0.3)] dark:shadow-[0_0_24px_rgba(0,255,135,0.25)] hover:shadow-[0_0_32px_rgba(0,204,106,0.45)] dark:hover:shadow-[0_0_32px_rgba(0,255,135,0.45)]"
                 >
                   Start free — no card needed
-                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  <svg
+                    className="w-3.5 h-3.5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2.5}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M13 7l5 5m0 0l-5 5m5-5H6"
+                    />
                   </svg>
-                </Link>
-                <Link
-                  href="/login"
-                  className="inline-flex items-center justify-center gap-2 text-xs font-semibold tracking-[0.06em] uppercase text-neutral-500 dark:text-neutral-400 border border-black/[0.08] dark:border-white/[0.08] rounded-xl px-6 py-3.5 hover:text-[#080808] dark:hover:text-white hover:border-black/[0.16] dark:hover:border-white/[0.16] transition-all duration-150"
-                  style={{ fontFamily: "'DM Mono', monospace" }}
-                >
-                  Sign in
                 </Link>
               </div>
 
+              {uniqueUsers > 0 && (
+                <p
+                  className="text-xs text-neutral-500 mt-4 fade-up"
+                  style={{
+                    fontFamily: "'DM Mono', monospace",
+                    animationDelay: "0.3s",
+                  }}
+                >
+                  <span className="text-[#00cc6a] dark:text-[#00ff87] font-medium">
+                    {uniqueUsers} developer{uniqueUsers === 1 ? "" : "s"}
+                  </span>{" "}
+                  already monitoring their APIs
+                </p>
+              )}
+
               {/* Specs row */}
               <div
-                className="flex items-center gap-8 fade-up"
+                className="flex items-center gap-8 mt-10 fade-up"
                 style={{ animationDelay: "0.32s" }}
               >
                 {[
@@ -219,7 +273,10 @@ export default function LandingClient() {
                 {/* Monitor rows */}
                 <div className="divide-y divide-black/[0.04] dark:divide-white/[0.03]">
                   {mockMonitors.map((m) => (
-                    <div key={m.name} className="px-4 py-3.5 flex items-center gap-3">
+                    <div
+                      key={m.name}
+                      className="px-4 py-3.5 flex items-center gap-3"
+                    >
                       {m.status === "up" ? (
                         <span className="relative flex w-1.5 h-1.5 shrink-0">
                           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00cc6a] dark:bg-[#00ff87] opacity-50" />
@@ -328,8 +385,18 @@ export default function LandingClient() {
                 title: "Instant Push Notifications",
                 desc: "The moment a monitor goes down, you know. Browser push notifications and webhook POSTs fire immediately on status change.",
                 icon: (
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+                    />
                   </svg>
                 ),
               },
@@ -338,8 +405,18 @@ export default function LandingClient() {
                 title: "Response Time Tracking",
                 desc: "Every ping records latency. Color-coded readouts instantly show what's fast, degraded, or broken.",
                 icon: (
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                    />
                   </svg>
                 ),
               },
@@ -348,8 +425,18 @@ export default function LandingClient() {
                 title: "Public Status Pages",
                 desc: "One shareable link. Your users see live status, uptime %, and auto-refreshing data. Zero setup.",
                 icon: (
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
                   </svg>
                 ),
               },
@@ -366,7 +453,9 @@ export default function LandingClient() {
                   >
                     {f.num}
                   </span>
-                  <div className="text-[#00cc6a] dark:text-[#00ff87]">{f.icon}</div>
+                  <div className="text-[#00cc6a] dark:text-[#00ff87]">
+                    {f.icon}
+                  </div>
                 </div>
                 <h3 className="text-base font-extrabold text-[#080808] dark:text-white mb-2.5 tracking-tight">
                   {f.title}
@@ -472,11 +561,90 @@ export default function LandingClient() {
                 className="inline-flex items-center gap-2 bg-[#00ff87] hover:bg-[#00f080] text-black text-sm font-bold tracking-[0.08em] uppercase px-8 py-4 rounded-xl transition-all duration-150 shadow-[0_0_32px_rgba(0,255,135,0.3)] hover:shadow-[0_0_48px_rgba(0,255,135,0.5)]"
               >
                 Create free account
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2.5}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M13 7l5 5m0 0l-5 5m5-5H6"
+                  />
                 </svg>
               </Link>
             </div>
+          </div>
+        </section>
+
+        {/* FAQ */}
+        <section className="max-w-6xl mx-auto px-4 sm:px-6 pb-14 sm:pb-20">
+          <div className="flex items-center gap-4 mb-14">
+            <div className="flex-1 h-px bg-black/[0.06] dark:bg-white/[0.04]" />
+            <span
+              className="text-[10px] tracking-[0.15em] uppercase text-neutral-400 dark:text-neutral-600 whitespace-nowrap"
+              style={{ fontFamily: "'DM Mono', monospace" }}
+            >
+              FAQ
+            </span>
+            <div className="flex-1 h-px bg-black/[0.06] dark:bg-white/[0.04]" />
+          </div>
+
+          <h2
+            className="text-2xl font-bold text-[#080808] dark:text-white mb-8"
+            style={{ fontFamily: "'Syne', sans-serif" }}
+          >
+            Questions &amp; Answers
+          </h2>
+
+          <div className="grid sm:grid-cols-2 gap-4">
+            {[
+              {
+                q: "Is this really free?",
+                a: "Yes, completely free. No credit card required, no trial period. Free tier includes 5 monitors, 5-minute check intervals, push notifications, webhooks, and a public status page. We plan to offer a paid tier in the future for teams that need more — but the free tier stays free forever.",
+              },
+              {
+                q: "How do I get notified when something goes down?",
+                a: "Pulse supports browser push notifications — just click the bell icon on your dashboard and allow notifications. You can also add a Discord webhook URL to any monitor and get a formatted alert directly in your Discord server.",
+              },
+              {
+                q: "What happens if I exceed 5 monitors?",
+                a: "You'll see a message letting you know you've hit the free tier limit. We're working on a Pro plan for unlimited monitors — stay tuned.",
+              },
+              {
+                q: "How accurate is the uptime data?",
+                a: "Pulse pings your endpoints every 5 minutes from our worker server. Response time and status code are recorded on every check. This means downtime shorter than 5 minutes may not be detected — longer intervals are a Pro tier feature.",
+              },
+              {
+                q: "Is my API data private?",
+                a: "Yes. Each user can only see their own monitors and ping history. Your endpoint URLs are never shared or exposed to other users.",
+              },
+              {
+                q: "Can I share my uptime with my users?",
+                a: "Yes — every account gets a public status page at your Pulse URL /status/your-id. Share the link with your users or clients so they can see live uptime without needing an account.",
+              },
+            ].map(({ q, a }) => (
+              <div
+                key={q}
+                className="relative bg-white dark:bg-[#0f0f0f] border border-black/[0.06] dark:border-white/[0.06] rounded-2xl p-5"
+              >
+                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00cc6a]/40 dark:via-[#00ff87]/40 to-transparent rounded-t-2xl" />
+                <p
+                  className="text-[#080808] dark:text-white font-semibold text-sm mb-2"
+                  style={{ fontFamily: "'Syne', sans-serif" }}
+                >
+                  {q}
+                </p>
+                <p
+                  className="text-neutral-500 dark:text-neutral-400 text-xs leading-relaxed"
+                  style={{ fontFamily: "'DM Mono', monospace" }}
+                >
+                  {a}
+                </p>
+              </div>
+            ))}
           </div>
         </section>
 
@@ -485,8 +653,18 @@ export default function LandingClient() {
           <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2.5">
               <div className="w-5 h-5 rounded-md bg-[#00cc6a] dark:bg-[#00ff87] flex items-center justify-center">
-                <svg className="w-2.5 h-2.5 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                <svg
+                  className="w-2.5 h-2.5 text-black"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2.5}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
                 </svg>
               </div>
               <span
