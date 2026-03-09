@@ -1,25 +1,5 @@
-/*
- * SQL — run these in the Supabase SQL editor if status page is blank for logged-out users:
- *
- * DROP POLICY IF EXISTS "Public read active monitors" ON monitors;
- * DROP POLICY IF EXISTS "Anon read active monitors" ON monitors;
- * DROP POLICY IF EXISTS "Public read pings" ON pings;
- * DROP POLICY IF EXISTS "Anon read pings" ON pings;
- *
- * CREATE POLICY "Anon read active monitors"
- * ON monitors FOR SELECT
- * TO anon
- * USING (is_active = true);
- *
- * CREATE POLICY "Anon read pings"
- * ON pings FOR SELECT
- * TO anon
- * USING (
- *   monitor_id IN (
- *     SELECT id FROM monitors WHERE is_active = true
- *   )
- * );
- */
+export const revalidate = 0;
+export const dynamic = "force-dynamic";
 
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import AutoRefresh from "./AutoRefresh";
@@ -65,7 +45,10 @@ export default async function StatusPage({
   sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
   sevenDaysAgo.setHours(0, 0, 0, 0);
 
-  const weekPingsByMonitor = new Map<string, { status: string; checked_at: string }[]>();
+  const weekPingsByMonitor = new Map<
+    string,
+    { status: string; checked_at: string }[]
+  >();
 
   if (monitorIds.length > 0) {
     const [recentResult, weekResult] = await Promise.all([
@@ -307,7 +290,9 @@ export default async function StatusPage({
               </svg>
             </div>
             <div>
-              <p className="text-base font-bold text-red-500 dark:text-red-400">Major Outage</p>
+              <p className="text-base font-bold text-red-500 dark:text-red-400">
+                Major Outage
+              </p>
               <p
                 className="text-xs text-neutral-500 mt-0.5"
                 style={{ fontFamily: "'DM Mono', monospace" }}
