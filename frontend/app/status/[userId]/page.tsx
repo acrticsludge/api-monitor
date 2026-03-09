@@ -1,7 +1,7 @@
 export const revalidate = 0;
 export const dynamic = "force-dynamic";
 
-import { createClient as createSupabaseClient } from "@supabase/supabase-js";
+import { createClient } from "@supabase/supabase-js";
 import AutoRefresh from "./AutoRefresh";
 import ThemeToggle from "../../../components/ThemeToggle";
 
@@ -23,67 +23,52 @@ export default async function StatusPage({
   params: Promise<{ userId: string }>;
 }) {
   const { userId } = await params;
-  // Use anon client so unauthenticated users can read public RLS policies
-  const supabase = createSupabaseClient(
+
+  const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
   );
 
-  const { data: monitors } = await supabase
+  const { data: monitors, error: monitorsError } = await supabase
     .from("monitors")
     .select("id, name, url")
     .eq("user_id", userId)
     .eq("is_active", true)
     .order("created_at", { ascending: true });
 
+  console.log("Status page userId:", userId);
+  console.log("Monitors:", monitors);
+  console.log("Monitors error:", monitorsError);
+
   const monitorList = monitors ?? [];
   const monitorIds = monitorList.map((m) => m.id);
 
-  const pingsByMonitor = new Map<string, Ping[]>();
+  const { data: allPings, error: pingsError } = await supabase
+    .from("pings")
+    .select("monitor_id, status, checked_at")
+    .in(
+      "monitor_id",
+      monitorIds.length > 0
+        ? monitorIds
+        : ["00000000-0000-0000-0000-000000000000"],
+    )
+    .order("checked_at", { ascending: false })
+    .limit(1000);
 
-  const sevenDaysAgo = new Date();
-  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-  sevenDaysAgo.setHours(0, 0, 0, 0);
+  console.log("Pings count:", allPings?.length);
+  console.log("Pings error:", pingsError);
 
-  const weekPingsByMonitor = new Map<
-    string,
-    { status: string; checked_at: string }[]
-  >();
-
-  if (monitorIds.length > 0) {
-    const [recentResult, weekResult] = await Promise.all([
-      supabase
-        .from("pings")
-        .select("monitor_id, status, checked_at")
-        .in("monitor_id", monitorIds)
-        .order("checked_at", { ascending: false })
-        .limit(500),
-      supabase
-        .from("pings")
-        .select("monitor_id, status, checked_at")
-        .in("monitor_id", monitorIds)
-        .gte("checked_at", sevenDaysAgo.toISOString()),
-    ]);
-
-    for (const ping of recentResult.data ?? []) {
-      const list = pingsByMonitor.get(ping.monitor_id) ?? [];
-      if (list.length < 100) list.push(ping);
-      pingsByMonitor.set(ping.monitor_id, list);
-    }
-
-    for (const ping of weekResult.data ?? []) {
-      const list = weekPingsByMonitor.get(ping.monitor_id) ?? [];
-      list.push(ping);
-      weekPingsByMonitor.set(ping.monitor_id, list);
-    }
-  }
+  const pings: Ping[] = allPings ?? [];
 
   const todayMidnight = new Date();
   todayMidnight.setHours(0, 0, 0, 0);
 
+  const sevenDaysAgo = new Date(todayMidnight);
+  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
+
   // Returns 7 days × 4 buckets (6-hour periods) per day
   function buildWeekDaySegments(monitorId: string): ("up" | "down" | null)[][] {
-    const pings = weekPingsByMonitor.get(monitorId) ?? [];
+    const monitorPings = pings.filter((p) => p.monitor_id === monitorId);
     const BUCKETS = 4;
     const bucketMs = 86400000 / BUCKETS;
 
@@ -95,7 +80,7 @@ export default async function StatusPage({
       return Array.from({ length: BUCKETS }, (_, b) => {
         const bStart = dayStart + b * bucketMs;
         const bEnd = bStart + bucketMs;
-        const bp = pings.filter((p) => {
+        const bp = monitorPings.filter((p) => {
           const t = new Date(p.checked_at).getTime();
           return t >= bStart && t < bEnd;
         });
@@ -106,11 +91,13 @@ export default async function StatusPage({
   }
 
   const monitorStats = monitorList.map((monitor) => {
-    const pings = pingsByMonitor.get(monitor.id) ?? [];
-    const latestStatus = pings[0]?.status ?? null;
-    const upCount = pings.filter((p) => p.status === "up").length;
+    const monitorPings = pings.filter((p) => p.monitor_id === monitor.id);
+    const latestStatus = monitorPings[0]?.status ?? null;
+    const upCount = monitorPings.filter((p) => p.status === "up").length;
     const uptimePct =
-      pings.length > 0 ? Math.round((upCount / pings.length) * 100) : null;
+      monitorPings.length > 0
+        ? Math.round((upCount / monitorPings.length) * 100)
+        : null;
     const weekDays = buildWeekDaySegments(monitor.id);
     return { ...monitor, latestStatus, uptimePct, weekDays };
   });
