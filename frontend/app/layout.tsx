@@ -4,6 +4,7 @@ import { ThemeProvider } from "next-themes";
 import { Analytics } from "@vercel/analytics/next";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://pulsemonitor.dev"),
   title: "Pulse — Free API Uptime Monitor",
   description:
     "Monitor your APIs and get alerted instantly when something goes down. Free uptime monitoring for developers.",
@@ -12,7 +13,7 @@ export const metadata: Metadata = {
     title: "Pulse — Free API Uptime Monitor",
     description:
       "Monitor your APIs and get alerted instantly when something goes down.",
-    url: "https://api-monitor-seven.vercel.app",
+    url: "https://pulsemonitor.dev",
   },
   verification: {
     google: "Zp52JvI0L79nRUCpzbY02TiXUvymszci4n6HP6o76QY",
