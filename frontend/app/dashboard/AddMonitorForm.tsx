@@ -185,10 +185,10 @@ export default function AddMonitorForm({
                 <input
                   name="interval"
                   type="number"
-                  defaultValue={5}
-                  min={5}
-                  max={60}
-                  className="w-full bg-[#f0f0f0] dark:bg-[#0a0a0a] border border-black/[0.08] dark:border-white/[0.1] rounded-xl px-3.5 py-2.5 text-[#080808] dark:text-white text-sm focus:outline-none focus:border-[#00cc6a]/50 dark:focus:border-[#00ff87]/50 focus:ring-2 focus:ring-[#00cc6a]/10 dark:focus:ring-[#00ff87]/10 transition-all duration-200"
+                  value={5}
+                  readOnly
+                  disabled
+                  className="w-full bg-[#f0f0f0] dark:bg-[#0a0a0a] border border-black/[0.08] dark:border-white/[0.1] rounded-xl px-3.5 py-2.5 text-[#080808] dark:text-white text-sm opacity-50 cursor-not-allowed"
                   style={{ fontFamily: "'DM Mono', monospace" }}
                 />
               </Field>

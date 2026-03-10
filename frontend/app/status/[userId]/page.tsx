@@ -36,8 +36,6 @@ export default async function StatusPage({
     .eq("is_active", true)
     .order("created_at", { ascending: true });
 
-  console.log("Status page userId:", userId);
-  console.log("Monitors:", monitors);
   console.log("Monitors error:", monitorsError);
 
   const monitorList = monitors ?? [];

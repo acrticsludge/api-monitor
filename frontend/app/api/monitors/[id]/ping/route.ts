@@ -16,6 +16,11 @@ export async function POST(
 
   const { id } = await params;
 
+  const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  if (!UUID_RE.test(id)) {
+    return NextResponse.json({ error: "Invalid monitor ID" }, { status: 400 });
+  }
+
   const { data: monitor } = await supabase
     .from("monitors")
     .select("id, url, method, expected_status_code")

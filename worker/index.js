@@ -32,6 +32,41 @@ webpush.setVapidDetails(
   process.env.VAPID_PRIVATE_KEY,
 );
 
+// ── Sanitization helpers ──────────────────────────────────────────────────────
+
+const ALLOWED_METHODS = [
+  "GET",
+  "POST",
+  "PUT",
+  "PATCH",
+  "DELETE",
+  "HEAD",
+  "OPTIONS",
+];
+
+/** Returns true if the URL is a valid http/https URL. */
+function isValidHttpUrl(raw) {
+  if (!raw) return false;
+  try {
+    const u = new URL(raw);
+    return u.protocol === "http:" || u.protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
+/** Escape HTML special chars to prevent XSS in email bodies. */
+function escapeHtml(str) {
+  return String(str ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+
 // Ping a single monitor
 async function pingMonitor(monitor) {
   try {
@@ -40,9 +75,20 @@ async function pingMonitor(monitor) {
     let statusCode = null;
     let responseTime = null;
 
+    const method = ALLOWED_METHODS.includes(
+      (monitor.method || "").toUpperCase(),
+    )
+      ? monitor.method.toUpperCase()
+      : "GET";
+
+    if (!isValidHttpUrl(monitor.url)) {
+      console.warn(`[pingMonitor] Skipping ${monitor.name}: invalid URL`);
+      return;
+    }
+
     try {
       const response = await axios({
-        method: monitor.method || "GET",
+        method,
         url: monitor.url,
         timeout: 10000,
       });
@@ -110,8 +156,13 @@ async function sendAlert(monitor, type) {
     });
 
     // Then try email — failure won't affect alert recording
-    const { data: user } = await supabase.auth.admin.getUserById(monitor.user_id);
+    const { data: user } = await supabase.auth.admin.getUserById(
+      monitor.user_id,
+    );
     if (user?.user?.email) {
+      const safeName = escapeHtml(monitor.name);
+      const safeUrl = escapeHtml(monitor.url);
+
       const subject =
         type === "down"
           ? `🔴 ${monitor.name} is down`
@@ -119,8 +170,8 @@ async function sendAlert(monitor, type) {
 
       const html =
         type === "down"
-          ? `<p>Your monitor <strong>${monitor.name}</strong> (<code>${monitor.url}</code>) is currently returning an unexpected response.</p>`
-          : `<p>Your monitor <strong>${monitor.name}</strong> (<code>${monitor.url}</code>) has recovered and is responding normally.</p>`;
+          ? `<p>Your monitor <strong>${safeName}</strong> (<code>${safeUrl}</code>) is currently returning an unexpected response.</p>`
+          : `<p>Your monitor <strong>${safeName}</strong> (<code>${safeUrl}</code>) has recovered and is responding normally.</p>`;
 
       const { error } = await resend.emails.send({
         from: "onboarding@resend.dev",
@@ -137,7 +188,7 @@ async function sendAlert(monitor, type) {
     }
 
     // Webhook
-    if (monitor.webhook_url) {
+    if (monitor.webhook_url && isValidHttpUrl(monitor.webhook_url)) {
       try {
         const isDown = type === "down";
 
@@ -231,9 +282,6 @@ async function sendPushNotification(monitor, type) {
   }
 }
 
-// RAILWAY DEPLOYMENT NOTE:
-// Set WORKER_URL env var to your Railway public URL (e.g. https://your-worker.railway.app)
-// This is used by the keep-alive cron to prevent Railway from hibernating the service.
 const WORKER_URL =
   process.env.WORKER_URL || `http://localhost:${process.env.PORT || 3001}`;
 
