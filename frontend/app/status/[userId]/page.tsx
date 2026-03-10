@@ -43,6 +43,12 @@ export default async function StatusPage({
   const monitorList = monitors ?? [];
   const monitorIds = monitorList.map((m) => m.id);
 
+  const todayMidnight = new Date();
+  todayMidnight.setHours(0, 0, 0, 0);
+
+  const sevenDaysAgo = new Date(todayMidnight);
+  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
+
   const { data: allPings, error: pingsError } = await supabase
     .from("pings")
     .select("monitor_id, status, checked_at")
@@ -52,19 +58,14 @@ export default async function StatusPage({
         ? monitorIds
         : ["00000000-0000-0000-0000-000000000000"],
     )
+    .gte("checked_at", sevenDaysAgo.toISOString())
     .order("checked_at", { ascending: false })
-    .limit(1000);
+    .limit(15000);
 
   console.log("Pings count:", allPings?.length);
   console.log("Pings error:", pingsError);
 
   const pings: Ping[] = allPings ?? [];
-
-  const todayMidnight = new Date();
-  todayMidnight.setHours(0, 0, 0, 0);
-
-  const sevenDaysAgo = new Date(todayMidnight);
-  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
 
   // Returns 7 days × 4 buckets (6-hour periods) per day
   function buildWeekDaySegments(monitorId: string): ("up" | "down" | null)[][] {
