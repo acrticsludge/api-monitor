@@ -340,24 +340,6 @@ export default function LandingClient({
                 </div>
               </div>
 
-              {/* Floating alert badge */}
-              <div className="absolute bottom-16 -left-5 bg-white dark:bg-[#111] border border-red-500/20 rounded-xl px-3.5 py-2.5 shadow-[0_4px_24px_rgba(0,0,0,0.12)] dark:shadow-[0_4px_28px_rgba(0,0,0,0.6)]">
-                <div className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-red-500 dark:bg-red-400 shrink-0" />
-                  <span
-                    className="text-[11px] font-semibold text-red-500 dark:text-red-400"
-                    style={{ fontFamily: "'DM Mono', monospace" }}
-                  >
-                    payments.api/status is down
-                  </span>
-                </div>
-                <p
-                  className="text-[10px] text-neutral-400 mt-0.5 pl-3.5"
-                  style={{ fontFamily: "'DM Mono', monospace" }}
-                >
-                  Alert sent · just now
-                </p>
-              </div>
             </div>
           </div>
         </section>
