@@ -513,16 +513,16 @@ export default function LandingClient({
           </div>
         </section>
 
-        {/* CTA — always dark */}
+        {/* CTA */}
         <section className="max-w-6xl mx-auto px-4 sm:px-6 pb-14">
-          <div className="relative bg-[#060606] border border-white/[0.07] rounded-2xl px-8 sm:px-16 py-14 sm:py-20 overflow-hidden">
-            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00ff87]/60 to-transparent" />
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_80%_at_50%_110%,rgba(0,255,135,0.07),transparent)]" />
+          <div className="relative bg-[#f0f0f0] dark:bg-[#060606] border border-black/[0.07] dark:border-white/[0.07] rounded-2xl px-8 sm:px-16 py-14 sm:py-20 overflow-hidden">
+            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00cc6a]/60 dark:via-[#00ff87]/60 to-transparent" />
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_80%_at_50%_110%,rgba(0,204,106,0.05),transparent)] dark:bg-[radial-gradient(ellipse_60%_80%_at_50%_110%,rgba(0,255,135,0.07),transparent)]" />
             <div
-              className="absolute inset-0 opacity-[0.025]"
+              className="absolute inset-0 opacity-[0.03] dark:opacity-[0.025]"
               style={{
                 backgroundImage:
-                  "linear-gradient(rgba(255,255,255,0.6) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.6) 1px, transparent 1px)",
+                  "linear-gradient(rgba(0,0,0,0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.8) 1px, transparent 1px)",
                 backgroundSize: "40px 40px",
               }}
             />
@@ -534,13 +534,13 @@ export default function LandingClient({
               >
                 Free forever
               </p>
-              <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-white mb-4 leading-tight">
+              <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-[#080808] dark:text-white mb-4 leading-tight">
                 Start monitoring
                 <br />
                 in 60 seconds.
               </h2>
               <p
-                className="text-sm text-neutral-500 mb-10"
+                className="text-sm text-neutral-500 dark:text-neutral-500 mb-10"
                 style={{ fontFamily: "'DM Mono', monospace" }}
               >
                 5 monitors · 5 minute checks · no credit card
