@@ -74,7 +74,14 @@ export default function LandingClient({
               Pulse
             </span>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
+            <Link
+              href="/docs"
+              className="hidden sm:block text-[11px] font-semibold tracking-[0.08em] uppercase text-neutral-500 dark:text-neutral-400 hover:text-[#080808] dark:hover:text-white transition-colors duration-150"
+              style={{ fontFamily: "'DM Mono', monospace" }}
+            >
+              Docs
+            </Link>
             <ThemeToggle />
             <Link
               href="/login"

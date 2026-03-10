@@ -119,15 +119,15 @@ export default async function DashboardPage() {
             <span className="text-sm font-bold tracking-[0.08em] uppercase text-[#080808] dark:text-white">
               Pulse
             </span>
+          </div>
+          <div className="flex items-center gap-3">
             <Link
               href="/docs"
-              className="hidden sm:block text-[10px] tracking-[0.08em] uppercase text-neutral-400 dark:text-neutral-600 hover:text-[#080808] dark:hover:text-white transition-colors ml-1"
+              className="hidden sm:block text-[11px] font-semibold tracking-[0.08em] uppercase text-neutral-500 dark:text-neutral-400 hover:text-[#080808] dark:hover:text-white transition-colors duration-150"
               style={{ fontFamily: "'DM Mono', monospace" }}
             >
               Docs
             </Link>
-          </div>
-          <div className="flex items-center gap-3">
             <span
               className="hidden sm:block text-xs text-neutral-500 dark:text-neutral-400"
               style={{ fontFamily: "'DM Mono', monospace" }}
