@@ -5,6 +5,7 @@ import CheckNowButton from "./CheckNowButton";
 import ThemeToggle from "../../../../components/ThemeToggle";
 import EditMonitorModal from "../../../../components/EditMonitorModal";
 import UptimeHistory, { type DayData } from "./UptimeHistory";
+import ResponseTimeGraph from "./ResponseTimeGraph";
 import LocalTime from "../../../../components/LocalTime";
 import HealthBadge from "../../../../components/HealthBadge";
 import { calculateHealthScore } from "../../../lib/healthScore";
@@ -59,6 +60,17 @@ export default async function MonitorDetailPage({
     .eq("monitor_id", id)
     .gte("triggered_at", oneDayAgo.toISOString())
     .order("triggered_at", { ascending: false });
+
+  const graphSevenDaysAgo = new Date();
+  graphSevenDaysAgo.setDate(graphSevenDaysAgo.getDate() - 7);
+
+  const { data: graphPings } = await supabase
+    .from("pings")
+    .select("status, response_time_ms, checked_at")
+    .eq("monitor_id", id)
+    .gte("checked_at", graphSevenDaysAgo.toISOString())
+    .order("checked_at", { ascending: true })
+    .limit(2000);
 
   const sevenDaysAgo = new Date();
   sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
@@ -383,6 +395,8 @@ export default async function MonitorDetailPage({
         </div>
 
         <UptimeHistory days={weekDays} overallUptimePercent={weekUptimePercent} />
+
+        <ResponseTimeGraph pings={graphPings ?? []} monitorName={monitor.name} />
 
         <div className="bg-white dark:bg-[#0f0f0f] rounded-2xl border border-black/[0.06] dark:border-white/[0.06] overflow-hidden">
           <div className="px-5 py-4 border-b border-black/[0.06] dark:border-white/[0.06]">
