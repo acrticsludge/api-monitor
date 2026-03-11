@@ -886,6 +886,41 @@ export default function DocsPage() {
           <div className="h-20" />
         </main>
       </div>
+
+      {/* Footer */}
+      <div className="border-t border-white/[0.06]">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <span
+            className="text-[11px] text-neutral-600 tracking-[0.1em] uppercase"
+            style={{ fontFamily: "'DM Mono', monospace" }}
+          >
+            Pulse · Free API monitoring
+          </span>
+          <div className="flex items-center gap-5">
+            <Link
+              href="/pricing"
+              className="text-[11px] text-neutral-500 hover:text-white transition-colors"
+              style={{ fontFamily: "'DM Mono', monospace" }}
+            >
+              Pricing
+            </Link>
+            <Link
+              href="/privacy"
+              className="text-[11px] text-neutral-500 hover:text-white transition-colors"
+              style={{ fontFamily: "'DM Mono', monospace" }}
+            >
+              Privacy
+            </Link>
+            <Link
+              href="/terms"
+              className="text-[11px] text-neutral-500 hover:text-white transition-colors"
+              style={{ fontFamily: "'DM Mono', monospace" }}
+            >
+              Terms
+            </Link>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

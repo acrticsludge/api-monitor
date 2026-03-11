@@ -2,10 +2,19 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { createClient } from "../lib/supabase";
 
 export default function TermsPage() {
   const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  const [loggedIn, setLoggedIn] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data }) => {
+      setLoggedIn(!!data.user);
+    });
+  }, []);
 
   return (
     <div
@@ -60,11 +69,11 @@ export default function TermsPage() {
               Pricing
             </Link>
             <Link
-              href="/login"
+              href={loggedIn ? "/dashboard" : "/login"}
               className="text-[11px] font-semibold tracking-[0.08em] uppercase text-neutral-400 border border-white/[0.08] rounded-md px-3 py-1.5 hover:text-white hover:border-white/20 transition-all duration-150"
               style={{ fontFamily: "'DM Mono', monospace" }}
             >
-              Sign in
+              {loggedIn ? "Dashboard" : "Sign in"}
             </Link>
           </div>
         </div>
