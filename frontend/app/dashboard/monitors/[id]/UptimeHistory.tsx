@@ -1,16 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 
-export type DayData = {
-  dateStr: string;
-  label: string;
-  fullLabel: string;
-  pings: { status: string }[];
-  uptimePercent: number;
-  totalChecks: number;
-  downtimeMinutes: number;
-};
+interface Ping {
+  status: string;
+  checked_at: string;
+}
+
+const DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const FULL_DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+const MONTH_NAMES = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 function buildSegments(
   pings: { status: string }[],
@@ -36,14 +35,71 @@ function buildSegments(
   return segments;
 }
 
-export default function UptimeHistory({
-  days,
-  overallUptimePercent,
-}: {
-  days: DayData[];
-  overallUptimePercent: number;
-}) {
+export default function UptimeHistory({ pings }: { pings: Ping[] }) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+
+  // All date math runs in the browser's local timezone
+  const days = useMemo(() => {
+    const todayMidnight = new Date();
+    todayMidnight.setHours(0, 0, 0, 0);
+
+    return Array.from({ length: 7 }, (_, i) => {
+      const d = new Date(todayMidnight);
+      d.setDate(d.getDate() - (6 - i));
+      const isToday = i === 6;
+      const label = isToday ? "Today" : DAY_NAMES[d.getDay()];
+      const fullLabel = `${FULL_DAY_NAMES[d.getDay()]}, ${MONTH_NAMES[d.getMonth()]} ${d.getDate()}`;
+      const dateStr = d.toISOString().split("T")[0];
+
+      const dayPings = pings.filter((p) => {
+        const pingDay = new Date(p.checked_at);
+        pingDay.setHours(0, 0, 0, 0);
+        return pingDay.getTime() === d.getTime();
+      });
+
+      const totalChecks = dayPings.length;
+      const upCount = dayPings.filter((p) => p.status === "up").length;
+      const uptimePercent =
+        totalChecks > 0 ? Math.round((upCount / totalChecks) * 100) : 0;
+
+      let downtimeMs = 0;
+      let downStartMs: number | null = null;
+      for (const ping of dayPings) {
+        const t = new Date(ping.checked_at).getTime();
+        if (ping.status === "down" && downStartMs === null) {
+          downStartMs = t;
+        } else if (ping.status === "up" && downStartMs !== null) {
+          downtimeMs += t - downStartMs;
+          downStartMs = null;
+        }
+      }
+      if (downStartMs !== null && dayPings.length > 0) {
+        downtimeMs +=
+          new Date(dayPings[dayPings.length - 1].checked_at).getTime() -
+          downStartMs;
+      }
+      const downtimeMinutes = Math.round(downtimeMs / 60000);
+
+      return {
+        dateStr,
+        label,
+        fullLabel,
+        pings: dayPings.map((p) => ({ status: p.status })),
+        uptimePercent,
+        totalChecks,
+        downtimeMinutes,
+      };
+    });
+  }, [pings]);
+
+  const overallUptimePercent = useMemo(() => {
+    const total = days.reduce((acc, d) => acc + d.totalChecks, 0);
+    const up = days.reduce(
+      (acc, d) => acc + d.pings.filter((p) => p.status === "up").length,
+      0,
+    );
+    return total > 0 ? Math.round((up / total) * 100) : 100;
+  }, [days]);
 
   const hasData = days.some((d) => d.totalChecks > 0);
 
