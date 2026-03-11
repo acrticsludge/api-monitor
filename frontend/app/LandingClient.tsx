@@ -367,7 +367,7 @@ export default function LandingClient({
 
         {/* Features — joined panel layout */}
         <section className="max-w-6xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
-          <div className="grid sm:grid-cols-3 gap-px bg-black/[0.06] dark:bg-white/[0.05] rounded-2xl overflow-hidden border border-black/[0.06] dark:border-white/[0.05]">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-black/[0.06] dark:bg-white/[0.05] rounded-2xl overflow-hidden border border-black/[0.06] dark:border-white/[0.05]">
             {[
               {
                 num: "01",
@@ -391,8 +391,8 @@ export default function LandingClient({
               },
               {
                 num: "02",
-                title: "Response Time Tracking",
-                desc: "Every ping records latency. Color-coded readouts instantly show what's fast, degraded, or broken.",
+                title: "Response Time Graph",
+                desc: "Every ping records latency. View timeline trends and daily averages in an interactive chart — min, avg, and max included.",
                 icon: (
                   <svg
                     className="w-4 h-4"
@@ -411,6 +411,26 @@ export default function LandingClient({
               },
               {
                 num: "03",
+                title: "Health Score & Anomaly Detection",
+                desc: "Each monitor gets a Healthy / Degraded / Critical score. Pulse also alerts you when response times spike 2x above baseline — before anything actually breaks.",
+                icon: (
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                    />
+                  </svg>
+                ),
+              },
+              {
+                num: "04",
                 title: "Public Status Pages",
                 desc: "One shareable link. Your users see live status, uptime %, and auto-refreshing data. Zero setup.",
                 icon: (

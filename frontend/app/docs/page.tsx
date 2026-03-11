@@ -490,6 +490,25 @@ export default function DocsPage() {
               events.
             </Body>
 
+            <SubHeading>Health Score</SubHeading>
+            <Body>
+              Every monitor gets a live health score — Healthy, Degraded, or
+              Critical — shown as a badge on your dashboard and monitor detail
+              page. The score factors in recent uptime, consecutive failures, and
+              whether response times are stable. It gives you an at-a-glance
+              signal beyond just up/down.
+            </Body>
+
+            <SubHeading>Response Time Graph</SubHeading>
+            <Body>
+              The monitor detail page includes a response time chart with two
+              views: <InlineCode>Timeline</InlineCode> plots every recorded ping
+              over the last 7 days so you can spot spikes at a glance, and{" "}
+              <InlineCode>Daily Average</InlineCode> shows a bar chart of average
+              latency per day. Min, avg, and max for the period are shown above
+              the chart.
+            </Body>
+
             <SubHeading>Monitor detail page</SubHeading>
             <Body>
               Click any monitor name to open its detail page. Here you can:
@@ -499,9 +518,11 @@ export default function DocsPage() {
               style={{ fontFamily: "'DM Mono', monospace" }}
             >
               {[
-                "View the 7-day uptime bar with daily breakdown",
+                "View the 7-day uptime bar with daily breakdown and hover tooltips",
+                "See response time trends — timeline chart and 7-day daily average bar chart",
+                "Check your monitor's health score (Healthy / Degraded / Critical)",
                 "See full ping history with status codes and response times",
-                "Review the incidents log (every status change)",
+                "Review the incidents log (every status change and anomaly alert)",
                 "Trigger an immediate manual ping with Check Now",
               ].map((item) => (
                 <li
