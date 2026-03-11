@@ -50,6 +50,16 @@ export default async function MonitorDetailPage({
     .eq("monitor_id", id)
     .order("sent_at", { ascending: false });
 
+  const oneDayAgo = new Date();
+  oneDayAgo.setDate(oneDayAgo.getDate() - 1);
+
+  const { data: anomalyAlerts } = await supabase
+    .from("anomaly_alerts")
+    .select("id, type, baseline_ms, current_avg_ms, triggered_at")
+    .eq("monitor_id", id)
+    .gte("triggered_at", oneDayAgo.toISOString())
+    .order("triggered_at", { ascending: false });
+
   const sevenDaysAgo = new Date();
   sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
   sevenDaysAgo.setHours(0, 0, 0, 0);
@@ -549,63 +559,109 @@ export default async function MonitorDetailPage({
             </p>
           </div>
 
-          {!alerts || alerts.length === 0 ? (
-            <div className="px-5 py-12 text-center">
-              <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-[#00cc6a]/[0.06] dark:bg-[#00ff87]/[0.06] border border-[#00cc6a]/10 dark:border-[#00ff87]/10 mb-3">
-                <svg
-                  className="w-5 h-5 text-[#00cc6a] dark:text-[#00ff87]"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={1.5}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-              </div>
-              <p className="text-xs text-neutral-600 dark:text-neutral-400 font-medium">
-                All clear
-              </p>
-              <p
-                className="text-[11px] text-neutral-400 dark:text-neutral-600 mt-1"
-                style={{ fontFamily: "'DM Mono', monospace" }}
-              >
-                No incidents recorded
-              </p>
-            </div>
-          ) : (
-            <div className="divide-y divide-black/[0.04] dark:divide-white/[0.04]">
-              {alerts.map((alert) => (
-                <div
-                  key={alert.id}
-                  className="px-5 py-3.5 flex items-center justify-between gap-4 hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors"
-                >
-                  <div className="flex items-center gap-2.5">
-                    {alert.type === "down" ? (
-                      <span className="w-1.5 h-1.5 rounded-full bg-red-500 dark:bg-red-400 shrink-0" />
-                    ) : (
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#00cc6a] dark:bg-[#00ff87] shrink-0" />
-                    )}
-                    <span
-                      className={`text-xs font-semibold ${alert.type === "down" ? "text-red-500 dark:text-red-400" : "text-[#00cc6a] dark:text-[#00ff87]"}`}
-                      style={{ fontFamily: "'DM Mono', monospace" }}
+          {(() => {
+            type IncidentItem =
+              | { kind: "alert"; id: string; type: string; ts: string }
+              | { kind: "anomaly"; id: string; baseline_ms: number; current_avg_ms: number; ts: string };
+
+            const items: IncidentItem[] = [
+              ...(alerts ?? []).map((a) => ({ kind: "alert" as const, id: a.id, type: a.type, ts: a.sent_at })),
+              ...(anomalyAlerts ?? []).map((a) => ({ kind: "anomaly" as const, id: a.id, baseline_ms: a.baseline_ms, current_avg_ms: a.current_avg_ms, ts: a.triggered_at })),
+            ].sort((a, b) => new Date(b.ts).getTime() - new Date(a.ts).getTime());
+
+            if (items.length === 0) {
+              return (
+                <div className="px-5 py-12 text-center">
+                  <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-[#00cc6a]/[0.06] dark:bg-[#00ff87]/[0.06] border border-[#00cc6a]/10 dark:border-[#00ff87]/10 mb-3">
+                    <svg
+                      className="w-5 h-5 text-[#00cc6a] dark:text-[#00ff87]"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={1.5}
                     >
-                      {alert.type === "down" ? "WENT DOWN" : "RECOVERED"}
-                    </span>
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
                   </div>
-                  <span
-                    className="text-xs text-neutral-500 dark:text-neutral-400"
+                  <p className="text-xs text-neutral-600 dark:text-neutral-400 font-medium">
+                    All clear
+                  </p>
+                  <p
+                    className="text-[11px] text-neutral-400 dark:text-neutral-600 mt-1"
                     style={{ fontFamily: "'DM Mono', monospace" }}
                   >
-                    {new Date(alert.sent_at).toLocaleString()}
-                  </span>
+                    No incidents recorded
+                  </p>
                 </div>
-              ))}
-            </div>
-          )}
+              );
+            }
+
+            return (
+              <div className="divide-y divide-black/[0.04] dark:divide-white/[0.04]">
+                {items.map((item) =>
+                  item.kind === "alert" ? (
+                    <div
+                      key={item.id}
+                      className="px-5 py-3.5 flex items-center justify-between gap-4 hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors"
+                    >
+                      <div className="flex items-center gap-2.5">
+                        {item.type === "down" ? (
+                          <span className="w-1.5 h-1.5 rounded-full bg-red-500 dark:bg-red-400 shrink-0" />
+                        ) : (
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#00cc6a] dark:bg-[#00ff87] shrink-0" />
+                        )}
+                        <span
+                          className={`text-xs font-semibold ${item.type === "down" ? "text-red-500 dark:text-red-400" : "text-[#00cc6a] dark:text-[#00ff87]"}`}
+                          style={{ fontFamily: "'DM Mono', monospace" }}
+                        >
+                          {item.type === "down" ? "WENT DOWN" : "RECOVERED"}
+                        </span>
+                      </div>
+                      <span
+                        className="text-xs text-neutral-500 dark:text-neutral-400"
+                        style={{ fontFamily: "'DM Mono', monospace" }}
+                      >
+                        {new Date(item.ts).toLocaleString()}
+                      </span>
+                    </div>
+                  ) : (
+                    <div
+                      key={item.id}
+                      className="px-5 py-3.5 flex items-center justify-between gap-4 hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors"
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-yellow-400 shrink-0" />
+                        <div>
+                          <span
+                            className="text-xs font-semibold text-yellow-400"
+                            style={{ fontFamily: "'DM Mono', monospace" }}
+                          >
+                            ⚠️ DEGRADATION
+                          </span>
+                          <span
+                            className="text-xs text-neutral-400 dark:text-neutral-500 ml-2"
+                            style={{ fontFamily: "'DM Mono', monospace" }}
+                          >
+                            {item.current_avg_ms}ms avg ({Math.round(item.current_avg_ms / item.baseline_ms)}x baseline)
+                          </span>
+                        </div>
+                      </div>
+                      <span
+                        className="text-xs text-neutral-500 dark:text-neutral-400"
+                        style={{ fontFamily: "'DM Mono', monospace" }}
+                      >
+                        {new Date(item.ts).toLocaleString()}
+                      </span>
+                    </div>
+                  )
+                )}
+              </div>
+            );
+          })()}
         </div>
       </main>
     </div>

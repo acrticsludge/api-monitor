@@ -72,6 +72,17 @@ export default async function DashboardPage() {
     }
   }
 
+  const twoHoursAgo = new Date();
+  twoHoursAgo.setHours(twoHoursAgo.getHours() - 2);
+
+  const { data: anomalies } = monitorIds.length > 0
+    ? await supabase
+        .from("anomaly_alerts")
+        .select("id, monitor_id, baseline_ms, current_avg_ms, triggered_at, monitors(name)")
+        .gte("triggered_at", twoHoursAgo.toISOString())
+        .order("triggered_at", { ascending: false })
+    : { data: null };
+
   const upCount = monitorList.filter(
     (m) => latestPings.get(m.id)?.status === "up",
   ).length;
@@ -226,6 +237,32 @@ export default async function DashboardPage() {
           <div className="flex-1 h-px bg-black/[0.06] dark:bg-white/[0.04]" />
         </div>
 
+        {anomalies && anomalies.length > 0 && (
+          <div className="relative bg-yellow-400/[0.06] border border-yellow-400/20 rounded-2xl p-4 mb-6 overflow-hidden">
+            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-yellow-400/40 to-transparent" />
+            <div className="flex items-start gap-3">
+              <span className="text-yellow-400 text-lg">⚠️</span>
+              <div>
+                <p
+                  className="text-yellow-400 text-xs font-bold uppercase tracking-wider mb-1"
+                  style={{ fontFamily: "'Syne', sans-serif" }}
+                >
+                  Performance Degradation Detected
+                </p>
+                {anomalies.map((a) => (
+                  <p
+                    key={a.id}
+                    className="text-neutral-400 text-xs"
+                    style={{ fontFamily: "'DM Mono', monospace" }}
+                  >
+                    {(a.monitors as unknown as { name: string } | null)?.name} — averaging {a.current_avg_ms}ms ({Math.round(a.current_avg_ms / a.baseline_ms)}x slower than usual baseline of {a.baseline_ms}ms)
+                  </p>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="bg-white dark:bg-[#0f0f0f] rounded-2xl border border-black/[0.06] dark:border-white/[0.06] shadow-[0_1px_3px_rgba(0,0,0,0.05)] dark:shadow-none">
           <div className="flex items-center justify-between px-5 py-4 border-b border-black/[0.06] dark:border-white/[0.06]">
             <div>
@@ -279,12 +316,11 @@ export default async function DashboardPage() {
                         "Response",
                         "Health",
                         "Last Checked",
-                        "Interval",
                         "",
                       ].map((h) => (
                         <th
                           key={h}
-                          className="px-5 py-3 text-left text-[10px] font-semibold tracking-[0.1em] uppercase text-neutral-500"
+                          className="px-4 py-3 text-left text-[10px] font-semibold tracking-[0.1em] uppercase text-neutral-500"
                           style={{ fontFamily: "'DM Mono', monospace" }}
                         >
                           {h}
@@ -301,7 +337,7 @@ export default async function DashboardPage() {
                           className={`border-b border-black/[0.03] dark:border-white/[0.03] hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors duration-100 group ${!monitor.is_active ? "opacity-40" : ""}`}
                           style={{ animationDelay: `${i * 40}ms` }}
                         >
-                          <td className="px-5 py-4 text-sm font-semibold">
+                          <td className="px-4 py-4 text-sm font-semibold">
                             <Link
                               href={`/dashboard/monitors/${monitor.id}`}
                               className="text-[#080808] dark:text-white hover:text-[#00cc6a] dark:hover:text-[#00ff87] transition-colors duration-150"
@@ -309,7 +345,7 @@ export default async function DashboardPage() {
                               {monitor.name}
                             </Link>
                           </td>
-                          <td className="px-5 py-4 max-w-[180px]">
+                          <td className="px-4 py-4 max-w-40">
                             <span
                               className="block truncate text-xs text-neutral-500 dark:text-neutral-400"
                               style={{ fontFamily: "'DM Mono', monospace" }}
@@ -318,7 +354,7 @@ export default async function DashboardPage() {
                               {monitor.url}
                             </span>
                           </td>
-                          <td className="px-5 py-4">
+                          <td className="px-4 py-4">
                             {!monitor.is_active ? (
                               <span
                                 className="inline-flex items-center gap-1.5 text-[11px] font-medium text-neutral-400 dark:text-neutral-600"
@@ -334,7 +370,7 @@ export default async function DashboardPage() {
                               />
                             )}
                           </td>
-                          <td className="px-5 py-4">
+                          <td className="px-4 py-4">
                             <span
                               className={`text-xs font-medium ${responseTimeColor(ping?.response_time_ms ?? null)}`}
                               style={{ fontFamily: "'DM Mono', monospace" }}
@@ -344,13 +380,13 @@ export default async function DashboardPage() {
                                 : "—"}
                             </span>
                           </td>
-                          <td className="px-5 py-4">
+                          <td className="px-4 py-4">
                             {(() => {
                               const h = calculateHealthScore(healthPingsMap.get(monitor.id) ?? []);
                               return <HealthBadge score={h.score} label={h.label} reasons={h.reasons} size="sm" />;
                             })()}
                           </td>
-                          <td className="px-5 py-4">
+                          <td className="px-4 py-4">
                             <span
                               className="text-xs text-neutral-500 dark:text-neutral-400"
                               style={{ fontFamily: "'DM Mono', monospace" }}
@@ -360,15 +396,7 @@ export default async function DashboardPage() {
                                 : "—"}
                             </span>
                           </td>
-                          <td className="px-5 py-4">
-                            <span
-                              className="text-xs text-neutral-400 dark:text-neutral-500"
-                              style={{ fontFamily: "'DM Mono', monospace" }}
-                            >
-                              {monitor.check_interval_minutes ?? "—"}m
-                            </span>
-                          </td>
-                          <td className="px-5 py-4">
+                          <td className="px-4 py-4">
                             <div className="flex items-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
                               <EditMonitorModal monitor={monitor} variant="icon" />
                               <form action={toggleMonitor}>

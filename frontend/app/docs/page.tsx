@@ -479,6 +479,17 @@ export default function DocsPage() {
               <InlineCode>Resume</InlineCode>.
             </Body>
 
+            <SubHeading>Anomaly Detection</SubHeading>
+            <Body>
+              Pulse monitors response time trends and alerts you when performance
+              degrades — even before your endpoint goes down. If your API&apos;s
+              response time is consistently 2x slower than its 7-day baseline
+              for 3 or more consecutive checks, you&apos;ll get a push
+              notification and a warning on your dashboard. Anomaly alerts appear
+              in your monitor&apos;s incident log alongside regular down/recovered
+              events.
+            </Body>
+
             <SubHeading>Monitor detail page</SubHeading>
             <Body>
               Click any monitor name to open its detail page. Here you can:

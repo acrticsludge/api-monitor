@@ -112,11 +112,119 @@ async function pingMonitor(monitor) {
     // Check if we need to send an alert
     await handleAlert(monitor, status);
 
+    // Fetch last 20 pings for anomaly detection
+    const { data: recentPings } = await supabase
+      .from("pings")
+      .select("status, response_time_ms, checked_at")
+      .eq("monitor_id", monitor.id)
+      .order("checked_at", { ascending: false })
+      .limit(20);
+
+    await checkForAnomaly(monitor, recentPings);
+
     console.log(
       `[${new Date().toISOString()}] ${monitor.name} — ${status} (${statusCode}) ${responseTime}ms`,
     );
   } catch (err) {
     console.error(`[pingMonitor] Failed for ${monitor.name}:`, err.message);
+  }
+}
+
+// Send anomaly push notification
+async function sendAnomalyPushNotification(monitor, baselineMs, currentMs) {
+  try {
+    const { data: subs } = await supabase
+      .from("push_subscriptions")
+      .select("id, subscription")
+      .eq("user_id", monitor.user_id);
+
+    if (!subs || subs.length === 0) return;
+
+    const payload = JSON.stringify({
+      title: `⚠️ ${monitor.name} is degrading`,
+      body: `Response time is ${currentMs}ms — ${Math.round(currentMs / baselineMs)}x slower than usual (baseline: ${baselineMs}ms)`,
+      url: "/dashboard",
+    });
+
+    await Promise.allSettled(
+      subs.map(({ id, subscription }) =>
+        webpush.sendNotification(subscription, payload).catch((err) => {
+          if (err.statusCode === 404 || err.statusCode === 410) {
+            return supabase.from("push_subscriptions").delete().eq("id", id);
+          }
+        }),
+      ),
+    );
+  } catch (err) {
+    console.error(`[sendAnomalyPushNotification] Failed:`, err.message);
+  }
+}
+
+// Check for response time anomaly — fires when recent avg is 2x+ above 7-day baseline
+async function checkForAnomaly(monitor, currentPings) {
+  try {
+    if (!currentPings || currentPings.length < 3) return;
+
+    const last3 = currentPings
+      .slice(0, 3)
+      .filter((p) => p.status === "up" && p.response_time_ms !== null);
+
+    if (last3.length < 3) return;
+
+    const recentAvg = last3.reduce((a, b) => a + b.response_time_ms, 0) / 3;
+
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+    const { data: baselinePings } = await supabase
+      .from("pings")
+      .select("response_time_ms")
+      .eq("monitor_id", monitor.id)
+      .eq("status", "up")
+      .gte("checked_at", sevenDaysAgo.toISOString())
+      .not("response_time_ms", "is", null)
+      .order("checked_at", { ascending: false })
+      .range(3, 200);
+
+    if (!baselinePings || baselinePings.length < 1) return;
+
+    const baseline =
+      baselinePings.reduce((a, b) => a + b.response_time_ms, 0) /
+      baselinePings.length;
+
+    if (recentAvg < baseline * 0.1) return;
+    if (recentAvg - baseline < 300) return;
+
+    const thirtyMinutesAgo = new Date();
+    thirtyMinutesAgo.setMinutes(thirtyMinutesAgo.getMinutes() - 30);
+
+    const { data: recentAlert } = await supabase
+      .from("anomaly_alerts")
+      .select("id")
+      .eq("monitor_id", monitor.id)
+      .gte("triggered_at", thirtyMinutesAgo.toISOString())
+      .limit(1);
+
+    if (recentAlert && recentAlert.length > 0) return;
+
+    await supabase.from("anomaly_alerts").insert({
+      monitor_id: monitor.id,
+      type: "degradation",
+      baseline_ms: Math.round(baseline),
+      current_avg_ms: Math.round(recentAvg),
+    });
+
+    await sendAnomalyPushNotification(
+      monitor,
+      Math.round(baseline),
+      Math.round(recentAvg),
+    );
+
+    console.log(
+      `[ANOMALY] ${monitor.name} — avg ${Math.round(recentAvg)}ms vs baseline ${Math.round(baseline)}ms`,
+    );
+  } catch (err) {
+    console.error(`[checkForAnomaly] Failed for ${monitor.name}:`, err.message);
   }
 }
 
