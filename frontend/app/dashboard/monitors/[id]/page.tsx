@@ -6,6 +6,8 @@ import ThemeToggle from "../../../../components/ThemeToggle";
 import EditMonitorModal from "../../../../components/EditMonitorModal";
 import UptimeHistory, { type DayData } from "./UptimeHistory";
 import LocalTime from "../../../../components/LocalTime";
+import HealthBadge from "../../../../components/HealthBadge";
+import { calculateHealthScore } from "../../../lib/healthScore";
 
 function responseTimeColor(ms: number | null): string {
   if (ms === null) return "text-neutral-400 dark:text-neutral-600";
@@ -130,6 +132,7 @@ export default async function MonitorDetailPage({
     pingList.length > 0 ? Math.round((upCount / pingList.length) * 100) : 100;
   const latestPing = pingList[0];
   const recentPings = pingList.slice(0, 20);
+  const health = calculateHealthScore(recentPings);
 
   const avgResponse =
     pingList.length > 0
@@ -245,7 +248,7 @@ export default async function MonitorDetailPage({
           </div>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
           <StatCard
             label="Uptime"
             value={`${uptimePct}%`}
@@ -281,6 +284,20 @@ export default async function MonitorDetailPage({
             sub={avgResponse != null ? "ms" : undefined}
             responseMs={avgResponse}
           />
+          <div className="bg-white dark:bg-[#0f0f0f] border border-black/[0.06] dark:border-white/[0.06] rounded-2xl px-4 py-4 hover:border-black/[0.1] dark:hover:border-white/[0.1] transition-all duration-200 shadow-[0_1px_3px_rgba(0,0,0,0.04)] dark:shadow-none col-span-2 sm:col-span-1">
+            <p
+              className="text-[10px] tracking-[0.12em] uppercase text-neutral-400 dark:text-neutral-500 mb-2"
+              style={{ fontFamily: "'DM Mono', monospace" }}
+            >
+              Health Score
+            </p>
+            <HealthBadge
+              score={health.score}
+              label={health.label}
+              reasons={health.reasons}
+              size="md"
+            />
+          </div>
         </div>
 
         <div className="bg-white dark:bg-[#0f0f0f] border border-black/[0.06] dark:border-white/[0.06] rounded-2xl px-5 py-4 grid grid-cols-2 sm:grid-cols-3 gap-4">

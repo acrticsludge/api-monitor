@@ -9,6 +9,8 @@ import StatusPageLink from "./StatusPageLink";
 import ThemeToggle from "../../components/ThemeToggle";
 import NotificationBell from "../../components/NotificationBell";
 import LocalTime from "../../components/LocalTime";
+import HealthBadge from "../../components/HealthBadge";
+import { calculateHealthScore } from "../lib/healthScore";
 
 type Monitor = {
   id: string;
@@ -48,6 +50,7 @@ export default async function DashboardPage() {
   const monitorList: Monitor[] = monitors ?? [];
   const monitorIds = monitorList.map((m) => m.id);
   const latestPings = new Map<string, Ping>();
+  const healthPingsMap = new Map<string, Ping[]>();
 
   if (monitorIds.length > 0) {
     const { data: pings } = await supabase
@@ -61,6 +64,11 @@ export default async function DashboardPage() {
       if (!latestPings.has(ping.monitor_id)) {
         latestPings.set(ping.monitor_id, ping);
       }
+      if (!healthPingsMap.has(ping.monitor_id)) {
+        healthPingsMap.set(ping.monitor_id, []);
+      }
+      const arr = healthPingsMap.get(ping.monitor_id)!;
+      if (arr.length < 20) arr.push(ping);
     }
   }
 
@@ -269,6 +277,7 @@ export default async function DashboardPage() {
                         "URL",
                         "Status",
                         "Response",
+                        "Health",
                         "Last Checked",
                         "Interval",
                         "",
@@ -334,6 +343,12 @@ export default async function DashboardPage() {
                                 ? `${ping.response_time_ms}ms`
                                 : "—"}
                             </span>
+                          </td>
+                          <td className="px-5 py-4">
+                            {(() => {
+                              const h = calculateHealthScore(healthPingsMap.get(monitor.id) ?? []);
+                              return <HealthBadge score={h.score} label={h.label} reasons={h.reasons} size="sm" />;
+                            })()}
                           </td>
                           <td className="px-5 py-4">
                             <span
@@ -456,6 +471,18 @@ export default async function DashboardPage() {
                             className="text-[10px] uppercase tracking-widest text-neutral-500 mb-0.5"
                             style={{ fontFamily: "'DM Mono', monospace" }}
                           >
+                            Health
+                          </p>
+                          {(() => {
+                            const h = calculateHealthScore(healthPingsMap.get(monitor.id) ?? []);
+                            return <HealthBadge score={h.score} label={h.label} reasons={h.reasons} size="sm" />;
+                          })()}
+                        </div>
+                        <div>
+                          <p
+                            className="text-[10px] uppercase tracking-widest text-neutral-500 mb-0.5"
+                            style={{ fontFamily: "'DM Mono', monospace" }}
+                          >
                             Interval
                           </p>
                           <p
@@ -499,6 +526,15 @@ export default async function DashboardPage() {
             </>
           )}
         </div>
+
+        {monitorList.length > 0 && (
+          <p
+            className="text-[10px] text-neutral-500 mt-3"
+            style={{ fontFamily: "'DM Mono', monospace" }}
+          >
+            Click any monitor for detailed health insights and ping history →
+          </p>
+        )}
       </main>
     </div>
   );

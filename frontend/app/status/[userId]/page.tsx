@@ -4,11 +4,15 @@ export const dynamic = "force-dynamic";
 import { createClient } from "@supabase/supabase-js";
 import AutoRefresh from "./AutoRefresh";
 import ThemeToggle from "../../../components/ThemeToggle";
+import HealthBadge from "../../../components/HealthBadge";
+import { calculateHealthScore } from "../../lib/healthScore";
 
 type Ping = {
   monitor_id: string;
   status: string;
   checked_at: string;
+  response_time_ms: number | null;
+  status_code: number | null;
 };
 
 function uptimeColor(pct: number): string {
@@ -51,7 +55,7 @@ export default async function StatusPage({
     monitorList.map((monitor) =>
       supabase
         .from("pings")
-        .select("monitor_id, status, checked_at")
+        .select("monitor_id, status, checked_at, response_time_ms, status_code")
         .eq("monitor_id", monitor.id)
         .gte("checked_at", sevenDaysAgo.toISOString())
         .order("checked_at", { ascending: false })
@@ -94,7 +98,8 @@ export default async function StatusPage({
         ? Math.round((upCount / monitorPings.length) * 100)
         : null;
     const weekDays = buildWeekDaySegments(monitor.id);
-    return { ...monitor, latestStatus, uptimePct, weekDays };
+    const health = calculateHealthScore(monitorPings.slice(0, 20));
+    return { ...monitor, latestStatus, uptimePct, weekDays, health };
   });
 
   const checkedMonitors = monitorStats.filter((m) => m.latestStatus !== null);
@@ -411,6 +416,21 @@ export default async function StatusPage({
                       </div>
                     )}
 
+                    <div className="hidden sm:block text-right">
+                      <p
+                        className="text-[10px] tracking-[0.1em] uppercase text-neutral-400 dark:text-neutral-600 mb-0.5"
+                        style={{ fontFamily: "'DM Mono', monospace" }}
+                      >
+                        Health
+                      </p>
+                      <HealthBadge
+                        score={monitor.health.score}
+                        label={monitor.health.label}
+                        reasons={monitor.health.reasons}
+                        size="sm"
+                      />
+                    </div>
+
                     {monitor.latestStatus === "up" ? (
                       <span
                         className="inline-flex items-center gap-1.5 text-[11px] font-medium text-[#00cc6a] dark:text-[#00ff87]"
@@ -445,6 +465,13 @@ export default async function StatusPage({
             </div>
           </div>
         )}
+
+        <p
+          className="text-[10px] text-neutral-600 text-center mt-6"
+          style={{ fontFamily: "'DM Mono', monospace" }}
+        >
+          Health scores are based on response time trends and uptime over the last 20 checks
+        </p>
 
         <p
           className="text-center text-[10px] text-neutral-400 dark:text-neutral-700 tracking-[0.1em] uppercase pt-4"
