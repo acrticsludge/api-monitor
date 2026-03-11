@@ -15,6 +15,7 @@ const features = [
   { icon: "📈", title: "Response Time Graphs", desc: "7-day timeline and daily average charts" },
   { icon: "🌐", title: "Public Status Page", desc: "Shareable uptime page for your users and clients" },
   { icon: "🔍", title: "Root Cause Analysis", desc: "Know why your API failed — DNS, TCP, TLS, or server overload", highlight: true },
+  { icon: "📋", title: "Auto Incident Reports", desc: "Full post-mortem generated automatically after every outage", highlight: true },
 ];
 
 export default function SignupPage() {

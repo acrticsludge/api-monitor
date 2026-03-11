@@ -303,6 +303,109 @@ async function checkForAnomaly(monitor, currentPings) {
   }
 }
 
+// Generate incident report after recovery
+async function generateIncidentReport(monitor, recoveredAt) {
+  try {
+    const { data: lastDownAlert } = await supabase
+      .from("alerts")
+      .select("sent_at")
+      .eq("monitor_id", monitor.id)
+      .eq("type", "down")
+      .order("sent_at", { ascending: false })
+      .limit(1);
+
+    if (!lastDownAlert || lastDownAlert.length === 0) return;
+
+    const startedAt = new Date(lastDownAlert[0].sent_at);
+    const recoveredAtDate = new Date(recoveredAt);
+    const durationMinutes = Math.round(
+      (recoveredAtDate - startedAt) / 1000 / 60,
+    );
+
+    const { data: incidentPings } = await supabase
+      .from("pings")
+      .select("status, status_code, response_time_ms, checked_at")
+      .eq("monitor_id", monitor.id)
+      .gte("checked_at", startedAt.toISOString())
+      .lte("checked_at", recoveredAtDate.toISOString())
+      .order("checked_at", { ascending: true });
+
+    if (!incidentPings || incidentPings.length === 0) return;
+
+    const failedChecks = incidentPings.filter((p) => p.status === "down").length;
+
+    const errorCodes = [
+      ...new Set(
+        incidentPings
+          .filter((p) => p.status_code && p.status_code >= 400)
+          .map((p) => p.status_code.toString()),
+      ),
+    ];
+
+    const responseTimes = incidentPings
+      .filter((p) => p.response_time_ms !== null)
+      .map((p) => p.response_time_ms);
+    const peakResponseTime =
+      responseTimes.length > 0 ? Math.max(...responseTimes) : null;
+
+    const { data: beforePings } = await supabase
+      .from("pings")
+      .select("response_time_ms")
+      .eq("monitor_id", monitor.id)
+      .eq("status", "up")
+      .lt("checked_at", startedAt.toISOString())
+      .order("checked_at", { ascending: false })
+      .limit(5);
+
+    const avgBeforeMs =
+      beforePings && beforePings.length > 0
+        ? Math.round(
+            beforePings.reduce((a, b) => a + (b.response_time_ms ?? 0), 0) /
+              beforePings.length,
+          )
+        : null;
+
+    let likelyCause = "Unknown";
+    const firstErrorCode = incidentPings.find((p) => p.status_code)?.status_code;
+    if (!firstErrorCode) likelyCause = "Connection timeout — server unreachable";
+    else if (firstErrorCode === 503)
+      likelyCause = "Service unavailable — server overloaded or in maintenance";
+    else if (firstErrorCode === 502)
+      likelyCause = "Bad gateway — upstream server returned invalid response";
+    else if (firstErrorCode === 504)
+      likelyCause = "Gateway timeout — upstream server too slow";
+    else if (firstErrorCode === 500)
+      likelyCause = "Internal server error — application crashed";
+    else if (firstErrorCode === 429)
+      likelyCause = "Rate limited — too many requests";
+    else if (firstErrorCode >= 500)
+      likelyCause = `Server error (${firstErrorCode})`;
+    else if (firstErrorCode >= 400)
+      likelyCause = `Client error (${firstErrorCode})`;
+
+    await supabase.from("incident_reports").insert({
+      monitor_id: monitor.id,
+      started_at: startedAt.toISOString(),
+      recovered_at: recoveredAtDate.toISOString(),
+      duration_minutes: durationMinutes,
+      error_codes: errorCodes.length > 0 ? errorCodes : null,
+      peak_response_time_ms: peakResponseTime,
+      avg_response_time_before_ms: avgBeforeMs,
+      failed_checks: failedChecks,
+      likely_cause: likelyCause,
+    });
+
+    console.log(
+      `[INCIDENT REPORT] Generated for ${monitor.name} — ${durationMinutes} min incident`,
+    );
+  } catch (err) {
+    console.error(
+      `[generateIncidentReport] Failed for ${monitor.name}:`,
+      err.message,
+    );
+  }
+}
+
 // Handle alerting logic
 async function handleAlert(monitor, currentStatus) {
   try {
@@ -368,6 +471,10 @@ async function sendAlert(monitor, type, lastPings = []) {
       response_time_ms: lastResponseTime ?? null,
       downtime_minutes: downtimeMinutes,
     });
+
+    if (type === "recovered") {
+      await generateIncidentReport(monitor, new Date().toISOString());
+    }
 
     // Then try email — failure won't affect alert recording
     const { data: user } = await supabase.auth.admin.getUserById(
