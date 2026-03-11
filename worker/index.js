@@ -186,13 +186,13 @@ async function checkForAnomaly(monitor, currentPings) {
       .order("checked_at", { ascending: false })
       .range(3, 200);
 
-    if (!baselinePings || baselinePings.length < 1) return;
+    if (!baselinePings || baselinePings.length < 10) return;
 
     const baseline =
       baselinePings.reduce((a, b) => a + b.response_time_ms, 0) /
       baselinePings.length;
 
-    if (recentAvg < baseline * 0.1) return;
+    if (recentAvg < baseline * 2) return;
     if (recentAvg - baseline < 300) return;
 
     const thirtyMinutesAgo = new Date();
