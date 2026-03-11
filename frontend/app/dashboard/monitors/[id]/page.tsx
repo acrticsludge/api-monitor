@@ -4,7 +4,8 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "../../../lib/supabase-server";
 import CheckNowButton from "./CheckNowButton";
-import CopyReportButton from "./CopyReportButton";
+import IncidentReportCard from "./IncidentReportCard";
+import { type IncidentReport } from "../../../lib/generateReport";
 import ThemeToggle from "../../../../components/ThemeToggle";
 import EditMonitorModal from "../../../../components/EditMonitorModal";
 import UptimeHistory from "./UptimeHistory";
@@ -53,10 +54,10 @@ export default async function MonitorDetailPage({
 
   const { data: alerts } = await supabase
     .from("alerts")
-    .select("id, type, sent_at, status_code, response_time_ms, downtime_minutes")
+    .select("id, type, sent_at, status_code, response_time_ms, downtime_minutes, incident_id")
     .eq("monitor_id", id)
     .order("sent_at", { ascending: false })
-    .limit(20);
+    .limit(40);
 
   const oneDayAgo = new Date();
   oneDayAgo.setDate(oneDayAgo.getDate() - 1);
@@ -67,13 +68,6 @@ export default async function MonitorDetailPage({
     .eq("monitor_id", id)
     .gte("triggered_at", oneDayAgo.toISOString())
     .order("triggered_at", { ascending: false });
-
-  const { data: incidentReports } = await supabase
-    .from("incident_reports")
-    .select("*")
-    .eq("monitor_id", id)
-    .order("created_at", { ascending: false })
-    .limit(10);
 
   const graphSevenDaysAgo = new Date();
   graphSevenDaysAgo.setDate(graphSevenDaysAgo.getDate() - 7);
@@ -166,6 +160,63 @@ export default async function MonitorDetailPage({
           baseline,
         )
       : null;
+
+  // Baseline response time from recent up pings (for incident reports)
+  const upPingsWithResponse = pingList.filter(
+    (p) => p.status === "up" && p.response_time_ms != null,
+  );
+  const baselineMs =
+    upPingsWithResponse.length > 0
+      ? Math.round(
+          upPingsWithResponse.reduce((a, b) => a + (b.response_time_ms ?? 0), 0) /
+            upPingsWithResponse.length,
+        )
+      : null;
+
+  // Group alerts into completed incidents (down + recovered with same incident_id)
+  const allAlerts = alerts ?? [];
+  const downAlerts = allAlerts.filter((a) => a.type === "down");
+  const incidentReports: IncidentReport[] = downAlerts
+    .flatMap((downAlert) => {
+      if (!downAlert.incident_id) return [];
+      const recoveredAlert = allAlerts.find(
+        (a) => a.type === "recovered" && a.incident_id === downAlert.incident_id,
+      );
+      if (!recoveredAlert) return [];
+
+      const downTime = new Date(downAlert.sent_at).getTime();
+      const anomalyBefore =
+        anomalyAlerts?.some((a) => {
+          const t = new Date(a.triggered_at).getTime();
+          return t < downTime && downTime - t < 30 * 60 * 1000;
+        }) ?? false;
+
+      const durationMinutes = recoveredAlert.downtime_minutes;
+      const failedChecks = durationMinutes
+        ? Math.max(1, Math.round(durationMinutes / (monitor.check_interval_minutes ?? 5)))
+        : 1;
+
+      return [
+        {
+          incidentId: downAlert.incident_id,
+          monitorName: monitor.name,
+          monitorUrl: monitor.url,
+          startTime: downAlert.sent_at,
+          endTime: recoveredAlert.sent_at,
+          durationMinutes,
+          errorStatusCode: downAlert.status_code ?? null,
+          rootCause: null,
+          confidence: null,
+          baselineResponseMs: baselineMs,
+          responseAtFailure: downAlert.response_time_ms ?? null,
+          responseAtRecovery: recoveredAlert.response_time_ms ?? null,
+          failedChecks,
+          estimatedRequestsAffected: durationMinutes ? durationMinutes * 100 : null,
+          anomalyDetectedBefore: anomalyBefore,
+          generatedAt: new Date().toISOString(),
+        } satisfies IncidentReport,
+      ];
+    });
 
   return (
     <div
@@ -787,164 +838,43 @@ export default async function MonitorDetailPage({
           })()}
         </div>
 
-        <div className="flex items-center gap-4 py-1">
-          <div className="flex-1 h-px bg-black/[0.06] dark:bg-white/[0.04]" />
-          <span
-            className="text-[10px] tracking-[0.15em] uppercase text-neutral-400 dark:text-neutral-600 whitespace-nowrap"
+        <div className="mt-2">
+          <p
+            className="text-[10px] tracking-[0.15em] uppercase text-neutral-400 dark:text-neutral-500 font-medium mb-1"
             style={{ fontFamily: "'DM Mono', monospace" }}
           >
-            Post-Mortems
-          </span>
-          <div className="flex-1 h-px bg-black/[0.06] dark:bg-white/[0.04]" />
-        </div>
+            Post-Mortem Reports
+          </p>
+          <p
+            className="text-lg font-bold text-[#080808] dark:text-white mb-4"
+            style={{ fontFamily: "'Syne', sans-serif" }}
+          >
+            Incident Reports
+          </p>
 
-        <div className="relative bg-white dark:bg-[#0f0f0f] border border-black/[0.06] dark:border-white/[0.06] rounded-2xl overflow-hidden">
-          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00cc6a]/40 dark:via-[#00ff87]/40 to-transparent" />
-          <div className="px-5 py-4 border-b border-black/[0.06] dark:border-white/[0.06]">
-            <p
-              className="text-[10px] tracking-[0.15em] uppercase text-neutral-400 dark:text-neutral-500 font-medium"
-              style={{ fontFamily: "'DM Mono', monospace" }}
-            >
-              Incident Reports
-            </p>
-            <p
-              className="text-lg font-bold text-[#080808] dark:text-white mt-0.5"
-              style={{ fontFamily: "'Syne', sans-serif" }}
-            >
-              Post-Mortems
-            </p>
-          </div>
-
-          {!incidentReports || incidentReports.length === 0 ? (
-            <div className="p-8 text-center">
+          {incidentReports.length === 0 ? (
+            <div className="relative bg-white dark:bg-[#0f0f0f] border border-black/[0.06] dark:border-white/[0.06] rounded-2xl p-8 text-center">
               <p
                 className="text-neutral-500 dark:text-neutral-600 text-xs"
                 style={{ fontFamily: "'DM Mono', monospace" }}
               >
-                No incident reports yet
+                No completed incidents yet
               </p>
               <p
                 className="text-neutral-400 dark:text-neutral-700 text-[11px] mt-1"
                 style={{ fontFamily: "'DM Mono', monospace" }}
               >
-                Reports are generated automatically when a monitor recovers from downtime
+                Reports are generated automatically after a monitor recovers from downtime
               </p>
             </div>
           ) : (
-            <div className="divide-y divide-black/[0.04] dark:divide-white/[0.04]">
-              {incidentReports.map((report) => (
-                <div key={report.id} className="p-5">
-                  <div className="flex items-start justify-between gap-4 mb-4">
-                    <div>
-                      <p
-                        className="text-[#080808] dark:text-white text-sm font-semibold"
-                        style={{ fontFamily: "'Syne', sans-serif" }}
-                      >
-                        {report.duration_minutes} minute incident
-                      </p>
-                      <p
-                        className="text-neutral-500 text-xs mt-0.5"
-                        style={{ fontFamily: "'DM Mono', monospace" }}
-                      >
-                        {new Date(report.started_at).toLocaleString()} → {new Date(report.recovered_at).toLocaleString()}
-                      </p>
-                    </div>
-                    <CopyReportButton
-                      report={report}
-                      monitorName={monitor.name}
-                      monitorUrl={monitor.url}
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
-                    <div className="bg-black/[0.03] dark:bg-white/[0.02] rounded-xl p-3">
-                      <p
-                        className="text-[10px] text-neutral-500 dark:text-neutral-600 uppercase tracking-wider mb-1"
-                        style={{ fontFamily: "'DM Mono', monospace" }}
-                      >
-                        Duration
-                      </p>
-                      <p
-                        className="text-[#080808] dark:text-white text-sm font-medium"
-                        style={{ fontFamily: "'DM Mono', monospace" }}
-                      >
-                        {report.duration_minutes} min
-                      </p>
-                    </div>
-                    <div className="bg-black/[0.03] dark:bg-white/[0.02] rounded-xl p-3">
-                      <p
-                        className="text-[10px] text-neutral-500 dark:text-neutral-600 uppercase tracking-wider mb-1"
-                        style={{ fontFamily: "'DM Mono', monospace" }}
-                      >
-                        Failed Checks
-                      </p>
-                      <p
-                        className="text-red-500 dark:text-red-400 text-sm font-medium"
-                        style={{ fontFamily: "'DM Mono', monospace" }}
-                      >
-                        {report.failed_checks}
-                      </p>
-                    </div>
-                    <div className="bg-black/[0.03] dark:bg-white/[0.02] rounded-xl p-3">
-                      <p
-                        className="text-[10px] text-neutral-500 dark:text-neutral-600 uppercase tracking-wider mb-1"
-                        style={{ fontFamily: "'DM Mono', monospace" }}
-                      >
-                        Peak Response
-                      </p>
-                      <p
-                        className="text-yellow-500 dark:text-yellow-400 text-sm font-medium"
-                        style={{ fontFamily: "'DM Mono', monospace" }}
-                      >
-                        {report.peak_response_time_ms ? `${report.peak_response_time_ms}ms` : "N/A"}
-                      </p>
-                    </div>
-                    <div className="bg-black/[0.03] dark:bg-white/[0.02] rounded-xl p-3">
-                      <p
-                        className="text-[10px] text-neutral-500 dark:text-neutral-600 uppercase tracking-wider mb-1"
-                        style={{ fontFamily: "'DM Mono', monospace" }}
-                      >
-                        Normal Response
-                      </p>
-                      <p
-                        className="text-[#00cc6a] dark:text-[#00ff87] text-sm font-medium"
-                        style={{ fontFamily: "'DM Mono', monospace" }}
-                      >
-                        {report.avg_response_time_before_ms ? `${report.avg_response_time_before_ms}ms` : "N/A"}
-                      </p>
-                    </div>
-                  </div>
-
-                  {report.error_codes && report.error_codes.length > 0 && (
-                    <div className="flex items-center gap-2 mb-3 flex-wrap">
-                      <span
-                        className="text-[10px] text-neutral-500 dark:text-neutral-600 uppercase tracking-wider"
-                        style={{ fontFamily: "'DM Mono', monospace" }}
-                      >
-                        Error codes:
-                      </span>
-                      {report.error_codes.map((code: string) => (
-                        <span
-                          key={code}
-                          className="text-xs bg-red-400/10 text-red-500 dark:text-red-400 border border-red-400/20 rounded px-1.5 py-0.5"
-                          style={{ fontFamily: "'DM Mono', monospace" }}
-                        >
-                          {code}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-
-                  <div className="flex items-start gap-2.5 bg-black/[0.03] dark:bg-white/[0.02] rounded-xl p-3">
-                    <span className="text-neutral-400 flex-shrink-0">💡</span>
-                    <p
-                      className="text-neutral-600 dark:text-neutral-400 text-xs leading-relaxed"
-                      style={{ fontFamily: "'DM Mono', monospace" }}
-                    >
-                      {report.likely_cause}
-                    </p>
-                  </div>
-                </div>
+            <div className="space-y-3">
+              {incidentReports.map((report, i) => (
+                <IncidentReportCard
+                  key={report.incidentId}
+                  report={report}
+                  defaultExpanded={i === 0}
+                />
               ))}
             </div>
           )}
