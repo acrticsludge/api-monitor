@@ -81,7 +81,8 @@ export default async function MonitorDetailPage({
     .select("status, checked_at")
     .eq("monitor_id", id)
     .gte("checked_at", sevenDaysAgo.toISOString())
-    .order("checked_at", { ascending: true });
+    .order("checked_at", { ascending: true })
+    .limit(2500);
 
   const DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const FULL_DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
