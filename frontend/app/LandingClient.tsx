@@ -353,7 +353,6 @@ export default function LandingClient({
                   </div>
                 </div>
               </div>
-
             </div>
           </div>
         </section>

@@ -1,6 +1,8 @@
 import express from "express";
 import cron from "node-cron";
 import axios from "axios";
+import http from "http";
+import https from "https";
 import { createClient } from "@supabase/supabase-js";
 import dotenv from "dotenv";
 dotenv.config();
@@ -67,14 +69,92 @@ function escapeHtml(str) {
 
 // ─────────────────────────────────────────────────────────────────────────────
 
+async function pingWithTiming(url, method = "GET", timeoutMs = 10000) {
+  return new Promise((resolve) => {
+    const startTime = Date.now();
+    const timings = {
+      dnsLookup: null,
+      tcpConnect: null,
+      tlsHandshake: null,
+      ttfb: null,
+      total: null,
+    };
+
+    let socketConnectTime = null;
+    let dnsTime = null;
+
+    const parsedUrl = new URL(url);
+    const isHttps = parsedUrl.protocol === "https:";
+    const transport = isHttps ? https : http;
+
+    const options = {
+      hostname: parsedUrl.hostname,
+      port: parsedUrl.port || (isHttps ? 443 : 80),
+      path: parsedUrl.pathname + parsedUrl.search,
+      method: method.toUpperCase(),
+      timeout: timeoutMs,
+      headers: {
+        "User-Agent": "Pulse-Monitor/1.0",
+      },
+    };
+
+    const req = transport.request(options, (res) => {
+      timings.ttfb = Date.now() - startTime;
+
+      res.on("data", () => {});
+      res.on("end", () => {
+        timings.total = Date.now() - startTime;
+        resolve({
+          statusCode: res.statusCode,
+          timings,
+          error: null,
+        });
+      });
+    });
+
+    req.on("socket", (socket) => {
+      socket.on("lookup", () => {
+        dnsTime = Date.now() - startTime;
+        timings.dnsLookup = dnsTime;
+      });
+
+      socket.on("connect", () => {
+        socketConnectTime = Date.now() - startTime;
+        timings.tcpConnect = socketConnectTime - (dnsTime ?? 0);
+      });
+
+      socket.on("secureConnect", () => {
+        timings.tlsHandshake =
+          Date.now() - startTime - (socketConnectTime ?? 0);
+      });
+    });
+
+    req.on("timeout", () => {
+      req.destroy();
+      timings.total = timeoutMs;
+      resolve({
+        statusCode: null,
+        timings,
+        error: "timeout",
+      });
+    });
+
+    req.on("error", (err) => {
+      timings.total = Date.now() - startTime;
+      resolve({
+        statusCode: null,
+        timings,
+        error: err.message,
+      });
+    });
+
+    req.end();
+  });
+}
+
 // Ping a single monitor
 async function pingMonitor(monitor) {
   try {
-    const start = Date.now();
-    let status = "up";
-    let statusCode = null;
-    let responseTime = null;
-
     const method = ALLOWED_METHODS.includes(
       (monitor.method || "").toUpperCase(),
     )
@@ -86,27 +166,22 @@ async function pingMonitor(monitor) {
       return;
     }
 
-    try {
-      const response = await axios({
-        method,
-        url: monitor.url,
-        timeout: 10000,
-      });
-      statusCode = response.status;
-      responseTime = Date.now() - start;
-      status = statusCode === monitor.expected_status_code ? "up" : "down";
-    } catch (error) {
-      status = "down";
-      statusCode = error.response?.status || null;
-      responseTime = Date.now() - start;
-    }
+    const result = await pingWithTiming(monitor.url, method, 10000);
 
-    // Save ping result
+    const status =
+      result.statusCode === monitor.expected_status_code ? "up" : "down";
+
+    // Save ping result with timing breakdown
     await supabase.from("pings").insert({
       monitor_id: monitor.id,
       status,
-      response_time_ms: responseTime,
-      status_code: statusCode,
+      response_time_ms: result.timings.total,
+      status_code: result.statusCode,
+      dns_lookup_ms: result.timings.dnsLookup,
+      tcp_connect_ms: result.timings.tcpConnect,
+      tls_handshake_ms: result.timings.tlsHandshake,
+      ttfb_ms: result.timings.ttfb,
+      error_detail: result.error,
     });
 
     // Check if we need to send an alert
@@ -123,7 +198,7 @@ async function pingMonitor(monitor) {
     await checkForAnomaly(monitor, recentPings);
 
     console.log(
-      `[${new Date().toISOString()}] ${monitor.name} — ${status} (${statusCode}) ${responseTime}ms`,
+      `[${new Date().toISOString()}] ${monitor.name} — ${status} (${result.statusCode}) ${result.timings.total}ms`,
     );
   } catch (err) {
     console.error(`[pingMonitor] Failed for ${monitor.name}:`, err.message);

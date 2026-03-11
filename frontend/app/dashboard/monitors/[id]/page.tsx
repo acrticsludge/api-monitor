@@ -11,6 +11,7 @@ import ResponseTimeGraph from "./ResponseTimeGraph";
 import LocalTime from "../../../../components/LocalTime";
 import HealthBadge from "../../../../components/HealthBadge";
 import { calculateHealthScore } from "../../../lib/healthScore";
+import { analyzeRootCause } from "../../../lib/rootCause";
 
 function responseTimeColor(ms: number | null): string {
   if (ms === null) return "text-neutral-400 dark:text-neutral-600";
@@ -42,7 +43,9 @@ export default async function MonitorDetailPage({
 
   const { data: pings } = await supabase
     .from("pings")
-    .select("id, status, status_code, response_time_ms, checked_at")
+    .select(
+      "id, status, status_code, response_time_ms, checked_at, dns_lookup_ms, tcp_connect_ms, tls_handshake_ms, ttfb_ms, error_detail",
+    )
     .eq("monitor_id", id)
     .order("checked_at", { ascending: false })
     .limit(100);
@@ -102,6 +105,57 @@ export default async function MonitorDetailPage({
             .filter((p) => p.response_time_ms != null)
             .reduce((acc, p) => acc + (p.response_time_ms ?? 0), 0) /
             pingList.filter((p) => p.response_time_ms != null).length,
+        )
+      : null;
+
+  const isDown = latestPing?.status === "down";
+
+  const upPingsForBaseline = pingList.filter(
+    (p) => p.status === "up",
+  );
+  const baseline =
+    upPingsForBaseline.length > 0
+      ? {
+          dns_lookup_ms: Math.round(
+            upPingsForBaseline.reduce(
+              (a, b) => a + (b.dns_lookup_ms ?? 0),
+              0,
+            ) / upPingsForBaseline.length,
+          ),
+          tcp_connect_ms: Math.round(
+            upPingsForBaseline.reduce(
+              (a, b) => a + (b.tcp_connect_ms ?? 0),
+              0,
+            ) / upPingsForBaseline.length,
+          ),
+          tls_handshake_ms: Math.round(
+            upPingsForBaseline.reduce(
+              (a, b) => a + (b.tls_handshake_ms ?? 0),
+              0,
+            ) / upPingsForBaseline.length,
+          ),
+          ttfb_ms: Math.round(
+            upPingsForBaseline.reduce(
+              (a, b) => a + (b.ttfb_ms ?? 0),
+              0,
+            ) / upPingsForBaseline.length,
+          ),
+        }
+      : {};
+
+  const rootCause =
+    isDown && latestPing
+      ? analyzeRootCause(
+          {
+            dns_lookup_ms: latestPing.dns_lookup_ms ?? null,
+            tcp_connect_ms: latestPing.tcp_connect_ms ?? null,
+            tls_handshake_ms: latestPing.tls_handshake_ms ?? null,
+            ttfb_ms: latestPing.ttfb_ms ?? null,
+            response_time_ms: latestPing.response_time_ms ?? null,
+            status_code: latestPing.status_code ?? null,
+            error_detail: latestPing.error_detail ?? null,
+          },
+          baseline,
         )
       : null;
 
@@ -260,6 +314,83 @@ export default async function MonitorDetailPage({
             />
           </div>
         </div>
+
+        {rootCause && (
+          <div className="relative bg-yellow-400/[0.04] border border-yellow-400/20 rounded-2xl p-5 overflow-hidden">
+            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-yellow-400/40 to-transparent" />
+            <div className="flex items-start justify-between gap-4 mb-4">
+              <div className="min-w-0">
+                <p
+                  className="text-[10px] tracking-[0.15em] uppercase text-yellow-400/70 font-medium mb-1"
+                  style={{ fontFamily: "'DM Mono', monospace" }}
+                >
+                  Root Cause Analysis
+                </p>
+                <p
+                  className="text-base font-bold text-[#080808] dark:text-white leading-tight"
+                  style={{ fontFamily: "'Syne', sans-serif" }}
+                >
+                  {rootCause.likelyCause}
+                </p>
+              </div>
+              <span
+                className="text-xs text-yellow-400 bg-yellow-400/10 border border-yellow-400/20 rounded-lg px-2.5 py-1 font-medium shrink-0"
+                style={{ fontFamily: "'DM Mono', monospace" }}
+              >
+                {rootCause.confidence}% confidence
+              </span>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
+              {rootCause.signals.map((signal) => (
+                <div key={signal.stage} className="bg-black/20 dark:bg-black/30 rounded-xl p-3">
+                  <p
+                    className="text-[10px] text-neutral-500 uppercase tracking-wider mb-1"
+                    style={{ fontFamily: "'DM Mono', monospace" }}
+                  >
+                    {signal.stage}
+                  </p>
+                  <p
+                    className={`text-sm font-medium ${
+                      signal.status === "critical"
+                        ? "text-red-400"
+                        : signal.status === "elevated"
+                          ? "text-yellow-400"
+                          : signal.status === "normal"
+                            ? "text-[#00cc6a] dark:text-[#00ff87]"
+                            : "text-neutral-500"
+                    }`}
+                    style={{ fontFamily: "'DM Mono', monospace" }}
+                  >
+                    {signal.value}
+                  </p>
+                  <p
+                    className={`text-[10px] mt-0.5 ${
+                      signal.status === "critical"
+                        ? "text-red-400/60"
+                        : signal.status === "elevated"
+                          ? "text-yellow-400/60"
+                          : signal.status === "normal"
+                            ? "text-[#00cc6a]/60 dark:text-[#00ff87]/60"
+                            : "text-neutral-600"
+                    }`}
+                    style={{ fontFamily: "'DM Mono', monospace" }}
+                  >
+                    {signal.status}
+                  </p>
+                </div>
+              ))}
+            </div>
+            <div className="flex items-start gap-2.5 bg-black/20 dark:bg-black/30 rounded-xl p-3">
+              <span className="text-yellow-400 mt-0.5 flex-shrink-0">💡</span>
+              <p
+                className="text-neutral-600 dark:text-neutral-400 text-xs leading-relaxed"
+                style={{ fontFamily: "'DM Mono', monospace" }}
+              >
+                {rootCause.suggestion}
+              </p>
+            </div>
+          </div>
+        )}
 
         <div className="bg-white dark:bg-[#0f0f0f] border border-black/[0.06] dark:border-white/[0.06] rounded-2xl px-5 py-4 grid grid-cols-2 sm:grid-cols-3 gap-4">
           {[

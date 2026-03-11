@@ -14,7 +14,7 @@ const features = [
   { icon: "⚠️", title: "Anomaly Detection", desc: "Warns you when response time spikes 2x baseline" },
   { icon: "📈", title: "Response Time Graphs", desc: "7-day timeline and daily average charts" },
   { icon: "🌐", title: "Public Status Page", desc: "Shareable uptime page for your users and clients" },
-  { icon: "🔍", title: "Rich Incident Logs", desc: "Status codes, downtime duration, error explanations" },
+  { icon: "🔍", title: "Root Cause Analysis", desc: "Know why your API failed — DNS, TCP, TLS, or server overload", highlight: true },
 ];
 
 export default function SignupPage() {
@@ -223,17 +223,35 @@ export default function SignupPage() {
             {features.map((feature, index) => (
               <div
                 key={feature.title}
-                className="flex items-start gap-3 bg-white dark:bg-[#0f0f0f] border border-black/[0.06] dark:border-white/[0.06] rounded-xl p-4"
+                className={`relative flex items-start gap-3 rounded-xl p-4 overflow-hidden ${
+                  feature.highlight
+                    ? "bg-[#00ff87]/[0.04] border border-[#00cc6a]/30 dark:border-[#00ff87]/30"
+                    : "bg-white dark:bg-[#0f0f0f] border border-black/[0.06] dark:border-white/[0.06]"
+                }`}
                 style={{
                   opacity: featureVisible[index] ? 1 : 0,
                   transform: featureVisible[index] ? "translateY(0)" : "translateY(12px)",
                   transition: "opacity 700ms ease, transform 700ms ease",
                 }}
               >
+                {feature.highlight && (
+                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00cc6a]/60 dark:via-[#00ff87]/60 to-transparent" />
+                )}
                 <span className="text-lg flex-shrink-0">{feature.icon}</span>
                 <div>
-                  <p className="text-[#080808] dark:text-white text-sm font-semibold" style={{ fontFamily: "'Syne', sans-serif" }}>
+                  <p
+                    className={`text-sm font-semibold ${feature.highlight ? "text-[#00cc6a] dark:text-[#00ff87]" : "text-[#080808] dark:text-white"}`}
+                    style={{ fontFamily: "'Syne', sans-serif" }}
+                  >
                     {feature.title}
+                    {feature.highlight && (
+                      <span
+                        className="text-[9px] bg-[#00cc6a]/10 dark:bg-[#00ff87]/10 text-[#00cc6a] dark:text-[#00ff87] border border-[#00cc6a]/20 dark:border-[#00ff87]/20 rounded px-1.5 py-0.5 font-medium ml-2 align-middle"
+                        style={{ fontFamily: "'DM Mono', monospace" }}
+                      >
+                        NEW
+                      </span>
+                    )}
                   </p>
                   <p className="text-neutral-500 text-xs mt-0.5 leading-relaxed" style={{ fontFamily: "'DM Mono', monospace" }}>
                     {feature.desc}
