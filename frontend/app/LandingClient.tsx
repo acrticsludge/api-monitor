@@ -76,6 +76,13 @@ export default function LandingClient({
           </div>
           <div className="flex items-center gap-3">
             <Link
+              href="/pricing"
+              className="hidden sm:block text-[11px] font-semibold tracking-[0.08em] uppercase text-neutral-500 dark:text-neutral-400 hover:text-[#080808] dark:hover:text-white transition-colors duration-150"
+              style={{ fontFamily: "'DM Mono', monospace" }}
+            >
+              Pricing
+            </Link>
+            <Link
               href="/docs"
               className="hidden sm:block text-[11px] font-semibold tracking-[0.08em] uppercase text-neutral-500 dark:text-neutral-400 hover:text-[#080808] dark:hover:text-white transition-colors duration-150"
               style={{ fontFamily: "'DM Mono', monospace" }}
@@ -685,11 +692,32 @@ export default function LandingClient({
             </div>
             <div className="flex items-center gap-5">
               <Link
+                href="/pricing"
+                className="text-[11px] text-neutral-500 hover:text-[#080808] dark:hover:text-white transition-colors"
+                style={{ fontFamily: "'DM Mono', monospace" }}
+              >
+                Pricing
+              </Link>
+              <Link
                 href="/docs"
                 className="text-[11px] text-neutral-500 hover:text-[#080808] dark:hover:text-white transition-colors"
                 style={{ fontFamily: "'DM Mono', monospace" }}
               >
                 Docs
+              </Link>
+              <Link
+                href="/privacy"
+                className="text-[11px] text-neutral-500 hover:text-[#080808] dark:hover:text-white transition-colors"
+                style={{ fontFamily: "'DM Mono', monospace" }}
+              >
+                Privacy
+              </Link>
+              <Link
+                href="/terms"
+                className="text-[11px] text-neutral-500 hover:text-[#080808] dark:hover:text-white transition-colors"
+                style={{ fontFamily: "'DM Mono', monospace" }}
+              >
+                Terms
               </Link>
               <Link
                 href="/login"

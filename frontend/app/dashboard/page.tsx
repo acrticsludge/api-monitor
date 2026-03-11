@@ -141,6 +141,13 @@ export default async function DashboardPage() {
           </div>
           <div className="flex items-center gap-3">
             <Link
+              href="/pricing"
+              className="hidden sm:block text-[11px] font-semibold tracking-[0.08em] uppercase text-neutral-500 dark:text-neutral-400 hover:text-[#080808] dark:hover:text-white transition-colors duration-150"
+              style={{ fontFamily: "'DM Mono', monospace" }}
+            >
+              Pricing
+            </Link>
+            <Link
               href="/docs"
               className="hidden sm:block text-[11px] font-semibold tracking-[0.08em] uppercase text-neutral-500 dark:text-neutral-400 hover:text-[#080808] dark:hover:text-white transition-colors duration-150"
               style={{ fontFamily: "'DM Mono', monospace" }}

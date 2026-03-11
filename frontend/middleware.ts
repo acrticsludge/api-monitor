@@ -36,7 +36,10 @@ export async function middleware(request: NextRequest) {
   const isPublicPage =
     request.nextUrl.pathname === "/" ||
     request.nextUrl.pathname.startsWith("/status") ||
-    request.nextUrl.pathname.startsWith("/docs");
+    request.nextUrl.pathname.startsWith("/docs") ||
+    request.nextUrl.pathname.startsWith("/pricing") ||
+    request.nextUrl.pathname.startsWith("/privacy") ||
+    request.nextUrl.pathname.startsWith("/terms");
 
   const isAuthOnlyPage =
     request.nextUrl.pathname.startsWith("/login") ||
