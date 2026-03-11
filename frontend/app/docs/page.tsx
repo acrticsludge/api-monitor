@@ -479,6 +479,14 @@ export default function DocsPage() {
               <InlineCode>Resume</InlineCode>.
             </Body>
 
+            <SubHeading>False positive protection</SubHeading>
+            <Body>
+              Pulse requires 2 consecutive failed pings before firing a down
+              alert. A single timeout or network blip won&apos;t wake you up at
+              3am. Once 2 pings in a row fail, an alert fires immediately and is
+              logged to your incident history.
+            </Body>
+
             <SubHeading>Anomaly Detection</SubHeading>
             <Body>
               Pulse monitors response time trends and alerts you when performance
@@ -522,7 +530,7 @@ export default function DocsPage() {
                 "See response time trends — timeline chart and 7-day daily average bar chart",
                 "Check your monitor's health score (Healthy / Degraded / Critical)",
                 "See full ping history with status codes and response times",
-                "Review the incidents log (every status change and anomaly alert)",
+                "Review the rich incident log — status codes with explanations, response times, and downtime duration per alert",
                 "Trigger an immediate manual ping with Check Now",
               ].map((item) => (
                 <li
@@ -672,10 +680,37 @@ export default function DocsPage() {
               recovers.
             </p>
 
+            <SubHeading>Slack webhooks</SubHeading>
+            <Body>
+              Pulse auto-detects Slack incoming webhook URLs and sends a
+              formatted attachment message instead of a raw JSON body.
+            </Body>
+            <ol
+              className="mt-3 space-y-3"
+              style={{ fontFamily: "'DM Mono', monospace" }}
+            >
+              {[
+                "Go to api.slack.com/apps → Create an app → Incoming Webhooks",
+                "Enable Incoming Webhooks and add it to your workspace channel",
+                "Copy the Webhook URL (starts with hooks.slack.com)",
+                "Paste it into the Webhook URL field on any monitor",
+              ].map((step, i) => (
+                <li
+                  key={i}
+                  className="flex gap-3 text-sm text-neutral-300 leading-relaxed"
+                >
+                  <span className="text-[#00ff87] shrink-0 text-xs mt-0.5">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <span>{step}</span>
+                </li>
+              ))}
+            </ol>
+
             <SubHeading>Generic webhooks</SubHeading>
             <Body>
-              For Slack incoming webhooks, custom servers, Zapier, Make, or any
-              other service, Pulse sends a JSON body:
+              For custom servers, Zapier, Make, or any other service, Pulse
+              sends a JSON body:
             </Body>
             <div className="mt-4 bg-[#0a0a0a] border border-white/[0.08] rounded-xl p-4 text-xs text-neutral-300 overflow-x-auto">
               <pre style={{ fontFamily: "'DM Mono', monospace" }}>{`{
@@ -683,6 +718,9 @@ export default function DocsPage() {
   "monitor_name": "My API",
   "monitor_url": "https://api.example.com",
   "type": "down" | "recovered",
+  "status_code": 503,
+  "last_response_time_ms": 1240,
+  "expected_status_code": 200,
   "timestamp": "2026-01-01T00:00:00.000Z"
 }`}</pre>
             </div>
