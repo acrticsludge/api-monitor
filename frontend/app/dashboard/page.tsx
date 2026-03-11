@@ -527,32 +527,32 @@ export default async function DashboardPage() {
                             {monitor.check_interval_minutes ?? "—"}m
                           </p>
                         </div>
-                        <div className="ml-auto flex items-center gap-3">
-                          <EditMonitorModal monitor={monitor} variant="icon" />
-                          <form action={toggleMonitor}>
-                            <input type="hidden" name="id" value={monitor.id} />
-                            <input
-                              type="hidden"
-                              name="is_active"
-                              value={monitor.is_active ? "false" : "true"}
-                            />
-                            <button
-                              type="submit"
-                              className="text-xs font-medium text-neutral-500 dark:text-neutral-400 hover:text-[#00cc6a] dark:hover:text-[#00ff87] transition-colors"
-                            >
-                              {monitor.is_active ? "Pause" : "Resume"}
-                            </button>
-                          </form>
-                          <form action={deleteMonitor}>
-                            <input type="hidden" name="id" value={monitor.id} />
-                            <button
-                              type="submit"
-                              className="text-xs font-medium text-neutral-400 dark:text-neutral-600 hover:text-red-500 dark:hover:text-red-400 transition-colors"
-                            >
-                              Remove
-                            </button>
-                          </form>
-                        </div>
+                      </div>
+                      <div className="flex items-center gap-3 pt-1">
+                        <EditMonitorModal monitor={monitor} variant="icon" />
+                        <form action={toggleMonitor}>
+                          <input type="hidden" name="id" value={monitor.id} />
+                          <input
+                            type="hidden"
+                            name="is_active"
+                            value={monitor.is_active ? "false" : "true"}
+                          />
+                          <button
+                            type="submit"
+                            className="text-xs font-medium text-neutral-500 dark:text-neutral-400 hover:text-[#00cc6a] dark:hover:text-[#00ff87] transition-colors"
+                          >
+                            {monitor.is_active ? "Pause" : "Resume"}
+                          </button>
+                        </form>
+                        <form action={deleteMonitor}>
+                          <input type="hidden" name="id" value={monitor.id} />
+                          <button
+                            type="submit"
+                            className="text-xs font-medium text-neutral-400 dark:text-neutral-600 hover:text-red-500 dark:hover:text-red-400 transition-colors"
+                          >
+                            Remove
+                          </button>
+                        </form>
                       </div>
                     </div>
                   );
@@ -571,6 +571,35 @@ export default async function DashboardPage() {
           </p>
         )}
       </main>
+
+      <footer className="border-t border-black/[0.06] dark:border-white/[0.06] mt-10">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <span
+            className="text-[11px] text-neutral-400 dark:text-neutral-600 tracking-[0.1em] uppercase"
+            style={{ fontFamily: "'DM Mono', monospace" }}
+          >
+            Pulse · API Monitor
+          </span>
+          <div className="flex items-center gap-5">
+            {[
+              { href: `/status/${user.id}`, label: "Status Page" },
+              { href: "/docs", label: "Docs" },
+              { href: "/pricing", label: "Pricing" },
+              { href: "/privacy", label: "Privacy" },
+              { href: "/terms", label: "Terms" },
+            ].map(({ href, label }) => (
+              <Link
+                key={href}
+                href={href}
+                className="text-[11px] text-neutral-500 dark:text-neutral-500 hover:text-[#080808] dark:hover:text-white transition-colors duration-150"
+                style={{ fontFamily: "'DM Mono', monospace" }}
+              >
+                {label}
+              </Link>
+            ))}
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

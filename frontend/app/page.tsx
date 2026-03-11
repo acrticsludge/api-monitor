@@ -10,6 +10,7 @@ export default async function Home() {
   } = await supabase.auth.getUser();
 
   if (user) redirect("/dashboard");
+  redirect("/signup");
 
   // Fetch unique user count using service role key (never exposed to client)
   // Requires SUPABASE_SERVICE_ROLE_KEY in frontend/.env.local and Vercel env vars

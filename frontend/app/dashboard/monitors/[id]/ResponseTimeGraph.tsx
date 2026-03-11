@@ -113,7 +113,7 @@ export default function ResponseTimeGraph({ pings, monitorName }: Props) {
   };
 
   return (
-    <div className="relative bg-white dark:bg-[#0f0f0f] border border-black/[0.06] dark:border-white/[0.06] rounded-2xl p-5 overflow-hidden">
+    <div className="relative bg-white dark:bg-[#0f0f0f] border border-black/[0.06] dark:border-white/[0.06] rounded-2xl p-3 sm:p-5 overflow-hidden">
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00cc6a]/40 dark:via-[#00ff87]/40 to-transparent" />
 
       {/* Header */}
@@ -206,7 +206,7 @@ export default function ResponseTimeGraph({ pings, monitorName }: Props) {
         <ResponsiveContainer width="100%" height={200}>
           <LineChart
             data={timelineData}
-            margin={{ top: 5, right: 10, left: 0, bottom: 5 }}
+            margin={{ top: 5, right: 4, left: 0, bottom: 5 }}
           >
             <CartesianGrid
               strokeDasharray="3 3"
@@ -234,7 +234,7 @@ export default function ResponseTimeGraph({ pings, monitorName }: Props) {
               tickLine={false}
               axisLine={false}
               tickFormatter={(v) => `${v}ms`}
-              width={48}
+              width={36}
             />
             <Tooltip
               contentStyle={tooltipStyle}
@@ -271,7 +271,7 @@ export default function ResponseTimeGraph({ pings, monitorName }: Props) {
         <ResponsiveContainer width="100%" height={200}>
           <BarChart
             data={dailyData}
-            margin={{ top: 5, right: 10, left: 0, bottom: 5 }}
+            margin={{ top: 5, right: 4, left: 0, bottom: 5 }}
           >
             <CartesianGrid
               strokeDasharray="3 3"
@@ -289,7 +289,7 @@ export default function ResponseTimeGraph({ pings, monitorName }: Props) {
               tickLine={false}
               axisLine={false}
               tickFormatter={(v) => `${v}ms`}
-              width={48}
+              width={36}
             />
             <Tooltip
               contentStyle={tooltipStyle}
