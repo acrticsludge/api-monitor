@@ -245,7 +245,8 @@ async function handleAlert(monitor, currentStatus) {
     // For DOWN alert: require 2 consecutive down pings before alerting
     // This prevents false alerts from single network hiccups
     if (currentStatus === "down") {
-      const twoConsecutiveDown = latest.status === "down" && previous.status === "down";
+      const twoConsecutiveDown =
+        latest.status === "down" && previous.status === "down";
       const wasUpBefore = beforeThat ? beforeThat.status === "up" : true;
       if (!twoConsecutiveDown || !wasUpBefore) return;
     }
@@ -264,12 +265,33 @@ async function sendAlert(monitor, type, lastPings = []) {
   try {
     const latestPing = lastPings[0];
     const statusCode = latestPing?.status_code ?? null;
-    const lastResponseTime = lastPings.find((p) => p.response_time_ms)?.response_time_ms ?? null;
+    const lastResponseTime =
+      lastPings.find((p) => p.response_time_ms)?.response_time_ms ?? null;
+
+    // Calculate downtime duration for recovery alerts
+    let downtimeMinutes = null;
+    if (type === "recovered") {
+      const { data: lastDownAlert } = await supabase
+        .from("alerts")
+        .select("sent_at")
+        .eq("monitor_id", monitor.id)
+        .eq("type", "down")
+        .order("sent_at", { ascending: false })
+        .limit(1);
+      if (lastDownAlert && lastDownAlert.length > 0) {
+        const downAt = new Date(lastDownAlert[0].sent_at);
+        const recoveredAt = new Date();
+        downtimeMinutes = Math.round((recoveredAt - downAt) / 1000 / 60);
+      }
+    }
 
     // Always record the alert first regardless of email/push success
     await supabase.from("alerts").insert({
       monitor_id: monitor.id,
       type,
+      status_code: statusCode ?? null,
+      response_time_ms: lastResponseTime ?? null,
+      downtime_minutes: downtimeMinutes,
     });
 
     // Then try email — failure won't affect alert recording
@@ -340,33 +362,65 @@ async function sendWebhook(monitor, type, statusCode, lastResponseTime) {
 
     if (isDiscord) {
       body = {
-        embeds: [{
-          title: isDown ? `🔴 ${monitor.name} is down` : `🟢 ${monitor.name} recovered`,
-          color: isDown ? 15158332 : 5763719,
-          fields: [
-            { name: "URL", value: monitor.url, inline: true },
-            { name: "Status Code", value: statusCode?.toString() ?? "Timeout", inline: true },
-            { name: "Last Response Time", value: lastResponseTime ? `${lastResponseTime}ms` : "N/A", inline: true },
-            { name: "Expected Status", value: monitor.expected_status_code.toString(), inline: true },
-            { name: "Time", value: new Date().toUTCString(), inline: false },
-          ],
-          footer: { text: "Pulse API Monitor" },
-        }],
+        embeds: [
+          {
+            title: isDown
+              ? `🔴 ${monitor.name} is down`
+              : `🟢 ${monitor.name} recovered`,
+            color: isDown ? 15158332 : 5763719,
+            fields: [
+              { name: "URL", value: monitor.url, inline: true },
+              {
+                name: "Status Code",
+                value: statusCode?.toString() ?? "Timeout",
+                inline: true,
+              },
+              {
+                name: "Last Response Time",
+                value: lastResponseTime ? `${lastResponseTime}ms` : "N/A",
+                inline: true,
+              },
+              {
+                name: "Expected Status",
+                value: monitor.expected_status_code.toString(),
+                inline: true,
+              },
+              { name: "Time", value: new Date().toUTCString(), inline: false },
+            ],
+            footer: { text: "Pulse API Monitor" },
+          },
+        ],
       };
     } else if (isSlack) {
       body = {
-        text: isDown ? `🔴 *${monitor.name}* is down` : `🟢 *${monitor.name}* recovered`,
-        attachments: [{
-          color: isDown ? "danger" : "good",
-          fields: [
-            { title: "URL", value: monitor.url, short: true },
-            { title: "Status Code", value: statusCode?.toString() ?? "Timeout", short: true },
-            { title: "Response Time", value: lastResponseTime ? `${lastResponseTime}ms` : "N/A", short: true },
-            { title: "Expected Status", value: monitor.expected_status_code.toString(), short: true },
-            { title: "Time", value: new Date().toUTCString(), short: false },
-          ],
-          footer: "Pulse API Monitor",
-        }],
+        text: isDown
+          ? `🔴 *${monitor.name}* is down`
+          : `🟢 *${monitor.name}* recovered`,
+        attachments: [
+          {
+            color: isDown ? "danger" : "good",
+            fields: [
+              { title: "URL", value: monitor.url, short: true },
+              {
+                title: "Status Code",
+                value: statusCode?.toString() ?? "Timeout",
+                short: true,
+              },
+              {
+                title: "Response Time",
+                value: lastResponseTime ? `${lastResponseTime}ms` : "N/A",
+                short: true,
+              },
+              {
+                title: "Expected Status",
+                value: monitor.expected_status_code.toString(),
+                short: true,
+              },
+              { title: "Time", value: new Date().toUTCString(), short: false },
+            ],
+            footer: "Pulse API Monitor",
+          },
+        ],
       };
     } else {
       body = {
@@ -390,7 +444,12 @@ async function sendWebhook(monitor, type, statusCode, lastResponseTime) {
 
 // Send browser push notification to all subscribed devices for this monitor's owner
 // Note: NEXT_PUBLIC_APP_URL must be set in worker environment (e.g. https://api-monitor-seven.vercel.app)
-async function sendPushNotification(monitor, type, statusCode, lastResponseTime) {
+async function sendPushNotification(
+  monitor,
+  type,
+  statusCode,
+  lastResponseTime,
+) {
   try {
     const { data: subs } = await supabase
       .from("push_subscriptions")

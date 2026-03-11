@@ -49,9 +49,10 @@ export default async function MonitorDetailPage({
 
   const { data: alerts } = await supabase
     .from("alerts")
-    .select("id, type, sent_at")
+    .select("id, type, sent_at, status_code, response_time_ms, downtime_minutes")
     .eq("monitor_id", id)
-    .order("sent_at", { ascending: false });
+    .order("sent_at", { ascending: false })
+    .limit(20);
 
   const oneDayAgo = new Date();
   oneDayAgo.setDate(oneDayAgo.getDate() - 1);
@@ -513,11 +514,11 @@ export default async function MonitorDetailPage({
 
           {(() => {
             type IncidentItem =
-              | { kind: "alert"; id: string; type: string; ts: string }
+              | { kind: "alert"; id: string; type: string; ts: string; status_code: number | null; response_time_ms: number | null; downtime_minutes: number | null }
               | { kind: "anomaly"; id: string; baseline_ms: number; current_avg_ms: number; ts: string };
 
             const items: IncidentItem[] = [
-              ...(alerts ?? []).map((a) => ({ kind: "alert" as const, id: a.id, type: a.type, ts: a.sent_at })),
+              ...(alerts ?? []).map((a) => ({ kind: "alert" as const, id: a.id, type: a.type, ts: a.sent_at, status_code: a.status_code ?? null, response_time_ms: a.response_time_ms ?? null, downtime_minutes: a.downtime_minutes ?? null })),
               ...(anomalyAlerts ?? []).map((a) => ({ kind: "anomaly" as const, id: a.id, baseline_ms: a.baseline_ms, current_avg_ms: a.current_avg_ms, ts: a.triggered_at })),
             ].sort((a, b) => new Date(b.ts).getTime() - new Date(a.ts).getTime());
 
@@ -539,14 +540,17 @@ export default async function MonitorDetailPage({
                       />
                     </svg>
                   </div>
-                  <p className="text-xs text-neutral-600 dark:text-neutral-400 font-medium">
-                    All clear
-                  </p>
                   <p
-                    className="text-[11px] text-neutral-400 dark:text-neutral-600 mt-1"
+                    className="text-xs text-neutral-600 dark:text-neutral-400 font-medium"
                     style={{ fontFamily: "'DM Mono', monospace" }}
                   >
-                    No incidents recorded
+                    All clear — no incidents recorded
+                  </p>
+                  <p
+                    className="text-[11px] text-neutral-400 dark:text-neutral-700 mt-1"
+                    style={{ fontFamily: "'DM Mono', monospace" }}
+                  >
+                    Incidents appear here when a monitor goes down or recovers
                   </p>
                 </div>
               );
@@ -558,27 +562,55 @@ export default async function MonitorDetailPage({
                   item.kind === "alert" ? (
                     <div
                       key={item.id}
-                      className="px-5 py-3.5 flex items-center justify-between gap-4 hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors"
+                      className="px-5 py-3.5 hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors"
                     >
-                      <div className="flex items-center gap-2.5">
-                        {item.type === "down" ? (
-                          <span className="w-1.5 h-1.5 rounded-full bg-red-500 dark:bg-red-400 shrink-0" />
-                        ) : (
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#00cc6a] dark:bg-[#00ff87] shrink-0" />
-                        )}
-                        <span
-                          className={`text-xs font-semibold ${item.type === "down" ? "text-red-500 dark:text-red-400" : "text-[#00cc6a] dark:text-[#00ff87]"}`}
-                          style={{ fontFamily: "'DM Mono', monospace" }}
-                        >
-                          {item.type === "down" ? "WENT DOWN" : "RECOVERED"}
-                        </span>
+                      <div className="flex flex-col gap-1.5">
+                        <div className="flex items-center justify-between gap-4">
+                          <div className="flex items-center gap-2">
+                            <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${item.type === "down" ? "bg-red-500 dark:bg-red-400" : "bg-[#00cc6a] dark:bg-[#00ff87]"}`} />
+                            <span
+                              className={`text-xs font-medium ${item.type === "down" ? "text-red-500 dark:text-red-400" : "text-[#00cc6a] dark:text-[#00ff87]"}`}
+                              style={{ fontFamily: "'DM Mono', monospace" }}
+                            >
+                              {item.type === "down" ? "Down" : "Recovered"}
+                            </span>
+                          </div>
+                          <span
+                            className="text-xs text-neutral-500 dark:text-neutral-600 shrink-0"
+                            style={{ fontFamily: "'DM Mono', monospace" }}
+                          >
+                            {new Date(item.ts).toLocaleString()}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-3 pl-3.5 flex-wrap">
+                          {item.status_code ? (
+                            <StatusCodeBadge code={item.status_code} />
+                          ) : item.type === "down" ? (
+                            <span
+                              className="text-neutral-500 dark:text-neutral-500 text-[11px]"
+                              style={{ fontFamily: "'DM Mono', monospace" }}
+                            >
+                              No response · Connection timeout
+                            </span>
+                          ) : null}
+                          {item.response_time_ms && (
+                            <span
+                              className="text-neutral-500 dark:text-neutral-500 text-[11px]"
+                              style={{ fontFamily: "'DM Mono', monospace" }}
+                            >
+                              {item.response_time_ms}ms
+                            </span>
+                          )}
+                          {item.type === "recovered" && item.downtime_minutes && (
+                            <span
+                              className="text-neutral-500 dark:text-neutral-500 text-[11px]"
+                              style={{ fontFamily: "'DM Mono', monospace" }}
+                            >
+                              · Down for {item.downtime_minutes} min
+                            </span>
+                          )}
+                        </div>
                       </div>
-                      <span
-                        className="text-xs text-neutral-500 dark:text-neutral-400"
-                        style={{ fontFamily: "'DM Mono', monospace" }}
-                      >
-                        {new Date(item.ts).toLocaleString()}
-                      </span>
                     </div>
                   ) : (
                     <div
@@ -616,6 +648,49 @@ export default async function MonitorDetailPage({
           })()}
         </div>
       </main>
+    </div>
+  );
+}
+
+const STATUS_CODE_MEANINGS: Record<number, string> = {
+  400: "Bad Request — malformed request syntax",
+  401: "Unauthorized — authentication required",
+  403: "Forbidden — server refused the request",
+  404: "Not Found — endpoint does not exist",
+  408: "Request Timeout — server timed out waiting",
+  429: "Too Many Requests — rate limited",
+  500: "Internal Server Error — server crashed",
+  502: "Bad Gateway — invalid response from upstream",
+  503: "Service Unavailable — server overloaded or down",
+  504: "Gateway Timeout — upstream server timed out",
+};
+
+function StatusCodeBadge({ code }: { code: number }) {
+  const meaning = STATUS_CODE_MEANINGS[code];
+  const isError = code >= 400;
+
+  return (
+    <div className="relative group inline-flex">
+      <span
+        className={`text-[11px] px-1.5 py-0.5 rounded font-medium ${
+          isError
+            ? "bg-red-400/10 text-red-500 dark:text-red-400 border border-red-400/20"
+            : "bg-[#00cc6a]/10 dark:bg-[#00ff87]/10 text-[#00cc6a] dark:text-[#00ff87] border border-[#00cc6a]/20 dark:border-[#00ff87]/20"
+        }`}
+        style={{ fontFamily: "'DM Mono', monospace" }}
+      >
+        {code}
+      </span>
+      {meaning && (
+        <div className="absolute bottom-full right-0 mb-2 hidden group-hover:block z-10 w-56">
+          <div
+            className="bg-white dark:bg-[#111111] border border-black/8 dark:border-white/8 rounded-xl px-3 py-2 shadow-lg"
+            style={{ fontFamily: "'DM Mono', monospace" }}
+          >
+            <p className="text-[11px] text-neutral-600 dark:text-neutral-300 leading-relaxed">{meaning}</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
