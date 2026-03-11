@@ -46,8 +46,8 @@ export default function ResponseTimeGraph({ pings, monitorName }: Props) {
     const mapped = upPings.map((p) => {
       const d = new Date(p.checked_at);
       return {
-        // Short label for X axis — just "Jan 5" to avoid overlap
-        time: d.toLocaleDateString("en-US", { month: "short", day: "numeric" }),
+        // Numeric timestamp — unique per point, used as XAxis dataKey for accurate hover
+        ts: d.getTime(),
         // Full label shown in tooltip
         fullTime: d.toLocaleString("en-US", {
           month: "short",
@@ -213,7 +213,16 @@ export default function ResponseTimeGraph({ pings, monitorName }: Props) {
               stroke="rgba(255,255,255,0.04)"
             />
             <XAxis
-              dataKey="time"
+              dataKey="ts"
+              type="number"
+              scale="time"
+              domain={["auto", "auto"]}
+              tickFormatter={(ts) =>
+                new Date(ts).toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                })
+              }
               tick={axisTickStyle}
               tickLine={false}
               axisLine={false}
