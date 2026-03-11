@@ -1,4 +1,6 @@
-export default function sitemap() {
+export const dynamic = "force-dynamic";
+import { MetadataRoute } from "next";
+export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
       url: "https://pulsemonitor.dev/",
