@@ -1,43 +1,43 @@
 export default function sitemap() {
   return [
     {
-      url: "https://api-monitor-seven.vercel.app",
+      url: "https://pulsemonitor.dev/",
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 1,
     },
     {
-      url: "https://api-monitor-seven.vercel.app/login",
+      url: "https://pulsemonitor.dev/login",
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.8,
     },
     {
-      url: "https://api-monitor-seven.vercel.app/signup",
+      url: "https://pulsemonitor.dev/signup",
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.8,
     },
     {
-      url: "https://api-monitor-seven.vercel.app/docs",
+      url: "https://pulsemonitor.dev/docs",
       lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 0.7,
     },
     {
-      url: "https://api-monitor-seven.vercel.app/pricing",
+      url: "https://pulsemonitor.dev/pricing",
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.8,
     },
     {
-      url: "https://api-monitor-seven.vercel.app/privacy",
+      url: "https://pulsemonitor.dev/privacy",
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.5,
     },
     {
-      url: "https://api-monitor-seven.vercel.app/terms",
+      url: "https://pulsemonitor.dev/terms",
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.5,
