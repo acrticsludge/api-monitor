@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from "next/server";
 
 // When true, unauthenticated users accessing protected pages are sent to /signup
 // (showing the feature overview). Set to false to redirect to /login instead.
-const REDIRECT_TO_SIGNUP = true;
+const REDIRECT_TO_SIGNUP = false;
 
 export async function middleware(request: NextRequest) {
   if (request.nextUrl.pathname.startsWith("/status")) {

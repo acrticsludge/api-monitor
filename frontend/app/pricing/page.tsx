@@ -58,7 +58,9 @@ export default function PricingPage() {
                 />
               </svg>
             </div>
-            <span className="text-sm font-bold tracking-[0.08em] uppercase">Pulse</span>
+            <span className="text-sm font-bold tracking-[0.08em] uppercase">
+              Pulse
+            </span>
           </Link>
           <div className="flex items-center gap-4">
             <Link
@@ -147,14 +149,23 @@ export default function PricingPage() {
                 { label: "Anomaly detection" },
                 { label: "Response time graphs (7 days)" },
                 { label: "7 day ping history" },
-                { label: "Incident reports (timeline, impact, response times)", beta: true },
-                { label: "Root cause analysis with confidence score", beta: true },
+                {
+                  label: "Incident reports (timeline, impact, response times)",
+                  beta: true,
+                },
+                {
+                  label: "Root cause analysis with confidence score",
+                  beta: true,
+                },
                 { label: "Copyable post mortem reports", beta: true },
               ].map(({ label, beta }) => (
                 <li
                   key={label}
                   className="flex items-start gap-3 text-sm text-neutral-300"
-                  style={{ fontFamily: "'DM Mono', monospace", fontSize: "12px" }}
+                  style={{
+                    fontFamily: "'DM Mono', monospace",
+                    fontSize: "12px",
+                  }}
                 >
                   <span className="text-[#00ff87] shrink-0 mt-0.5">✓</span>
                   <span className="flex items-center gap-2 flex-wrap">
@@ -184,7 +195,7 @@ export default function PricingPage() {
                 className="text-[10px] bg-[#00ff87]/10 text-[#00ff87] border border-[#00ff87]/20 px-2 py-0.5 rounded-full tracking-wider uppercase"
                 style={{ fontFamily: "'DM Mono', monospace" }}
               >
-                Most popular for teams
+                Recommended for side projects
               </span>
             </div>
             <div className="flex items-end gap-1.5 mb-1">
@@ -229,7 +240,10 @@ export default function PricingPage() {
                 <li
                   key={feature}
                   className="flex items-start gap-3 text-sm text-neutral-300"
-                  style={{ fontFamily: "'DM Mono', monospace", fontSize: "12px" }}
+                  style={{
+                    fontFamily: "'DM Mono', monospace",
+                    fontSize: "12px",
+                  }}
                 >
                   <span className="text-[#00ff87] shrink-0 mt-0.5">⚡</span>
                   {feature}
