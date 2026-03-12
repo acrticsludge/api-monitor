@@ -147,6 +147,9 @@ export default function PricingPage() {
                 "Anomaly detection",
                 "Response time graphs (7 days)",
                 "7 day ping history",
+                "Incident reports (timeline, impact, response times)",
+                "Root cause analysis with confidence score",
+                "Copyable post mortem reports",
               ].map((feature) => (
                 <li
                   key={feature}

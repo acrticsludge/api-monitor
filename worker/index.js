@@ -330,7 +330,8 @@ async function handleAlert(monitor, currentStatus) {
     // For RECOVERED alert: current is up, previous was down
     if (currentStatus === "up" && previous.status !== "down") return;
 
-    await sendAlert(monitor, currentStatus, lastPings);
+    const alertType = currentStatus === "up" ? "recovered" : "down";
+    await sendAlert(monitor, alertType, lastPings);
   } catch (err) {
     console.error(`[handleAlert] Failed for ${monitor.name}:`, err.message);
   }

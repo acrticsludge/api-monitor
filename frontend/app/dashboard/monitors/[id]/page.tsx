@@ -77,7 +77,7 @@ export default async function MonitorDetailPage({
     .select("status, response_time_ms, checked_at")
     .eq("monitor_id", id)
     .gte("checked_at", graphSevenDaysAgo.toISOString())
-    .order("checked_at", { ascending: true })
+    .order("checked_at", { ascending: false })
     .limit(2000);
 
   const sevenDaysAgo = new Date();
@@ -89,7 +89,7 @@ export default async function MonitorDetailPage({
     .select("status, checked_at")
     .eq("monitor_id", id)
     .gte("checked_at", sevenDaysAgo.toISOString())
-    .order("checked_at", { ascending: true })
+    .order("checked_at", { ascending: false })
     .limit(2500);
 
   const pingList = pings ?? [];

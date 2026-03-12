@@ -43,21 +43,24 @@ export default function ResponseTimeGraph({ pings, monitorName }: Props) {
       : null;
 
   const timelineData = useMemo(() => {
-    const mapped = upPings.map((p) => {
-      const d = new Date(p.checked_at);
-      return {
-        // Numeric timestamp — unique per point, used as XAxis dataKey for accurate hover
-        ts: d.getTime(),
-        // Full label shown in tooltip
-        fullTime: d.toLocaleString("en-US", {
-          month: "short",
-          day: "numeric",
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
-        ms: p.response_time_ms!,
-      };
-    });
+    const mapped = upPings
+      .slice()
+      .sort((a, b) => new Date(a.checked_at).getTime() - new Date(b.checked_at).getTime())
+      .map((p) => {
+        const d = new Date(p.checked_at);
+        return {
+          // Numeric timestamp — unique per point, used as XAxis dataKey for accurate hover
+          ts: d.getTime(),
+          // Full label shown in tooltip
+          fullTime: d.toLocaleString("en-US", {
+            month: "short",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+          ms: p.response_time_ms!,
+        };
+      });
     const maxPoints = 200;
     const step = Math.ceil(mapped.length / maxPoints);
     return step <= 1 ? mapped : mapped.filter((_, i) => i % step === 0);

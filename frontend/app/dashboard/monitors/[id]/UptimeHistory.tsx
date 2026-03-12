@@ -51,11 +51,13 @@ export default function UptimeHistory({ pings }: { pings: Ping[] }) {
       const fullLabel = `${FULL_DAY_NAMES[d.getDay()]}, ${MONTH_NAMES[d.getMonth()]} ${d.getDate()}`;
       const dateStr = d.toISOString().split("T")[0];
 
-      const dayPings = pings.filter((p) => {
-        const pingDay = new Date(p.checked_at);
-        pingDay.setHours(0, 0, 0, 0);
-        return pingDay.getTime() === d.getTime();
-      });
+      const dayPings = pings
+        .filter((p) => {
+          const pingDay = new Date(p.checked_at);
+          pingDay.setHours(0, 0, 0, 0);
+          return pingDay.getTime() === d.getTime();
+        })
+        .sort((a, b) => new Date(a.checked_at).getTime() - new Date(b.checked_at).getTime());
 
       const totalChecks = dayPings.length;
       const upCount = dayPings.filter((p) => p.status === "up").length;

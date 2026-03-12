@@ -373,7 +373,7 @@ export default function LandingClient({
 
         {/* Features — joined panel layout */}
         <section className="max-w-6xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-black/[0.06] dark:bg-white/[0.05] rounded-2xl overflow-hidden border border-black/[0.06] dark:border-white/[0.05]">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-px bg-black/[0.06] dark:bg-white/[0.05] rounded-2xl overflow-hidden border border-black/[0.06] dark:border-white/[0.05]">
             {[
               {
                 num: "01",
@@ -451,6 +451,46 @@ export default function LandingClient({
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                ),
+              },
+              {
+                num: "05",
+                title: "Incident Reports",
+                desc: "Every outage generates a structured report — start time, duration, response time at failure vs. recovery, and estimated requests affected.",
+                icon: (
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                    />
+                  </svg>
+                ),
+              },
+              {
+                num: "06",
+                title: "Root Cause Analysis",
+                desc: "Pulse reads HTTP error codes and response patterns to surface the likely cause of each incident — with a confidence score. Copy the full post mortem in one click.",
+                icon: (
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                     />
                   </svg>
                 ),

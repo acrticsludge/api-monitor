@@ -7,6 +7,7 @@ import { createClient } from "../lib/supabase";
 const SECTIONS = [
   { id: "getting-started", label: "Getting Started" },
   { id: "monitors", label: "Monitors" },
+  { id: "incident-reports", label: "Incident Reports" },
   { id: "notifications", label: "Notifications" },
   { id: "webhooks", label: "Webhooks" },
   { id: "status-pages", label: "Status Pages" },
@@ -387,6 +388,14 @@ export default function DocsPage() {
                   "Public status page",
                   "Share a live status page with your users",
                 ],
+                [
+                  "Incident reports",
+                  "Every resolved outage generates a structured report with timeline, root cause, and impact",
+                ],
+                [
+                  "Post mortem reports",
+                  "Copy a formatted plain-text post mortem to share with your team in one click",
+                ],
               ].map(([title, desc]) => (
                 <div
                   key={title}
@@ -530,7 +539,8 @@ export default function DocsPage() {
                 "See response time trends — timeline chart and 7-day daily average bar chart",
                 "Check your monitor's health score (Healthy / Degraded / Critical)",
                 "See full ping history with status codes and response times",
-                "Review the rich incident log — status codes with explanations, response times, and downtime duration per alert",
+                "Review incident reports — timeline, root cause analysis, response time comparison, and estimated impact per outage",
+                "Copy a post mortem report to your clipboard with one click",
                 "Trigger an immediate manual ping with Check Now",
               ].map((item) => (
                 <li
@@ -546,9 +556,123 @@ export default function DocsPage() {
 
           <Divider />
 
+          {/* ── Incident Reports ── */}
+          <section id="incident-reports" className="scroll-mt-28">
+            <SectionLabel>03 · Incident Reports</SectionLabel>
+            <SectionHeading>Incident Reports</SectionHeading>
+            <Body>
+              Every time a monitor goes down and recovers, Pulse automatically
+              generates a structured incident report. No configuration required —
+              reports appear in your monitor&apos;s detail page as soon as the
+              outage is resolved.
+            </Body>
+
+            <SubHeading>What each report contains</SubHeading>
+            <div className="space-y-2 mt-2">
+              {[
+                ["Timeline", "Exact start time, resolution time, and total downtime in minutes"],
+                ["Error", "The HTTP status code returned during the outage (or Timeout if the endpoint was unreachable)"],
+                ["Root Cause", "Pulse analyzes the error code and response patterns to suggest a likely cause — e.g. server overload, authentication failure, or upstream dependency — along with a confidence percentage"],
+                ["Response time comparison", "Baseline (7-day average), response at time of failure, and response at recovery — so you can see whether performance recovered fully"],
+                ["Anomaly warning", "A yellow banner appears if Pulse detected a response time spike before the incident, indicating the degradation was visible before the outage"],
+                ["Impact estimate", "Number of failed checks during the outage, and an estimated count of requests likely affected based on check interval"],
+              ].map(([title, desc]) => (
+                <div
+                  key={title}
+                  className="flex gap-3 items-start bg-white/[0.02] border border-white/[0.06] rounded-xl px-4 py-3"
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#00ff87] mt-1.5 shrink-0" />
+                  <div>
+                    <p
+                      className="text-xs font-semibold text-white"
+                      style={{ fontFamily: "'Syne', sans-serif" }}
+                    >
+                      {title}
+                    </p>
+                    <p
+                      className="text-[11px] text-neutral-500 mt-0.5"
+                      style={{ fontFamily: "'DM Mono', monospace" }}
+                    >
+                      {desc}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <SubHeading>Root Cause Analysis</SubHeading>
+            <Body>
+              Pulse classifies HTTP errors to surface the most likely explanation
+              for each incident. Examples:
+            </Body>
+            <div
+              className="mt-4 space-y-2"
+              style={{ fontFamily: "'DM Mono', monospace" }}
+            >
+              {[
+                ["5xx errors", "Server-side failures — overload, crashes, or upstream dependency issues"],
+                ["401 / 403", "Authentication or authorization problems — expired tokens, missing credentials"],
+                ["404", "Endpoint removed or URL changed"],
+                ["408 / timeout", "Network congestion, DNS resolution failure, or server unresponsive"],
+                ["429", "Rate limiting — the pinging IP is being throttled"],
+              ].map(([code, desc]) => (
+                <div key={code} className="flex gap-3 text-xs leading-relaxed">
+                  <span className="text-[#00ff87] shrink-0 w-28">{code}</span>
+                  <span className="text-neutral-400">{desc}</span>
+                </div>
+              ))}
+            </div>
+            <div className="mt-4">
+              <Body>
+                Each classification includes a confidence score. Lower confidence
+                appears when the error could have multiple explanations.
+              </Body>
+            </div>
+
+            <SubHeading>Post Mortem Reports</SubHeading>
+            <Body>
+              Expand any incident report and click{" "}
+              <InlineCode>Copy incident report</InlineCode> to copy a formatted
+              plain-text post mortem to your clipboard. The report includes
+              monitor name, URL, full timeline, root cause, response time
+              comparison, and impact estimate — ready to paste into Slack, Notion,
+              a ticket, or an email.
+            </Body>
+
+            <SubHeading>Where to find them</SubHeading>
+            <Body>
+              Open any monitor&apos;s detail page and scroll to the{" "}
+              <InlineCode>Incidents</InlineCode> section. Each resolved incident
+              appears as a collapsible card showing the start time, duration, and
+              HTTP status. Click a card to expand the full report.
+            </Body>
+
+            <SubHeading>Notes</SubHeading>
+            <ul
+              className="mt-2 space-y-2"
+              style={{ fontFamily: "'DM Mono', monospace" }}
+            >
+              {[
+                "Incident reports are only generated for resolved incidents — an ongoing outage shows the start time and \"Ongoing\" for the end time",
+                "Reports require the 2-consecutive-ping confirmation — a single blip will not generate an incident",
+                "If anomaly detection flagged the monitor before the outage, the incident report will note this",
+              ].map((item) => (
+                <li
+                  key={item}
+                  className="flex gap-3 text-sm text-neutral-300 leading-relaxed"
+                >
+                  <span className="text-[#00ff87] shrink-0">·</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          <Divider />
+
           {/* ── Notifications ── */}
           <section id="notifications" className="scroll-mt-28">
-            <SectionLabel>03 · Notifications</SectionLabel>
+            <SectionLabel>04 · Notifications</SectionLabel>
             <SectionHeading>Notifications</SectionHeading>
             <Body>
               Pulse sends browser push notifications the moment a monitor
@@ -628,7 +752,7 @@ export default function DocsPage() {
 
           {/* ── Webhooks ── */}
           <section id="webhooks" className="scroll-mt-28">
-            <SectionLabel>04 · Webhooks</SectionLabel>
+            <SectionLabel>05 · Webhooks</SectionLabel>
             <SectionHeading>Webhooks</SectionHeading>
             <Body>
               A webhook is a URL on your server or a third-party service that
@@ -750,7 +874,7 @@ export default function DocsPage() {
 
           {/* ── Status Pages ── */}
           <section id="status-pages" className="scroll-mt-28">
-            <SectionLabel>05 · Status Pages</SectionLabel>
+            <SectionLabel>06 · Status Pages</SectionLabel>
             <SectionHeading>Status Pages</SectionHeading>
             <Body>
               Every Pulse account comes with a public status page — a live URL
@@ -823,7 +947,7 @@ export default function DocsPage() {
 
           {/* ── Coming Soon ── */}
           <section id="coming-soon" className="scroll-mt-28">
-            <SectionLabel>06 · Coming Soon</SectionLabel>
+            <SectionLabel>07 · Coming Soon</SectionLabel>
             <SectionHeading>What&apos;s Coming in V2</SectionHeading>
             <p
               className="text-sm text-neutral-500 leading-relaxed mb-8"
