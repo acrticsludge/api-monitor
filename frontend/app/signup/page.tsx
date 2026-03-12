@@ -247,10 +247,10 @@ export default function SignupPage() {
                     {feature.title}
                     {feature.highlight && (
                       <span
-                        className="text-[9px] bg-[#00cc6a]/10 dark:bg-[#00ff87]/10 text-[#00cc6a] dark:text-[#00ff87] border border-[#00cc6a]/20 dark:border-[#00ff87]/20 rounded px-1.5 py-0.5 font-medium ml-2 align-middle"
+                        className="text-[9px] bg-[#00cc6a]/10 dark:bg-[#00ff87]/10 text-[#00cc6a] dark:text-[#00ff87] border border-[#00cc6a]/20 dark:border-[#00ff87]/20 rounded-full px-1.5 py-0.5 font-medium ml-2 align-middle tracking-wider uppercase"
                         style={{ fontFamily: "'DM Mono', monospace" }}
                       >
-                        NEW
+                        Pro · Free in beta
                       </span>
                     )}
                   </p>

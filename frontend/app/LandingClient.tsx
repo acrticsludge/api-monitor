@@ -458,6 +458,7 @@ export default function LandingClient({
               {
                 num: "05",
                 title: "Incident Reports",
+                beta: true,
                 desc: "Every outage generates a structured report — start time, duration, response time at failure vs. recovery, and estimated requests affected.",
                 icon: (
                   <svg
@@ -478,6 +479,7 @@ export default function LandingClient({
               {
                 num: "06",
                 title: "Root Cause Analysis",
+                beta: true,
                 desc: "Pulse reads HTTP error codes and response patterns to surface the likely cause of each incident — with a confidence score. Copy the full post mortem in one click.",
                 icon: (
                   <svg
@@ -512,9 +514,19 @@ export default function LandingClient({
                     {f.icon}
                   </div>
                 </div>
-                <h3 className="text-base font-extrabold text-[#080808] dark:text-white mb-2.5 tracking-tight">
-                  {f.title}
-                </h3>
+                <div className="flex items-center gap-2 mb-2.5 flex-wrap">
+                  <h3 className="text-base font-extrabold text-[#080808] dark:text-white tracking-tight">
+                    {f.title}
+                  </h3>
+                  {f.beta && (
+                    <span
+                      className="text-[9px] bg-[#00cc6a]/10 dark:bg-[#00ff87]/10 text-[#00cc6a] dark:text-[#00ff87] border border-[#00cc6a]/20 dark:border-[#00ff87]/20 px-1.5 py-0.5 rounded-full tracking-wider uppercase font-semibold"
+                      style={{ fontFamily: "'DM Mono', monospace" }}
+                    >
+                      Pro · Free in beta
+                    </span>
+                  )}
+                </div>
                 <p
                   className="text-xs text-neutral-500 leading-relaxed"
                   style={{ fontFamily: "'DM Mono', monospace" }}

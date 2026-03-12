@@ -136,28 +136,35 @@ export default function PricingPage() {
             </Link>
             <ul className="space-y-3">
               {[
-                "5 monitors",
-                "5 minute check intervals",
-                "2-ping confirmation before alerting",
-                "Browser push notifications",
-                "Discord & Slack webhook alerts",
-                "Rich alert context (status code, response time)",
-                "Public status page",
-                "Health scoring",
-                "Anomaly detection",
-                "Response time graphs (7 days)",
-                "7 day ping history",
-                "Incident reports (timeline, impact, response times)",
-                "Root cause analysis with confidence score",
-                "Copyable post mortem reports",
-              ].map((feature) => (
+                { label: "5 monitors" },
+                { label: "5 minute check intervals" },
+                { label: "2-ping confirmation before alerting" },
+                { label: "Browser push notifications" },
+                { label: "Discord & Slack webhook alerts" },
+                { label: "Rich alert context (status code, response time)" },
+                { label: "Public status page" },
+                { label: "Health scoring" },
+                { label: "Anomaly detection" },
+                { label: "Response time graphs (7 days)" },
+                { label: "7 day ping history" },
+                { label: "Incident reports (timeline, impact, response times)", beta: true },
+                { label: "Root cause analysis with confidence score", beta: true },
+                { label: "Copyable post mortem reports", beta: true },
+              ].map(({ label, beta }) => (
                 <li
-                  key={feature}
+                  key={label}
                   className="flex items-start gap-3 text-sm text-neutral-300"
                   style={{ fontFamily: "'DM Mono', monospace", fontSize: "12px" }}
                 >
                   <span className="text-[#00ff87] shrink-0 mt-0.5">✓</span>
-                  {feature}
+                  <span className="flex items-center gap-2 flex-wrap">
+                    {label}
+                    {beta && (
+                      <span className="text-[9px] bg-[#00ff87]/10 text-[#00ff87] border border-[#00ff87]/20 px-1.5 py-0.5 rounded-full tracking-wider uppercase font-semibold">
+                        Pro · Free in beta
+                      </span>
+                    )}
+                  </span>
                 </li>
               ))}
             </ul>
