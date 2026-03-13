@@ -19,7 +19,7 @@ function scoreColor(label: HealthLabel): string {
 function HealthTooltip({ reasons }: { reasons: string[] }) {
   return (
     <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-50 hidden group-hover/badge:block pointer-events-none">
-      <div className="bg-[#111111] border border-white/[0.06] rounded-xl px-3 py-2.5 w-max max-w-[220px]">
+      <div className="bg-white dark:bg-[#111111] border border-black/10 dark:border-white/6 rounded-xl px-3 py-2.5 w-max max-w-55 shadow-lg dark:shadow-none">
         <ul className="space-y-1">
           {reasons.map((reason, i) => (
             <li
@@ -27,8 +27,8 @@ function HealthTooltip({ reasons }: { reasons: string[] }) {
               className="flex items-start gap-1.5"
               style={{ fontFamily: "'DM Mono', monospace" }}
             >
-              <span className="text-neutral-600 shrink-0 mt-px">·</span>
-              <span className="text-[11px] text-neutral-300 leading-snug">
+              <span className="text-neutral-400 dark:text-neutral-600 shrink-0 mt-px">·</span>
+              <span className="text-[11px] text-neutral-700 dark:text-neutral-300 leading-snug">
                 {reason}
               </span>
             </li>

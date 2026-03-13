@@ -349,7 +349,7 @@ export default async function StatusPage({
 
         {/* Monitor list */}
         {monitorStats.length > 0 && (
-          <div className="bg-white dark:bg-[#0f0f0f] rounded-2xl border border-black/[0.06] dark:border-white/[0.06] overflow-hidden shadow-[0_1px_3px_rgba(0,0,0,0.04)] dark:shadow-none">
+          <div className="bg-white dark:bg-[#0f0f0f] rounded-2xl border border-black/[0.06] dark:border-white/[0.06] shadow-[0_1px_3px_rgba(0,0,0,0.04)] dark:shadow-none">
             <div className="px-5 py-4 border-b border-black/[0.06] dark:border-white/[0.06]">
               <p
                 className="text-[10px] tracking-[0.12em] uppercase text-neutral-400 dark:text-neutral-500"

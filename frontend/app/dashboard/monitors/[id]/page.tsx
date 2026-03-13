@@ -69,6 +69,34 @@ export default async function MonitorDetailPage({
     .gte("triggered_at", oneDayAgo.toISOString())
     .order("triggered_at", { ascending: false });
 
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+  const { data: recentDownAlerts } = await supabase
+    .from("alerts")
+    .select("id")
+    .eq("monitor_id", id)
+    .eq("type", "down")
+    .gte("sent_at", thirtyDaysAgo.toISOString());
+
+  const incidentFrequency30d = recentDownAlerts?.length ?? 0;
+
+  const { data: historicalRecoveries } = await supabase
+    .from("alerts")
+    .select("downtime_minutes")
+    .eq("monitor_id", id)
+    .eq("type", "recovered")
+    .not("downtime_minutes", "is", null)
+    .limit(10);
+
+  const averageHistoricalDowntimeMinutes =
+    historicalRecoveries && historicalRecoveries.length > 0
+      ? Math.round(
+          historicalRecoveries.reduce((a, b) => a + (b.downtime_minutes ?? 0), 0) /
+            historicalRecoveries.length,
+        )
+      : null;
+
   const graphSevenDaysAgo = new Date();
   graphSevenDaysAgo.setDate(graphSevenDaysAgo.getDate() - 7);
 
@@ -176,28 +204,101 @@ export default async function MonitorDetailPage({
   // Group alerts into completed incidents (down + recovered with same incident_id)
   const allAlerts = alerts ?? [];
   const downAlerts = allAlerts.filter((a) => a.type === "down");
-  const incidentReports: IncidentReport[] = downAlerts
-    .flatMap((downAlert) => {
-      if (!downAlert.incident_id) return [];
-      const recoveredAlert = allAlerts.find(
-        (a) => a.type === "recovered" && a.incident_id === downAlert.incident_id,
-      );
-      if (!recoveredAlert) return [];
+  const incidentReports: IncidentReport[] = (
+    await Promise.all(
+      downAlerts.map(async (downAlert) => {
+        if (!downAlert.incident_id) return null;
+        const recoveredAlert = allAlerts.find(
+          (a) => a.type === "recovered" && a.incident_id === downAlert.incident_id,
+        );
+        if (!recoveredAlert) return null;
 
-      const downTime = new Date(downAlert.sent_at).getTime();
-      const anomalyBefore =
-        anomalyAlerts?.some((a) => {
-          const t = new Date(a.triggered_at).getTime();
-          return t < downTime && downTime - t < 30 * 60 * 1000;
-        }) ?? false;
+        const downTime = new Date(downAlert.sent_at).getTime();
 
-      const durationMinutes = recoveredAlert.downtime_minutes;
-      const failedChecks = durationMinutes
-        ? Math.max(1, Math.round(durationMinutes / (monitor.check_interval_minutes ?? 5)))
-        : 1;
+        // Pre-incident trend: last 5 pings before the outage
+        const { data: preIncidentPings } = await supabase
+          .from("pings")
+          .select("checked_at, response_time_ms, status")
+          .eq("monitor_id", id)
+          .lt("checked_at", downAlert.sent_at)
+          .order("checked_at", { ascending: false })
+          .limit(5);
 
-      return [
-        {
+        const preIncidentTrend = (preIncidentPings ?? []).reverse().map((p) => ({
+          checkedAt: p.checked_at,
+          responseTimeMs: p.response_time_ms,
+          status: p.status,
+        }));
+
+        // Error rate in 30 minutes before incident
+        const thirtyMinBefore = new Date(downTime - 30 * 60 * 1000).toISOString();
+        const { data: prePings } = await supabase
+          .from("pings")
+          .select("status")
+          .eq("monitor_id", id)
+          .gte("checked_at", thirtyMinBefore)
+          .lt("checked_at", downAlert.sent_at);
+
+        const errorRateBeforeIncident =
+          prePings && prePings.length > 0
+            ? Math.round(
+                (prePings.filter((p) => p.status === "down").length / prePings.length) * 100,
+              )
+            : null;
+
+        // Anomaly that fired within 30 min before outage
+        const relevantAnomaly = anomalyAlerts?.find((a) => {
+          const anomalyTime = new Date(a.triggered_at).getTime();
+          return anomalyTime < downTime && downTime - anomalyTime < 30 * 60 * 1000;
+        });
+
+        const anomalyLeadTimeMinutes = relevantAnomaly
+          ? Math.round((downTime - new Date(relevantAnomaly.triggered_at).getTime()) / 1000 / 60)
+          : null;
+        const anomalyBaselineMs = relevantAnomaly?.baseline_ms ?? null;
+        const anomalyPeakMs = relevantAnomaly?.current_avg_ms ?? null;
+
+        // First down ping after the alert for timing breakdown + root cause
+        const { data: incidentPingArr } = await supabase
+          .from("pings")
+          .select("dns_lookup_ms, tcp_connect_ms, tls_handshake_ms, ttfb_ms, status_code, response_time_ms, error_detail")
+          .eq("monitor_id", id)
+          .eq("status", "down")
+          .gte("checked_at", downAlert.sent_at)
+          .order("checked_at", { ascending: true })
+          .limit(1);
+
+        const incidentPing = incidentPingArr?.[0] ?? null;
+
+        const rootCauseAnalysis = incidentPing
+          ? analyzeRootCause(
+              {
+                dns_lookup_ms: incidentPing.dns_lookup_ms ?? null,
+                tcp_connect_ms: incidentPing.tcp_connect_ms ?? null,
+                tls_handshake_ms: incidentPing.tls_handshake_ms ?? null,
+                ttfb_ms: incidentPing.ttfb_ms ?? null,
+                response_time_ms: incidentPing.response_time_ms ?? null,
+                status_code: incidentPing.status_code ?? null,
+                error_detail: incidentPing.error_detail ?? null,
+              },
+              baseline,
+            )
+          : null;
+
+        // Time since previous incident
+        const previousIncident = allAlerts.find(
+          (a) => a.type === "down" && a.sent_at < downAlert.sent_at,
+        );
+        const timeSinceLastIncidentMinutes = previousIncident
+          ? Math.round((downTime - new Date(previousIncident.sent_at).getTime()) / 1000 / 60)
+          : null;
+
+        const durationMinutes = recoveredAlert.downtime_minutes;
+        const failedChecks = durationMinutes
+          ? Math.max(1, Math.round(durationMinutes / (monitor.check_interval_minutes ?? 5)))
+          : 1;
+
+        return {
           incidentId: downAlert.incident_id,
           monitorName: monitor.name,
           monitorUrl: monitor.url,
@@ -205,18 +306,32 @@ export default async function MonitorDetailPage({
           endTime: recoveredAlert.sent_at,
           durationMinutes,
           errorStatusCode: downAlert.status_code ?? null,
-          rootCause: null,
-          confidence: null,
+          rootCause: rootCauseAnalysis?.likelyCause ?? null,
+          confidence: rootCauseAnalysis?.confidence ?? null,
+          suggestion: rootCauseAnalysis?.suggestion ?? null,
           baselineResponseMs: baselineMs,
           responseAtFailure: downAlert.response_time_ms ?? null,
           responseAtRecovery: recoveredAlert.response_time_ms ?? null,
           failedChecks,
           estimatedRequestsAffected: durationMinutes ? durationMinutes * 100 : null,
-          anomalyDetectedBefore: anomalyBefore,
+          anomalyDetectedBefore: !!relevantAnomaly,
+          anomalyLeadTimeMinutes,
+          anomalyBaselineMs,
+          anomalyPeakMs,
+          dnsLookupMs: incidentPing?.dns_lookup_ms ?? null,
+          tcpConnectMs: incidentPing?.tcp_connect_ms ?? null,
+          tlsHandshakeMs: incidentPing?.tls_handshake_ms ?? null,
+          ttfbMs: incidentPing?.ttfb_ms ?? null,
+          preIncidentTrend,
+          errorRateBeforeIncident,
+          incidentFrequency30d,
+          averageHistoricalDowntimeMinutes,
+          timeSinceLastIncidentMinutes,
           generatedAt: new Date().toISOString(),
-        } satisfies IncidentReport,
-      ];
-    });
+        } satisfies IncidentReport;
+      }),
+    )
+  ).filter((r): r is IncidentReport => r !== null);
 
   return (
     <div

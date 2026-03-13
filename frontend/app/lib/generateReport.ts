@@ -8,12 +8,29 @@ export interface IncidentReport {
   errorStatusCode: number | null;
   rootCause: string | null;
   confidence: number | null;
+  suggestion: string | null;
   baselineResponseMs: number | null;
   responseAtFailure: number | null;
   responseAtRecovery: number | null;
   failedChecks: number;
   estimatedRequestsAffected: number | null;
   anomalyDetectedBefore: boolean;
+  anomalyLeadTimeMinutes: number | null;
+  anomalyBaselineMs: number | null;
+  anomalyPeakMs: number | null;
+  dnsLookupMs: number | null;
+  tcpConnectMs: number | null;
+  tlsHandshakeMs: number | null;
+  ttfbMs: number | null;
+  preIncidentTrend: {
+    checkedAt: string;
+    responseTimeMs: number | null;
+    status: string;
+  }[];
+  errorRateBeforeIncident: number | null;
+  incidentFrequency30d: number;
+  averageHistoricalDowntimeMinutes: number | null;
+  timeSinceLastIncidentMinutes: number | null;
   generatedAt: string;
 }
 
@@ -33,27 +50,77 @@ export function formatIncidentReport(report: IncidentReport): string {
   lines.push(`Start:    ${new Date(report.startTime).toUTCString()}`);
   lines.push(`End:      ${report.endTime ? new Date(report.endTime).toUTCString() : "Ongoing"}`);
   lines.push(`Duration: ${report.durationMinutes !== null ? report.durationMinutes + " minutes" : "Unknown"}`);
-  if (report.anomalyDetectedBefore) {
-    lines.push(`Note:     Performance degradation detected before outage`);
+  if (report.timeSinceLastIncidentMinutes !== null) {
+    const days = Math.floor(report.timeSinceLastIncidentMinutes / 60 / 24);
+    const hours = Math.floor((report.timeSinceLastIncidentMinutes % (60 * 24)) / 60);
+    lines.push(`Previous: ${days > 0 ? days + "d " : ""}${hours > 0 ? hours + "h ago" : "Less than 1h ago"}`);
   }
   lines.push(``);
+
   lines.push(`WHAT HAPPENED`);
-  lines.push(`Error:        ${report.errorStatusCode ? `HTTP ${report.errorStatusCode}` : "Connection timeout / No response"}`);
+  lines.push(`Error:       ${report.errorStatusCode ? `HTTP ${report.errorStatusCode}` : "Connection timeout / No response"}`);
   if (report.rootCause) {
-    lines.push(`Likely cause: ${report.rootCause}${report.confidence ? ` (${report.confidence}% confidence)` : ""}`);
+    lines.push(`Likely cause: ${report.rootCause} (${report.confidence}% confidence)`);
+    lines.push(`Suggestion:   ${report.suggestion}`);
   }
   lines.push(``);
+
+  if (report.dnsLookupMs || report.tcpConnectMs || report.tlsHandshakeMs || report.ttfbMs) {
+    lines.push(`REQUEST BREAKDOWN`);
+    lines.push(`DNS Lookup:         ${report.dnsLookupMs ? report.dnsLookupMs + "ms" : "N/A"}`);
+    lines.push(`TCP Connect:        ${report.tcpConnectMs ? report.tcpConnectMs + "ms" : "Failed"}`);
+    lines.push(`TLS Handshake:      ${report.tlsHandshakeMs ? report.tlsHandshakeMs + "ms" : "N/A"}`);
+    lines.push(`Time to First Byte: ${report.ttfbMs ? report.ttfbMs + "ms" : "N/A"}`);
+    lines.push(``);
+  }
+
+  if (report.preIncidentTrend.length > 0) {
+    lines.push(`PRE-INCIDENT TREND (last ${report.preIncidentTrend.length} pings)`);
+    report.preIncidentTrend.forEach((ping) => {
+      const time = new Date(ping.checkedAt).toUTCString();
+      const ms = ping.responseTimeMs ? ping.responseTimeMs + "ms" : "timeout";
+      const status = ping.status === "up" ? "✓" : "✗";
+      lines.push(`${status} ${time} · ${ms}`);
+    });
+    lines.push(``);
+  }
+
+  if (report.anomalyDetectedBefore) {
+    lines.push(`EARLY WARNING`);
+    if (report.anomalyLeadTimeMinutes !== null) {
+      lines.push(`Degradation detected ${report.anomalyLeadTimeMinutes} minutes before outage`);
+    }
+    if (report.anomalyBaselineMs && report.anomalyPeakMs) {
+      lines.push(`Response time: ${report.anomalyBaselineMs}ms baseline → ${report.anomalyPeakMs}ms before failure`);
+    }
+    lines.push(``);
+  }
+
+  if (report.errorRateBeforeIncident !== null) {
+    lines.push(`ERROR RATE (30 min before incident): ${report.errorRateBeforeIncident}%`);
+    lines.push(``);
+  }
+
   lines.push(`RESPONSE TIMES`);
   lines.push(`Baseline:    ${report.baselineResponseMs ? report.baselineResponseMs + "ms" : "N/A"}`);
   lines.push(`At failure:  ${report.responseAtFailure ? report.responseAtFailure + "ms" : "N/A"}`);
   lines.push(`At recovery: ${report.responseAtRecovery ? report.responseAtRecovery + "ms" : "N/A"}`);
   lines.push(``);
+
   lines.push(`IMPACT`);
   lines.push(`Failed checks: ${report.failedChecks}`);
   if (report.estimatedRequestsAffected !== null) {
     lines.push(`Est. impact:   ~${report.estimatedRequestsAffected.toLocaleString()} requests affected`);
   }
+  if (report.averageHistoricalDowntimeMinutes !== null) {
+    lines.push(`Avg recovery:  ${report.averageHistoricalDowntimeMinutes} minutes (historical)`);
+  }
   lines.push(``);
+
+  lines.push(`INCIDENT HISTORY (last 30 days)`);
+  lines.push(`Total incidents: ${report.incidentFrequency30d}`);
+  lines.push(``);
+
   lines.push(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`);
   lines.push(`Pulse API Monitor · pulse.app`);
 

@@ -10,9 +10,8 @@ PRO TIER:
 Upto 5 projects
 Unlimited Monitors under each project
 1 minute check intervals
-Email, Slack, Discord & Webhook alerts
-Advanced alert rules
-Response time monitoring & performance charts
+Email alerts
+Automatic API Schema Change Detection
 Custom HTTP requests (headers, body, auth)
 Response validation checks
 30 & 90 day history
@@ -45,7 +44,7 @@ Third-Party Dependency Monitoring:
 Monitor external APIs your system depends on (payments, auth providers, messaging services) to quickly identify when outages originate from third-party providers.
 
 API Test Monitoring:
-Upload or configure API tests that run periodically, validating API behavior and alerting when failure rates increase after deployments.
+Upload or configure API tests that run periodically, validating API behavior and alerting when failure rates increase.
 
 Centralized Alert Management:
 Configure alerts (email, webhooks, Slack/Discord) at the team or project level so multiple team members receive outage notifications.
