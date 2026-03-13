@@ -326,7 +326,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=
 - [x] Deploy frontend to Vercel
 - [x] last 7-day Uptime display
 - [x] Docs page
-- [ ] Resend email alerts (pending domain setup) (V2)
+- [x] Resend email alerts (pending domain setup) (V2)
 - [ ] Lemon Squeezy integration (V2)
 - [ ] SSL certificate expiry monitor (V2)
 - [ ] 30/90 day ping history retention (V2)
