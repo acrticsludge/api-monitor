@@ -1,48 +1,50 @@
-export const dynamic = "force-dynamic";
 import { MetadataRoute } from "next";
+
+const BASE_URL = "https://pulsemonitor.dev";
+
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
-      url: "https://pulsemonitor.dev/",
+      url: `${BASE_URL}/`,
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 1,
     },
     {
-      url: "https://pulsemonitor.dev/login",
+      url: `${BASE_URL}/pricing`,
       lastModified: new Date(),
       changeFrequency: "monthly",
-      priority: 0.8,
+      priority: 0.9,
     },
     {
-      url: "https://pulsemonitor.dev/signup",
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: "https://pulsemonitor.dev/docs",
+      url: `${BASE_URL}/docs`,
       lastModified: new Date(),
       changeFrequency: "weekly",
+      priority: 0.8,
+    },
+    {
+      url: `${BASE_URL}/login`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.6,
+    },
+    {
+      url: `${BASE_URL}/signup`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
       priority: 0.7,
     },
     {
-      url: "https://pulsemonitor.dev/pricing",
+      url: `${BASE_URL}/privacy`,
       lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
+      changeFrequency: "yearly",
+      priority: 0.3,
     },
     {
-      url: "https://pulsemonitor.dev/privacy",
+      url: `${BASE_URL}/terms`,
       lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.5,
-    },
-    {
-      url: "https://pulsemonitor.dev/terms",
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.5,
+      changeFrequency: "yearly",
+      priority: 0.3,
     },
   ];
 }

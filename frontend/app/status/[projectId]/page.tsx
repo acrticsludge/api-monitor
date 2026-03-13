@@ -1,8 +1,44 @@
 export const revalidate = 0;
 export const dynamic = "force-dynamic";
 
+import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { createClient } from "@supabase/supabase-js";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ projectId: string }>;
+}): Promise<Metadata> {
+  const { projectId } = await params;
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+  );
+  const { data: project } = await supabase
+    .from("projects")
+    .select("name")
+    .eq("id", projectId)
+    .single();
+
+  const title = project?.name
+    ? `${project.name} — Status`
+    : "Service Status";
+
+  return {
+    title,
+    description: project?.name
+      ? `Live uptime status for ${project.name}. Check current service health and monitor availability.`
+      : "Live uptime status page powered by Pulse.",
+    robots: { index: false, follow: false },
+    openGraph: {
+      title: `${title} | Pulse`,
+      description: project?.name
+        ? `Live uptime status for ${project.name}.`
+        : "Live uptime status page powered by Pulse.",
+    },
+  };
+}
 import AutoRefresh from "./AutoRefresh";
 import ThemeToggle from "../../../components/ThemeToggle";
 import HealthBadge from "../../../components/HealthBadge";
