@@ -30,11 +30,20 @@ export async function addMonitor(formData: FormData) {
 
   if (!user) return { error: "Not authenticated" };
 
-  // Free tier: max 5 monitors
+  // Get user's project
+  const { data: project } = await supabase
+    .from("projects")
+    .select("id")
+    .eq("user_id", user.id)
+    .single();
+
+  if (!project) return { error: "No project found." };
+
+  // Free tier: max 5 monitors per project
   const { count } = await supabase
     .from("monitors")
     .select("id", { count: "exact", head: true })
-    .eq("user_id", user.id);
+    .eq("project_id", project.id);
 
   if ((count ?? 0) >= 5) {
     return { error: "Free plan is limited to 5 monitors." };
@@ -65,6 +74,7 @@ export async function addMonitor(formData: FormData) {
   }
 
   const { error } = await supabase.from("monitors").insert({
+    project_id: project.id,
     name,
     url,
     method,
@@ -74,6 +84,30 @@ export async function addMonitor(formData: FormData) {
     is_active: true,
     webhook_url,
   });
+
+  if (error) return { error: error.message };
+
+  revalidatePath("/dashboard");
+  return {};
+}
+
+export async function updateProjectName(projectId: string, name: string) {
+  if (!UUID_RE.test(projectId)) return { error: "Invalid project ID." };
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return { error: "Not authenticated" };
+
+  if (!name.trim()) return { error: "Name cannot be empty." };
+
+  const { error } = await supabase
+    .from("projects")
+    .update({ name: name.trim() })
+    .eq("id", projectId)
+    .eq("user_id", user.id);
 
   if (error) return { error: error.message };
 

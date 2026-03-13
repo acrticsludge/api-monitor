@@ -1,6 +1,7 @@
 export const revalidate = 0;
 export const dynamic = "force-dynamic";
 
+import { notFound, redirect } from "next/navigation";
 import { createClient } from "@supabase/supabase-js";
 import AutoRefresh from "./AutoRefresh";
 import ThemeToggle from "../../../components/ThemeToggle";
@@ -24,23 +25,50 @@ function uptimeColor(pct: number): string {
 export default async function StatusPage({
   params,
 }: {
-  params: Promise<{ userId: string }>;
+  params: Promise<{ projectId: string }>;
 }) {
-  const { userId } = await params;
+  const { projectId } = await params;
 
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
   );
 
-  const { data: monitors, error: monitorsError } = await supabase
+  let { data: project } = await supabase
+    .from("projects")
+    .select("id, name")
+    .eq("id", projectId)
+    .single();
+
+  // Backwards compat: old URLs used userId as the path param
+  if (!project) {
+    const { data: bySlug, error: slugErr } = await supabase
+      .from("projects")
+      .select("id")
+      .eq("slug", projectId)
+      .single();
+    if (bySlug) redirect(`/status/${bySlug.id}`);
+
+    const { data: byUser, error: userErr } = await supabase
+      .from("projects")
+      .select("id")
+      .eq("user_id", projectId)
+      .single();
+    if (byUser) redirect(`/status/${byUser.id}`);
+
+    return (
+      <pre style={{ color: "white", background: "#111", padding: 20, whiteSpace: "pre-wrap" }}>
+        {JSON.stringify({ projectId, slugErr: slugErr?.message, userErr: userErr?.message }, null, 2)}
+      </pre>
+    );
+  }
+
+  const { data: monitors } = await supabase
     .from("monitors")
     .select("id, name, url")
-    .eq("user_id", userId)
+    .eq("project_id", projectId)
     .eq("is_active", true)
     .order("created_at", { ascending: true });
-
-  console.log("Monitors error:", monitorsError);
 
   const monitorList = monitors ?? [];
   const monitorIds = monitorList.map((m) => m.id);
@@ -186,7 +214,7 @@ export default async function StatusPage({
               className="text-[11px] text-neutral-400 dark:text-neutral-500"
               style={{ fontFamily: "'DM Mono', monospace" }}
             >
-              Status Page
+              {project.name} · Status
             </p>
             <ThemeToggle />
           </div>

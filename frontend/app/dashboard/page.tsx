@@ -6,6 +6,7 @@ import { deleteMonitor, toggleMonitor } from "./actions";
 import AddMonitorForm from "./AddMonitorForm";
 import EditMonitorModal from "../../components/EditMonitorModal";
 import StatusPageLink from "./StatusPageLink";
+import ProjectHeader from "./ProjectHeader";
 import ThemeToggle from "../../components/ThemeToggle";
 import NotificationBell from "../../components/NotificationBell";
 import LocalTime from "../../components/LocalTime";
@@ -39,12 +40,18 @@ export default async function DashboardPage() {
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
+  const { data: project } = await supabase
+    .from("projects")
+    .select("id, name, slug")
+    .eq("user_id", user.id)
+    .single();
+
   const { data: monitors } = await supabase
     .from("monitors")
     .select(
       "id, name, url, method, expected_status_code, check_interval_minutes, webhook_url, is_active, created_at",
     )
-    .eq("user_id", user.id)
+    .eq("project_id", project?.id ?? "")
     .order("created_at", { ascending: false });
 
   const monitorList: Monitor[] = monitors ?? [];
@@ -175,6 +182,7 @@ export default async function DashboardPage() {
       </header>
 
       <main className="relative max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-10 space-y-5">
+        {project && <ProjectHeader project={project} />}
         <div className="mb-6">
           <p
             className="text-[11px] tracking-[0.14em] uppercase text-[#00cc6a] dark:text-[#00ff87] mb-2 font-medium"
@@ -231,7 +239,7 @@ export default async function DashboardPage() {
           </p>
         </div>
 
-        <StatusPageLink userId={user.id} />
+        <StatusPageLink userId={project?.id ?? user.id} />
 
         <div className="flex items-center gap-4 py-1">
           <div className="flex-1 h-px bg-black/[0.06] dark:bg-white/[0.04]" />
@@ -582,7 +590,7 @@ export default async function DashboardPage() {
           </span>
           <div className="flex items-center gap-5">
             {[
-              { href: `/status/${user.id}`, label: "Status Page" },
+              { href: `/status/${project?.id ?? user.id}`, label: "Status Page" },
               { href: "/docs", label: "Docs" },
               { href: "/pricing", label: "Pricing" },
               { href: "/privacy", label: "Privacy" },

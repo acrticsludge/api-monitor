@@ -583,7 +583,7 @@ cron.schedule("*/5 * * * *", async () => {
 
     const { data: monitors, error } = await supabase
       .from("monitors")
-      .select("*")
+      .select("*, projects(id, name, slug)")
       .eq("is_active", true);
 
     if (error) {

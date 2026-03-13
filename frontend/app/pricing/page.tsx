@@ -138,7 +138,7 @@ export default function PricingPage() {
             </Link>
             <ul className="space-y-3">
               {[
-                { label: "5 monitors" },
+                { label: "1 project · 5 monitors" },
                 { label: "5 minute check intervals" },
                 { label: "2-ping confirmation before alerting" },
                 { label: "Browser push notifications" },
