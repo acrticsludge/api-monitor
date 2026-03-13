@@ -1,0 +1,69 @@
+- surface errors and performance degradations as soon as they occur
+- Some of the most business-critical workflows chain requests together, and they sometimes involve multiple APIs. An effective API monitoring strategy therefore enables teams to systematically trigger these complex workflows and monitor the results at every step of the way.
+- If a team is unable to identify the source of an issue, a third-party API may be to blame. These teams can configure monitors for the third-party endpoints that they consume, which will keep them from troubleshooting problems that are out of their control.
+- An insecure API can provide an entry point for attackers, so it's important for teams to continuously monitor their APIs for vulnerabilities. This process involves configuring and running security checks in development, CI/CD pipelines, and production.
+- Tests validate API behavior and transactions, and an increase in the number of failed test results could indicate that a recent deployment is not backwards compatible.
+- Team plan, 1 user creates a Team and can add projects, team members (via their email), each project gets their own status page.
+
+PRO TIER:
+
+Upto 5 projects
+Unlimited Monitors under each project
+1 minute check intervals
+Email, Slack, Discord & Webhook alerts
+Advanced alert rules
+Response time monitoring & performance charts
+Custom HTTP requests (headers, body, auth)
+Response validation checks
+30 & 90 day history
+SSL certificate monitoring
+Custom status page domain
+Status page customization
+CSV Export
+3 API Workflows
+Incident reports
+Root Cause Analysis
+
+TEAM TIER:
+
+Team Workspaces:
+Create a team workspace where one owner can invite members via email to collaborate on monitoring and incident management.
+
+Role-Based Access Control (RBAC):
+Assign roles such as Owner, Admin, Editor, or Viewer to control who can create monitors, edit settings, or view data.
+
+Projects for Service Organization:
+Organize monitors into separate projects (e.g., Auth Service, Payments API, Public API) to keep monitoring structured for larger teams.
+
+Project-Level Status Pages:
+Each project gets its own public status page to communicate uptime, incidents, and maintenance events to customers or internal stakeholders.
+
+Advanced API Workflow Monitoring:
+Create multi-step API workflows that chain requests together (e.g., login → fetch data → submit order) and validate responses at each step.
+
+Third-Party Dependency Monitoring:
+Monitor external APIs your system depends on (payments, auth providers, messaging services) to quickly identify when outages originate from third-party providers.
+
+API Test Monitoring:
+Upload or configure API tests that run periodically, validating API behavior and alerting when failure rates increase after deployments.
+
+Centralized Alert Management:
+Configure alerts (email, webhooks, Slack/Discord) at the team or project level so multiple team members receive outage notifications.
+
+Incident Reports & Timelines:
+Automatically generate incident reports showing when a failure started, when it was resolved, and which monitors were affected.
+
+Root Cause Indicators:
+Correlate failures across monitors to highlight potential root causes (for example, multiple endpoints failing due to the same upstream dependency).
+
+Shared Monitoring Dashboard:
+A team-wide dashboard showing monitor health, recent incidents, and response time trends across all projects.
+
+Historical Monitoring Analytics:
+Extended history (e.g., 90–180 days) of uptime, latency trends, and incident frequency.
+
+CSV Data Export:
+Export uptime and response time data for internal reports, compliance, or reliability analysis.
+
+Audit Logs:
+Track important actions like monitor creation, alert changes, or team member additions for accountability and debugging.
