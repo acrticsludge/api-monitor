@@ -64,6 +64,7 @@ export default function ResponseTimeGraph({ pings: initialPings, monitorId, isPr
 
   const minMs = upPings.length > 0 ? Math.min(...upPings.map((p) => p.response_time_ms!)) : null;
   const maxMs = upPings.length > 0 ? Math.max(...upPings.map((p) => p.response_time_ms!)) : null;
+  const yAxisMax = maxMs !== null ? Math.ceil((maxMs * 1.15) / 100) * 100 : undefined;
   const avgMs =
     upPings.length > 0
       ? Math.round(upPings.reduce((a, p) => a + p.response_time_ms!, 0) / upPings.length)
@@ -286,7 +287,8 @@ export default function ResponseTimeGraph({ pings: initialPings, monitorId, isPr
               tickLine={false}
               axisLine={false}
               tickFormatter={(v) => `${v}ms`}
-              width={36}
+              width={52}
+              domain={[0, yAxisMax ?? 'auto']}
             />
             <Tooltip
               contentStyle={tooltipStyle}
@@ -341,7 +343,8 @@ export default function ResponseTimeGraph({ pings: initialPings, monitorId, isPr
               tickLine={false}
               axisLine={false}
               tickFormatter={(v) => `${v}ms`}
-              width={36}
+              width={52}
+              domain={[0, yAxisMax ?? 'auto']}
             />
             <Tooltip
               contentStyle={tooltipStyle}

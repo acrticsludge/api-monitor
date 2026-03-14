@@ -6,7 +6,20 @@
       "Bash(npx tsc:*)",
       "Bash(mkdir -p \"c:\\\\Anubhav\\\\Web Dev Projects\\\\API-Monitor\\\\api-monitor\\\\frontend\\\\app\\\\api\\\\monitors\\\\[id]\\\\export\")",
       "Bash(mkdir -p \"c:\\\\Anubhav\\\\Web Dev Projects\\\\API-Monitor\\\\api-monitor\\\\frontend\\\\app\\\\api\\\\monitors\\\\[id]\\\\pings\")",
-      "Bash(node -e \"console.log\\(require\\(''crypto''\\).randomBytes\\(32\\).toString\\(''hex''\\)\\)\")"
+      "Bash(node -e \"console.log\\(require\\(''crypto''\\).randomBytes\\(32\\).toString\\(''hex''\\)\\)\")",
+      "Bash(npx shadcn@latest init --defaults)",
+      "Bash(npx shadcn@latest add badge separator tooltip scroll-area skeleton tabs progress alert table --yes)",
+      "Bash(mkdir -p \"c:\\\\Anubhav\\\\Web Dev Projects\\\\API-Monitor\\\\api-monitor\\\\frontend\\\\app\\\\dashboard\\\\monitors\\\\[id]\\\\graphs\")",
+      "Bash(mkdir -p \"c:\\\\Anubhav\\\\Web Dev Projects\\\\API-Monitor\\\\api-monitor\\\\frontend\\\\app\\\\dashboard\\\\monitors\\\\[id]\\\\incidents\")",
+      "Bash(mkdir -p \"c:\\\\Anubhav\\\\Web Dev Projects\\\\API-Monitor\\\\api-monitor\\\\frontend\\\\app\\\\dashboard\\\\monitors\\\\[id]\\\\reports\")",
+      "Bash(mkdir -p \"c:\\\\Anubhav\\\\Web Dev Projects\\\\API-Monitor\\\\api-monitor\\\\frontend\\\\app\\\\dashboard\\\\monitors\\\\[id]\\\\analysis\")",
+      "Bash(mkdir -p \"c:\\\\Anubhav\\\\Web Dev Projects\\\\API-Monitor\\\\api-monitor\\\\frontend\\\\app\\\\dashboard\\\\monitors\\\\[id]\\\\pings\")",
+      "Bash(mkdir -p \"c:\\\\Anubhav\\\\Web Dev Projects\\\\API-Monitor\\\\api-monitor\\\\frontend\\\\app\\\\dashboard\\\\monitors\\\\[id]\\\\ssl\")",
+      "Bash(mkdir -p \"c:\\\\Anubhav\\\\Web Dev Projects\\\\API-Monitor\\\\api-monitor\\\\frontend\\\\app\\\\dashboard\\\\monitors\\\\[id]\\\\settings\")",
+      "Bash(node -e \":*)",
+      "Bash(npm run:*)",
+      "Bash(npx next:*)",
+      "Bash(echo \"EXIT:$?\")"
     ]
   }
 }

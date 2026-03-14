@@ -12,5 +12,7 @@ self.addEventListener("push", function (event) {
 
 self.addEventListener("notificationclick", function (event) {
   event.notification.close();
-  event.waitUntil(clients.openWindow(event.notification.data.url));
+  const raw = event.notification.data.url || "/";
+  const url = raw.startsWith("http") ? raw : self.location.origin + raw;
+  event.waitUntil(clients.openWindow(url));
 });

@@ -53,6 +53,8 @@ webpush.setVapidDetails(
   process.env.VAPID_PRIVATE_KEY,
 );
 
+const APP_URL = (process.env.NEXT_PUBLIC_APP_URL ?? "https://pulsemonitor.dev").replace(/\/$/, "");
+
 // ── Sanitization helpers ──────────────────────────────────────────────────────
 
 const ALLOWED_METHODS = [
@@ -206,7 +208,7 @@ async function sendPushNotificationDirect(userId, title, body) {
 
     if (!subs || subs.length === 0) return;
 
-    const payload = JSON.stringify({ title, body, url: "/dashboard" });
+    const payload = JSON.stringify({ title, body, url: `${APP_URL}/dashboard` });
 
     await Promise.allSettled(
       subs.map(({ id, subscription }) =>
@@ -559,7 +561,7 @@ async function sendAnomalyPushNotification(monitor, baselineMs, currentMs) {
     const payload = JSON.stringify({
       title: `⚠️ ${monitor.name} is degrading`,
       body: `Response time is ${currentMs}ms — ${Math.round(currentMs / baselineMs)}x slower than usual (baseline: ${baselineMs}ms)`,
-      url: "/dashboard",
+      url: `${APP_URL}/dashboard`,
     });
 
     await Promise.allSettled(
@@ -905,7 +907,7 @@ async function sendPushNotification(
         ? `🔴 ${monitor.name} is down`
         : `🟢 ${monitor.name} recovered`,
       body: contextLine.trim(),
-      url: `/dashboard/monitors/${monitor.id}`,
+      url: `${APP_URL}/dashboard/monitors/${monitor.id}/incidents`,
     });
 
     await Promise.allSettled(

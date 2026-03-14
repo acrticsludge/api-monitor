@@ -430,6 +430,58 @@ export async function getDecryptedBody(monitorId: string): Promise<string | null
   return decrypt(data?.custom_body ?? null);
 }
 
+/**
+ * Called when a user's Pro subscription ends.
+ * Resets all monitors to free-tier constraints:
+ *   - check_interval_minutes → 5
+ *   - clears Pro-only fields (custom_headers, auth_type/value, response_validation, check_ssl, custom_body)
+ *   - pauses monitors beyond the 5-per-project limit
+ */
+export async function enforceFreeTierLimits(userId: string) {
+  if (!UUID_RE.test(userId)) return;
+
+  const supabase = await createClient();
+
+  // Fetch all projects for this user
+  const { data: projects } = await supabase
+    .from("projects")
+    .select("id")
+    .eq("user_id", userId);
+
+  for (const project of projects ?? []) {
+    const { data: monitors } = await supabase
+      .from("monitors")
+      .select("id, is_active")
+      .eq("project_id", project.id)
+      .eq("user_id", userId)
+      .order("created_at", { ascending: true });
+
+    const monitorList = monitors ?? [];
+
+    for (let i = 0; i < monitorList.length; i++) {
+      const monitor = monitorList[i];
+      const overLimit = i >= 5;
+
+      await supabase
+        .from("monitors")
+        .update({
+          check_interval_minutes: 5,
+          custom_headers: null,
+          auth_type: "none",
+          auth_value: null,
+          response_validation: null,
+          check_ssl: false,
+          custom_body: null,
+          ...(overLimit && { is_active: false }),
+        })
+        .eq("id", monitor.id)
+        .eq("user_id", userId);
+    }
+  }
+
+  revalidatePath("/dashboard");
+}
+
 export async function deleteMonitor(formData: FormData) {
   const supabase = await createClient();
   const {

@@ -118,6 +118,19 @@ export default async function DashboardPage({
           .order("triggered_at", { ascending: false })
       : { data: null };
 
+  // Detect free-tier violations for ex-Pro users
+  const downgradeViolations = !isPro
+    ? {
+        fastIntervals: monitorList.filter(
+          (m) => (m.check_interval_minutes ?? 5) < 5,
+        ).length,
+        overLimit: Math.max(0, monitorList.length - 5),
+      }
+    : null;
+  const hasViolations =
+    downgradeViolations !== null &&
+    (downgradeViolations.fastIntervals > 0 || downgradeViolations.overLimit > 0);
+
   const upCount = monitorList.filter(
     (m) => latestPings.get(m.id)?.status === "up",
   ).length;
@@ -246,6 +259,36 @@ export default async function DashboardPage({
               : `Watching ${monitorList.length} endpoint${monitorList.length !== 1 ? "s" : ""}`}
           </p>
         </div>
+
+        {hasViolations && downgradeViolations && (
+          <div className="relative bg-yellow-400/[0.04] border border-yellow-400/25 rounded-2xl p-4 overflow-hidden">
+            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-yellow-400/40 to-transparent" />
+            <div className="flex items-start gap-3">
+              <svg className="w-4 h-4 text-yellow-400 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+              <div className="flex-1 min-w-0">
+                <p className="text-yellow-400 text-xs font-semibold mb-1" style={{ fontFamily: "'Syne', sans-serif" }}>
+                  Pro subscription ended — free tier limits apply
+                </p>
+                <p className="text-yellow-400/70 text-[11px] leading-relaxed" style={{ fontFamily: "'DM Mono', monospace" }}>
+                  {[
+                    downgradeViolations.fastIntervals > 0 &&
+                      `${downgradeViolations.fastIntervals} monitor${downgradeViolations.fastIntervals > 1 ? "s have" : " has"} a check interval under 5 min`,
+                    downgradeViolations.overLimit > 0 &&
+                      `${downgradeViolations.overLimit} monitor${downgradeViolations.overLimit > 1 ? "s are" : " is"} over the 5-monitor free limit`,
+                  ]
+                    .filter(Boolean)
+                    .join(" · ")}
+                </p>
+                <p className="text-yellow-400/50 text-[11px] mt-1" style={{ fontFamily: "'DM Mono', monospace" }}>
+                  These monitors will continue running until the settings are updated or you{" "}
+                  <a href="/pricing" className="underline hover:text-yellow-400/80 transition-colors">reactivate Pro</a>.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           <StatCard label="Total" value={monitorList.length} />
