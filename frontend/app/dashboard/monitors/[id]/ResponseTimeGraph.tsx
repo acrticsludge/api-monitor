@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import {
   ResponsiveContainer,
   LineChart,
@@ -23,12 +23,39 @@ interface Ping {
 interface Props {
   pings: Ping[];
   monitorName: string;
+  monitorId: string;
+  isPro: boolean;
 }
 
 type Tab = "timeline" | "daily";
 
-export default function ResponseTimeGraph({ pings, monitorName }: Props) {
+const RANGES = [
+  { label: "7d", days: 7 },
+  { label: "30d", days: 30 },
+  { label: "90d", days: 90 },
+];
+
+export default function ResponseTimeGraph({ pings: initialPings, monitorId, isPro }: Props) {
   const [tab, setTab] = useState<Tab>("timeline");
+  const [rangeDays, setRangeDays] = useState(7);
+  const [pings, setPings] = useState<Ping[]>(initialPings);
+  const [loadingRange, setLoadingRange] = useState(false);
+
+  // When Pro user changes range, fetch new data
+  useEffect(() => {
+    if (rangeDays === 7) {
+      setPings(initialPings);
+      return;
+    }
+    setLoadingRange(true);
+    fetch(`/api/monitors/${monitorId}/pings?days=${rangeDays}`)
+      .then((r) => r.json())
+      .then((data) => {
+        setPings(data);
+        setLoadingRange(false);
+      })
+      .catch(() => setLoadingRange(false));
+  }, [rangeDays, monitorId, initialPings]);
 
   const upPings = useMemo(
     () => pings.filter((p) => p.status === "up" && p.response_time_ms !== null),
@@ -49,9 +76,7 @@ export default function ResponseTimeGraph({ pings, monitorName }: Props) {
       .map((p) => {
         const d = new Date(p.checked_at);
         return {
-          // Numeric timestamp — unique per point, used as XAxis dataKey for accurate hover
           ts: d.getTime(),
-          // Full label shown in tooltip
           fullTime: d.toLocaleString("en-US", {
             month: "short",
             day: "numeric",
@@ -68,7 +93,7 @@ export default function ResponseTimeGraph({ pings, monitorName }: Props) {
 
   const dailyData = useMemo(() => {
     const days: { day: string; avgMs: number | null; checks: number }[] = [];
-    for (let i = 6; i >= 0; i--) {
+    for (let i = rangeDays - 1; i >= 0; i--) {
       const date = new Date();
       date.setDate(date.getDate() - i);
       const dateStr = date.toLocaleDateString("en-US", {
@@ -95,8 +120,13 @@ export default function ResponseTimeGraph({ pings, monitorName }: Props) {
         checks: dayPings.length,
       });
     }
+    // For 30/90 day ranges, only show every few days to avoid clutter
+    if (rangeDays > 7) {
+      const step = rangeDays === 30 ? 3 : 7;
+      return days.filter((_, i) => i % step === 0 || i === days.length - 1);
+    }
     return days;
-  }, [pings]);
+  }, [pings, rangeDays]);
 
   const hasData = upPings.length > 0;
 
@@ -114,6 +144,8 @@ export default function ResponseTimeGraph({ pings, monitorName }: Props) {
     fontSize: 10,
     fontFamily: "DM Mono",
   };
+
+  const availableRanges = isPro ? RANGES : [RANGES[0]];
 
   return (
     <div className="relative bg-white dark:bg-[#0f0f0f] border border-black/[0.06] dark:border-white/[0.06] rounded-2xl p-3 sm:p-5 overflow-hidden">
@@ -135,16 +167,37 @@ export default function ResponseTimeGraph({ pings, monitorName }: Props) {
             Performance Trends
           </p>
         </div>
-        <span
-          className="text-[10px] text-neutral-400 dark:text-neutral-600 tracking-wider uppercase"
-          style={{ fontFamily: "'DM Mono', monospace" }}
-        >
-          Last 7 days
-        </span>
+
+        {/* Range selector */}
+        <div className="flex items-center gap-1">
+          {availableRanges.map((r) => (
+            <button
+              key={r.days}
+              onClick={() => setRangeDays(r.days)}
+              className={`text-[10px] px-2 py-1 rounded-md transition-all ${
+                rangeDays === r.days
+                  ? "bg-[#00cc6a]/10 dark:bg-[#00ff87]/10 text-[#00cc6a] dark:text-[#00ff87] font-semibold"
+                  : "text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300"
+              }`}
+              style={{ fontFamily: "'DM Mono', monospace" }}
+            >
+              {r.label}
+            </button>
+          ))}
+          {!isPro && (
+            <span
+              className="text-[10px] text-neutral-600 dark:text-neutral-700 ml-1"
+              style={{ fontFamily: "'DM Mono', monospace" }}
+              title="30/90 day range requires Pro"
+            >
+              30d/90d — Pro
+            </span>
+          )}
+        </div>
       </div>
 
       {/* Stats row */}
-      {hasData && (
+      {hasData && !loadingRange && (
         <div className="flex gap-5 mb-4">
           {[
             { label: "Min", value: `${minMs}ms` },
@@ -171,32 +224,31 @@ export default function ResponseTimeGraph({ pings, monitorName }: Props) {
 
       {/* Tab toggle */}
       <div className="flex gap-4 mb-4 border-b border-black/[0.06] dark:border-white/[0.06]">
-        <button
-          onClick={() => setTab("timeline")}
-          className={
-            tab === "timeline"
-              ? "text-xs font-semibold text-[#00cc6a] dark:text-[#00ff87] border-b-2 border-[#00cc6a] dark:border-[#00ff87] pb-2 px-1 -mb-px transition-colors"
-              : "text-xs text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300 pb-2 px-1 -mb-px transition-colors border-b-2 border-transparent"
-          }
-          style={{ fontFamily: "'DM Mono', monospace" }}
-        >
-          Timeline
-        </button>
-        <button
-          onClick={() => setTab("daily")}
-          className={
-            tab === "daily"
-              ? "text-xs font-semibold text-[#00cc6a] dark:text-[#00ff87] border-b-2 border-[#00cc6a] dark:border-[#00ff87] pb-2 px-1 -mb-px transition-colors"
-              : "text-xs text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300 pb-2 px-1 -mb-px transition-colors border-b-2 border-transparent"
-          }
-          style={{ fontFamily: "'DM Mono', monospace" }}
-        >
-          Daily Average
-        </button>
+        {(["timeline", "daily"] as Tab[]).map((t) => (
+          <button
+            key={t}
+            onClick={() => setTab(t)}
+            className={
+              tab === t
+                ? "text-xs font-semibold text-[#00cc6a] dark:text-[#00ff87] border-b-2 border-[#00cc6a] dark:border-[#00ff87] pb-2 px-1 -mb-px transition-colors"
+                : "text-xs text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300 pb-2 px-1 -mb-px transition-colors border-b-2 border-transparent"
+            }
+            style={{ fontFamily: "'DM Mono', monospace" }}
+          >
+            {t === "timeline" ? "Timeline" : "Daily Average"}
+          </button>
+        ))}
       </div>
 
       {/* Chart area */}
-      {!hasData ? (
+      {loadingRange ? (
+        <div className="h-[200px] flex items-center justify-center">
+          <svg className="w-4 h-4 animate-spin text-neutral-400" fill="none" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+          </svg>
+        </div>
+      ) : !hasData ? (
         <div className="h-[200px] flex items-center justify-center">
           <p
             className="text-neutral-500 dark:text-neutral-600 text-xs"
@@ -211,10 +263,7 @@ export default function ResponseTimeGraph({ pings, monitorName }: Props) {
             data={timelineData}
             margin={{ top: 5, right: 4, left: 0, bottom: 5 }}
           >
-            <CartesianGrid
-              strokeDasharray="3 3"
-              stroke="rgba(255,255,255,0.04)"
-            />
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
             <XAxis
               dataKey="ts"
               type="number"
@@ -308,14 +357,6 @@ export default function ResponseTimeGraph({ pings, monitorName }: Props) {
           </BarChart>
         </ResponsiveContainer>
       )}
-
-      {/* Pro tier note */}
-      <p
-        className="text-[10px] text-neutral-400 dark:text-neutral-700 mt-3 text-right"
-        style={{ fontFamily: "'DM Mono', monospace" }}
-      >
-        30-day history — coming with Pro tier
-      </p>
     </div>
   );
 }

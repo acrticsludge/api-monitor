@@ -7,11 +7,13 @@ import AddMonitorForm from "./AddMonitorForm";
 import EditMonitorModal from "../../components/EditMonitorModal";
 import StatusPageLink from "./StatusPageLink";
 import ProjectHeader from "./ProjectHeader";
+import ProjectTabs from "./ProjectTabs";
 import ThemeToggle from "../../components/ThemeToggle";
 import NotificationBell from "../../components/NotificationBell";
 import LocalTime from "../../components/LocalTime";
 import HealthBadge from "../../components/HealthBadge";
 import { calculateHealthScore } from "../lib/healthScore";
+import { getIsPro } from "../lib/isPro";
 
 type Monitor = {
   id: string;
@@ -23,6 +25,11 @@ type Monitor = {
   webhook_url: string | null;
   is_active: boolean;
   created_at: string;
+  custom_headers: Record<string, string> | null;
+  auth_type: string | null;
+  response_validation: { path: string; operator: string; expected: string } | null;
+  check_ssl: boolean | null;
+  custom_body: string | null;
 };
 
 type Ping = {
@@ -33,25 +40,43 @@ type Ping = {
   checked_at: string;
 };
 
-export default async function DashboardPage() {
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ project?: string }>;
+}) {
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  const { data: project } = await supabase
+  const [isPro, { project: activeProjectParam }] = await Promise.all([
+    getIsPro(),
+    searchParams,
+  ]);
+
+  // Fetch all projects for tabs
+  const { data: projects } = await supabase
     .from("projects")
     .select("id, name, slug")
     .eq("user_id", user.id)
-    .single();
+    .order("created_at", { ascending: true });
+
+  const projectList = projects ?? [];
+
+  // Determine active project
+  const activeProject =
+    (activeProjectParam
+      ? projectList.find((p) => p.id === activeProjectParam)
+      : null) ?? projectList[0];
 
   const { data: monitors } = await supabase
     .from("monitors")
     .select(
-      "id, name, url, method, expected_status_code, check_interval_minutes, webhook_url, is_active, created_at",
+      "id, name, url, method, expected_status_code, check_interval_minutes, webhook_url, is_active, created_at, custom_headers, auth_type, response_validation, check_ssl, custom_body",
     )
-    .eq("project_id", project?.id ?? "")
+    .eq("project_id", activeProject?.id ?? "")
     .order("created_at", { ascending: false });
 
   const monitorList: Monitor[] = monitors ?? [];
@@ -82,13 +107,16 @@ export default async function DashboardPage() {
   const twoHoursAgo = new Date();
   twoHoursAgo.setHours(twoHoursAgo.getHours() - 2);
 
-  const { data: anomalies } = monitorIds.length > 0
-    ? await supabase
-        .from("anomaly_alerts")
-        .select("id, monitor_id, baseline_ms, current_avg_ms, triggered_at, monitors(name)")
-        .gte("triggered_at", twoHoursAgo.toISOString())
-        .order("triggered_at", { ascending: false })
-    : { data: null };
+  const { data: anomalies } =
+    monitorIds.length > 0
+      ? await supabase
+          .from("anomaly_alerts")
+          .select(
+            "id, monitor_id, baseline_ms, current_avg_ms, triggered_at, monitors(name)",
+          )
+          .gte("triggered_at", twoHoursAgo.toISOString())
+          .order("triggered_at", { ascending: false })
+      : { data: null };
 
   const upCount = monitorList.filter(
     (m) => latestPings.get(m.id)?.status === "up",
@@ -147,6 +175,14 @@ export default async function DashboardPage() {
             </span>
           </div>
           <div className="flex items-center gap-3">
+            {isPro && (
+              <span
+                className="hidden sm:inline-flex items-center text-[10px] font-semibold tracking-[0.08em] uppercase text-[#00cc6a] dark:text-[#00ff87] border border-[#00cc6a]/30 dark:border-[#00ff87]/30 rounded-md px-2 py-1"
+                style={{ fontFamily: "'DM Mono', monospace" }}
+              >
+                Pro
+              </span>
+            )}
             <Link
               href="/pricing"
               className="hidden sm:block text-[11px] font-semibold tracking-[0.08em] uppercase text-neutral-500 dark:text-neutral-400 hover:text-[#080808] dark:hover:text-white transition-colors duration-150"
@@ -182,7 +218,15 @@ export default async function DashboardPage() {
       </header>
 
       <main className="relative max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-10 space-y-5">
-        {project && <ProjectHeader project={project} />}
+        {activeProject && <ProjectHeader project={activeProject} />}
+
+        {/* Project tabs — always shown; Add project only for Pro */}
+        <ProjectTabs
+          projects={projectList}
+          activeProjectId={activeProject?.id ?? ""}
+          isPro={isPro}
+        />
+
         <div className="mb-6">
           <p
             className="text-[11px] tracking-[0.14em] uppercase text-[#00cc6a] dark:text-[#00ff87] mb-2 font-medium"
@@ -239,7 +283,7 @@ export default async function DashboardPage() {
           </p>
         </div>
 
-        <StatusPageLink userId={project?.id ?? user.id} />
+        <StatusPageLink userId={activeProject?.id ?? user.id} />
 
         <div className="flex items-center gap-4 py-1">
           <div className="flex-1 h-px bg-black/[0.06] dark:bg-white/[0.04]" />
@@ -270,7 +314,10 @@ export default async function DashboardPage() {
                     className="text-neutral-400 text-xs"
                     style={{ fontFamily: "'DM Mono', monospace" }}
                   >
-                    {(a.monitors as unknown as { name: string } | null)?.name} — averaging {a.current_avg_ms}ms ({Math.round(a.current_avg_ms / a.baseline_ms)}x slower than usual baseline of {a.baseline_ms}ms)
+                    {(a.monitors as unknown as { name: string } | null)?.name} —
+                    averaging {a.current_avg_ms}ms (
+                    {Math.round(a.current_avg_ms / a.baseline_ms)}x slower than
+                    usual baseline of {a.baseline_ms}ms)
                   </p>
                 ))}
               </div>
@@ -291,7 +338,11 @@ export default async function DashboardPage() {
                 {monitorList.length} configured
               </p>
             </div>
-            <AddMonitorForm monitorCount={monitorList.length} />
+            <AddMonitorForm
+              monitorCount={monitorList.length}
+              isPro={isPro}
+              projectId={activeProject?.id}
+            />
           </div>
 
           {monitorList.length === 0 ? (
@@ -397,8 +448,17 @@ export default async function DashboardPage() {
                           </td>
                           <td className="px-4 py-4">
                             {(() => {
-                              const h = calculateHealthScore(healthPingsMap.get(monitor.id) ?? []);
-                              return <HealthBadge score={h.score} label={h.label} reasons={h.reasons} size="sm" />;
+                              const h = calculateHealthScore(
+                                healthPingsMap.get(monitor.id) ?? [],
+                              );
+                              return (
+                                <HealthBadge
+                                  score={h.score}
+                                  label={h.label}
+                                  reasons={h.reasons}
+                                  size="sm"
+                                />
+                              );
                             })()}
                           </td>
                           <td className="px-4 py-4">
@@ -406,14 +466,16 @@ export default async function DashboardPage() {
                               className="text-xs text-neutral-500 dark:text-neutral-400"
                               style={{ fontFamily: "'DM Mono', monospace" }}
                             >
-                              {ping
-                                ? <LocalTime iso={ping.checked_at} />
-                                : "—"}
+                              {ping ? <LocalTime iso={ping.checked_at} /> : "—"}
                             </span>
                           </td>
                           <td className="px-4 py-4">
                             <div className="flex items-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
-                              <EditMonitorModal monitor={monitor} variant="icon" />
+                              <EditMonitorModal
+                                monitor={monitor}
+                                variant="icon"
+                                isPro={isPro}
+                              />
                               <form action={toggleMonitor}>
                                 <input
                                   type="hidden"
@@ -517,8 +579,17 @@ export default async function DashboardPage() {
                             Health
                           </p>
                           {(() => {
-                            const h = calculateHealthScore(healthPingsMap.get(monitor.id) ?? []);
-                            return <HealthBadge score={h.score} label={h.label} reasons={h.reasons} size="sm" />;
+                            const h = calculateHealthScore(
+                              healthPingsMap.get(monitor.id) ?? [],
+                            );
+                            return (
+                              <HealthBadge
+                                score={h.score}
+                                label={h.label}
+                                reasons={h.reasons}
+                                size="sm"
+                              />
+                            );
                           })()}
                         </div>
                         <div>
@@ -537,7 +608,7 @@ export default async function DashboardPage() {
                         </div>
                       </div>
                       <div className="flex items-center gap-3 pt-1">
-                        <EditMonitorModal monitor={monitor} variant="icon" />
+                        <EditMonitorModal monitor={monitor} variant="icon" isPro={isPro} />
                         <form action={toggleMonitor}>
                           <input type="hidden" name="id" value={monitor.id} />
                           <input
@@ -578,6 +649,35 @@ export default async function DashboardPage() {
             Click any monitor for detailed health insights and ping history →
           </p>
         )}
+
+        {/* Upgrade banner for free users */}
+        {!isPro && (
+          <div className="relative bg-white dark:bg-[#0f0f0f] border border-[#00cc6a]/10 dark:border-[#00ff87]/10 rounded-2xl p-4 mt-2 flex items-center justify-between gap-4 shadow-[0_1px_3px_rgba(0,0,0,0.05)] dark:shadow-none">
+            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00cc6a]/20 dark:via-[#00ff87]/20 to-transparent" />
+            <div className="min-w-0">
+              <p
+                className="text-[#080808] dark:text-white text-sm font-semibold"
+                style={{ fontFamily: "'Syne', sans-serif" }}
+              >
+                Upgrade to Pro
+              </p>
+              <p
+                className="text-neutral-500 text-xs mt-0.5 truncate"
+                style={{ fontFamily: "'DM Mono', monospace" }}
+              >
+                1 min intervals · SSL monitoring · schema detection · 90 day
+                history
+              </p>
+            </div>
+            <Link
+              href="/pricing"
+              className="text-xs bg-[#00cc6a] dark:bg-[#00ff87] text-black font-bold px-4 py-2 rounded-xl flex-shrink-0"
+              style={{ fontFamily: "'DM Mono', monospace" }}
+            >
+              See Pro →
+            </Link>
+          </div>
+        )}
       </main>
 
       <footer className="border-t border-black/[0.06] dark:border-white/[0.06] mt-10">
@@ -590,7 +690,10 @@ export default async function DashboardPage() {
           </span>
           <div className="flex items-center gap-5">
             {[
-              { href: `/status/${project?.id ?? user.id}`, label: "Status Page" },
+              {
+                href: `/status/${activeProject?.id ?? user.id}`,
+                label: "Status Page",
+              },
               { href: "/docs", label: "Docs" },
               { href: "/pricing", label: "Pricing" },
               { href: "/privacy", label: "Privacy" },

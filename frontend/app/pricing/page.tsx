@@ -140,25 +140,16 @@ export default function PricingPage() {
               {[
                 { label: "1 project · 5 monitors" },
                 { label: "5 minute check intervals" },
+                { label: "7 day ping history" },
                 { label: "2-ping confirmation before alerting" },
                 { label: "Browser push notifications" },
                 { label: "Discord & Slack webhook alerts" },
-                { label: "Rich alert context (status code, response time)" },
+                { label: "Health scoring & anomaly detection" },
                 { label: "Public status page" },
-                { label: "Health scoring" },
-                { label: "Anomaly detection" },
-                { label: "Response time graphs (7 days)" },
-                { label: "7 day ping history" },
-                {
-                  label: "Incident reports (timeline, impact, response times)",
-                  beta: true,
-                },
-                {
-                  label: "Root cause analysis with confidence score",
-                  beta: true,
-                },
-                { label: "Copyable post mortem reports", beta: true },
-              ].map(({ label, beta }) => (
+                { label: "Response time graphs" },
+                { label: "Incident reports & post-mortems" },
+                { label: "Root cause analysis" },
+              ].map(({ label }) => (
                 <li
                   key={label}
                   className="flex items-start gap-3 text-sm text-neutral-300"
@@ -168,14 +159,7 @@ export default function PricingPage() {
                   }}
                 >
                   <span className="text-[#00ff87] shrink-0 mt-0.5">✓</span>
-                  <span className="flex items-center gap-2 flex-wrap">
-                    {label}
-                    {beta && (
-                      <span className="text-[9px] bg-[#00ff87]/10 text-[#00ff87] border border-[#00ff87]/20 px-1.5 py-0.5 rounded-full tracking-wider uppercase font-semibold">
-                        Pro · Free in beta
-                      </span>
-                    )}
-                  </span>
+                  {label}
                 </li>
               ))}
             </ul>
@@ -228,17 +212,21 @@ export default function PricingPage() {
             </p>
             <ul className="space-y-3">
               {[
-                "Unlimited monitors",
-                "1 minute check intervals",
-                "Email alerts",
-                "30 & 90 day history",
-                "SSL certificate monitoring",
-                "Custom status page domain",
-                "CSV export",
-                "More features yet to be decided",
-              ].map((feature) => (
+                { label: "5 projects" },
+                { label: "Unlimited monitors per project" },
+                { label: "1 minute check intervals" },
+                { label: "30 & 90 day history" },
+                { label: "Email alerts" },
+                { label: "Custom HTTP headers & auth" },
+                { label: "Response validation checks" },
+                { label: "API schema change detection" },
+                { label: "SSL certificate monitoring" },
+                { label: "CSV export" },
+                { label: "API Workflows", soon: true },
+                { label: "Custom status page domain", soon: true },
+              ].map(({ label, soon }) => (
                 <li
-                  key={feature}
+                  key={label}
                   className="flex items-start gap-3 text-sm text-neutral-300"
                   style={{
                     fontFamily: "'DM Mono', monospace",
@@ -246,7 +234,14 @@ export default function PricingPage() {
                   }}
                 >
                   <span className="text-[#00ff87] shrink-0 mt-0.5">⚡</span>
-                  {feature}
+                  <span className="flex items-center gap-2 flex-wrap">
+                    {label}
+                    {soon && (
+                      <span className="text-[9px] bg-white/[0.04] text-neutral-500 border border-white/[0.08] px-1.5 py-0.5 rounded-full tracking-wider uppercase">
+                        coming soon
+                      </span>
+                    )}
+                  </span>
                 </li>
               ))}
             </ul>
@@ -258,7 +253,7 @@ export default function PricingPage() {
           className="text-center text-xs text-neutral-600 mb-20"
           style={{ fontFamily: "'DM Mono', monospace" }}
         >
-          Pro tier is in development. Free tier stays free forever.
+          Pro tier launching soon. Free tier stays free forever.
         </p>
 
         {/* FAQ */}

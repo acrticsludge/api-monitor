@@ -4,6 +4,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "../../../lib/supabase-server";
 import CheckNowButton from "./CheckNowButton";
+import CSVExportButton from "./CSVExportButton";
 import IncidentReportCard from "./IncidentReportCard";
 import { type IncidentReport } from "../../../lib/generateReport";
 import ThemeToggle from "../../../../components/ThemeToggle";
@@ -14,6 +15,7 @@ import LocalTime from "../../../../components/LocalTime";
 import HealthBadge from "../../../../components/HealthBadge";
 import { calculateHealthScore } from "../../../lib/healthScore";
 import { analyzeRootCause } from "../../../lib/rootCause";
+import { getIsPro } from "../../../lib/isPro";
 
 function responseTimeColor(ms: number | null): string {
   if (ms === null) return "text-neutral-400 dark:text-neutral-600";
@@ -33,6 +35,8 @@ export default async function MonitorDetailPage({
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
+
+  const isPro = await getIsPro();
 
   const { data: monitor } = await supabase
     .from("monitors")
@@ -96,6 +100,29 @@ export default async function MonitorDetailPage({
             historicalRecoveries.length,
         )
       : null;
+
+  // ── Pro: SSL ping data ────────────────────────────────────────────────────
+  const { data: latestSSLPing } =
+    isPro && monitor.check_ssl
+      ? await supabase
+          .from("pings")
+          .select("ssl_valid, ssl_expires_at, ssl_days_remaining")
+          .eq("monitor_id", id)
+          .not("ssl_valid", "is", null)
+          .order("checked_at", { ascending: false })
+          .limit(1)
+          .single()
+      : { data: null };
+
+  // ── Pro: schema change alerts ─────────────────────────────────────────────
+  const { data: schemaAlerts } = isPro
+    ? await supabase
+        .from("schema_alerts")
+        .select("id, type, detail, triggered_at")
+        .eq("monitor_id", id)
+        .order("triggered_at", { ascending: false })
+        .limit(10)
+    : { data: [] };
 
   const graphSevenDaysAgo = new Date();
   graphSevenDaysAgo.setDate(graphSevenDaysAgo.getDate() - 7);
@@ -432,12 +459,13 @@ export default async function MonitorDetailPage({
                 PAUSED
               </span>
             )}
-            <EditMonitorModal monitor={monitor} variant="button" />
+            <EditMonitorModal monitor={monitor} variant="button" isPro={isPro} />
             <CheckNowButton monitorId={id} />
+            {isPro && <CSVExportButton monitorId={id} monitorName={monitor.name} />}
           </div>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+        <div className={`grid grid-cols-2 gap-3 ${isPro && monitor.check_ssl && latestSSLPing ? "sm:grid-cols-6" : "sm:grid-cols-5"}`}>
           <StatCard
             label="Uptime"
             value={`${uptimePct}%`}
@@ -487,6 +515,39 @@ export default async function MonitorDetailPage({
               size="md"
             />
           </div>
+
+          {isPro && monitor.check_ssl && latestSSLPing && (() => {
+            const ssl = latestSSLPing as { ssl_valid?: boolean; ssl_expires_at?: string | null; ssl_days_remaining?: number | null };
+            const daysLeft = ssl.ssl_days_remaining;
+            const expiryDate = ssl.ssl_expires_at ? new Date(ssl.ssl_expires_at).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" }) : null;
+            const daysColor = daysLeft == null ? "text-neutral-500" : daysLeft <= 7 ? "text-red-400" : daysLeft <= 30 ? "text-yellow-400" : "text-neutral-500 dark:text-neutral-500";
+            return (
+              <div className="bg-white dark:bg-[#0f0f0f] border border-black/[0.06] dark:border-white/[0.06] rounded-2xl px-4 py-4 hover:border-black/[0.1] dark:hover:border-white/[0.1] transition-all duration-200 shadow-[0_1px_3px_rgba(0,0,0,0.04)] dark:shadow-none">
+                <p
+                  className="text-[10px] tracking-[0.12em] uppercase text-neutral-400 dark:text-neutral-500 mb-2"
+                  style={{ fontFamily: "'DM Mono', monospace" }}
+                >
+                  SSL Certificate
+                </p>
+                <p
+                  className={`text-base font-bold ${ssl.ssl_valid ? "text-[#00cc6a] dark:text-[#00ff87]" : "text-red-500 dark:text-red-400"}`}
+                  style={{ fontFamily: "'DM Mono', monospace" }}
+                >
+                  {ssl.ssl_valid ? "Valid" : "Invalid"}
+                </p>
+                {daysLeft != null && (
+                  <p className={`text-[10px] mt-1 ${daysColor}`} style={{ fontFamily: "'DM Mono', monospace" }}>
+                    {daysLeft}d remaining
+                  </p>
+                )}
+                {expiryDate && (
+                  <p className="text-[10px] text-neutral-400 dark:text-neutral-600 mt-0.5" style={{ fontFamily: "'DM Mono', monospace" }}>
+                    Expires {expiryDate}
+                  </p>
+                )}
+              </div>
+            );
+          })()}
         </div>
 
         {rootCause && (
@@ -607,6 +668,33 @@ export default async function MonitorDetailPage({
               </p>
             </div>
           ))}
+          {isPro && monitor.auth_type && monitor.auth_type !== "none" && (
+            <div>
+              <p
+                className="text-[10px] tracking-[0.1em] uppercase text-neutral-400 dark:text-neutral-500 mb-1.5"
+                style={{ fontFamily: "'DM Mono', monospace" }}
+              >
+                Authentication
+              </p>
+              <div className="flex items-center gap-2 flex-wrap">
+                <p
+                  className="text-sm font-medium text-neutral-700 dark:text-neutral-200 capitalize"
+                  style={{ fontFamily: "'DM Mono', monospace" }}
+                >
+                  {monitor.auth_type === "bearer" ? "Bearer Token" : monitor.auth_type === "api_key" ? "API Key" : "Basic Auth"}
+                </p>
+                <span
+                  className="inline-flex items-center gap-1 text-[9px] tracking-[0.1em] uppercase bg-[#00cc6a]/10 dark:bg-[#00ff87]/10 text-[#00cc6a] dark:text-[#00ff87] border border-[#00cc6a]/20 dark:border-[#00ff87]/20 px-1.5 py-0.5 rounded-full"
+                  style={{ fontFamily: "'DM Mono', monospace" }}
+                >
+                  <svg className="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  </svg>
+                  AES-256 encrypted
+                </span>
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="flex items-center gap-4 bg-white dark:bg-[#0f0f0f] border border-black/[0.06] dark:border-white/[0.06] rounded-2xl px-5 py-4">
@@ -640,7 +728,7 @@ export default async function MonitorDetailPage({
 
         <UptimeHistory pings={weekPings ?? []} />
 
-        <ResponseTimeGraph pings={graphPings ?? []} monitorName={monitor.name} />
+        <ResponseTimeGraph pings={graphPings ?? []} monitorName={monitor.name} monitorId={id} isPro={isPro} />
 
         <div className="bg-white dark:bg-[#0f0f0f] rounded-2xl border border-black/[0.06] dark:border-white/[0.06] overflow-hidden">
           <div className="px-5 py-4 border-b border-black/[0.06] dark:border-white/[0.06]">
@@ -820,11 +908,13 @@ export default async function MonitorDetailPage({
           {(() => {
             type IncidentItem =
               | { kind: "alert"; id: string; type: string; ts: string; status_code: number | null; response_time_ms: number | null; downtime_minutes: number | null }
-              | { kind: "anomaly"; id: string; baseline_ms: number; current_avg_ms: number; ts: string };
+              | { kind: "anomaly"; id: string; baseline_ms: number; current_avg_ms: number; ts: string }
+              | { kind: "schema"; id: string; type: string; detail: string; ts: string };
 
             const items: IncidentItem[] = [
               ...(alerts ?? []).map((a) => ({ kind: "alert" as const, id: a.id, type: a.type, ts: a.sent_at, status_code: a.status_code ?? null, response_time_ms: a.response_time_ms ?? null, downtime_minutes: a.downtime_minutes ?? null })),
               ...(anomalyAlerts ?? []).map((a) => ({ kind: "anomaly" as const, id: a.id, baseline_ms: a.baseline_ms, current_avg_ms: a.current_avg_ms, ts: a.triggered_at })),
+              ...(schemaAlerts ?? []).map((a) => ({ kind: "schema" as const, id: a.id, type: a.type, detail: a.detail, ts: a.triggered_at })),
             ].sort((a, b) => new Date(b.ts).getTime() - new Date(a.ts).getTime());
 
             if (items.length === 0) {
@@ -916,6 +1006,37 @@ export default async function MonitorDetailPage({
                           )}
                         </div>
                       </div>
+                    </div>
+                  ) : item.kind === "schema" ? (
+                    <div
+                      key={item.id}
+                      className="px-5 py-3.5 flex items-center justify-between gap-4 hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors"
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${item.type === "ssl_expiry" ? "bg-yellow-400" : "bg-blue-400"}`} />
+                        <div>
+                          <span
+                            className={`text-xs font-semibold ${item.type === "ssl_expiry" ? "text-yellow-400" : "text-blue-400"}`}
+                            style={{ fontFamily: "'DM Mono', monospace" }}
+                          >
+                            {item.type === "ssl_expiry" ? "SSL Expiry" : "Schema Changed"}
+                          </span>
+                          {item.detail && (
+                            <span
+                              className="text-xs text-neutral-500 dark:text-neutral-500 ml-2"
+                              style={{ fontFamily: "'DM Mono', monospace" }}
+                            >
+                              {item.detail}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      <span
+                        className="text-xs text-neutral-500 dark:text-neutral-400 shrink-0"
+                        style={{ fontFamily: "'DM Mono', monospace" }}
+                      >
+                        {new Date(item.ts).toLocaleString()}
+                      </span>
                     </div>
                   ) : (
                     <div

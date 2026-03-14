@@ -3,7 +3,10 @@
     "allow": [
       "Bash(npm install next-themes)",
       "Bash(npm install:*)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(mkdir -p \"c:\\\\Anubhav\\\\Web Dev Projects\\\\API-Monitor\\\\api-monitor\\\\frontend\\\\app\\\\api\\\\monitors\\\\[id]\\\\export\")",
+      "Bash(mkdir -p \"c:\\\\Anubhav\\\\Web Dev Projects\\\\API-Monitor\\\\api-monitor\\\\frontend\\\\app\\\\api\\\\monitors\\\\[id]\\\\pings\")",
+      "Bash(node -e \"console.log\\(require\\(''crypto''\\).randomBytes\\(32\\).toString\\(''hex''\\)\\)\")"
     ]
   }
 }

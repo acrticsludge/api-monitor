@@ -1,14 +1,32 @@
 import express from "express";
 import cron from "node-cron";
 import axios from "axios";
-import { randomUUID } from "crypto";
+import { randomUUID, createHash, createDecipheriv } from "crypto";
 import http from "http";
 import https from "https";
+import tls from "tls";
 import { createClient } from "@supabase/supabase-js";
 import dotenv from "dotenv";
 dotenv.config();
 import { Resend } from "resend";
 import webpush from "web-push";
+
+// ── Decryption helper (AES-256-GCM) ──────────────────────────────────────────
+
+const ENC_KEY_HEX = process.env.MONITOR_ENCRYPTION_KEY ?? "";
+
+function decryptField(encoded) {
+  if (!encoded) return null;
+  try {
+    const key = Buffer.from(ENC_KEY_HEX, "hex");
+    const [ivHex, tagHex, ctHex] = encoded.split(":");
+    const decipher = createDecipheriv("aes-256-gcm", key, Buffer.from(ivHex, "hex"));
+    decipher.setAuthTag(Buffer.from(tagHex, "hex"));
+    return decipher.update(Buffer.from(ctHex, "hex")).toString("utf8") + decipher.final("utf8");
+  } catch {
+    return null;
+  }
+}
 
 // Global error handlers — prevent silent crashes from killing cron
 process.on("uncaughtException", (err) => {
@@ -68,9 +86,152 @@ function escapeHtml(str) {
     .replace(/'/g, "&#039;");
 }
 
+// ── Pro: schema change detection helpers ─────────────────────────────────────
+
+function extractKeys(obj, prefix = "") {
+  if (typeof obj !== "object" || obj === null) return [prefix];
+  return Object.keys(obj).flatMap((key) =>
+    extractKeys(obj[key], prefix ? `${prefix}.${key}` : key),
+  );
+}
+
+function hashResponseStructure(body) {
+  try {
+    const parsed = JSON.parse(body);
+    const keys = extractKeys(parsed).sort().join(",");
+    return createHash("md5").update(keys).digest("hex");
+  } catch {
+    return createHash("md5").update(body?.slice(0, 500) ?? "").digest("hex");
+  }
+}
+
+function hashHeaders(headers) {
+  const relevant = ["content-type", "x-powered-by", "server"];
+  const str = relevant.map((h) => `${h}:${headers[h] ?? ""}`).join(",");
+  return createHash("md5").update(str).digest("hex");
+}
+
+// ── Pro: response validation ──────────────────────────────────────────────────
+
+async function validateResponse(body, validation) {
+  if (!validation || !validation.path) return { passed: true, detail: null };
+
+  try {
+    const parsed = JSON.parse(body);
+    const keys = validation.path.split(".");
+    let value = parsed;
+    for (const key of keys) {
+      value = value?.[key];
+    }
+
+    const { operator, expected } = validation;
+
+    if (operator === "equals") {
+      const passed = String(value) === String(expected);
+      return {
+        passed,
+        detail: passed ? null : `Expected ${expected}, got ${value}`,
+      };
+    }
+    if (operator === "contains") {
+      const passed = String(value).includes(expected);
+      return {
+        passed,
+        detail: passed
+          ? null
+          : `Value "${value}" does not contain "${expected}"`,
+      };
+    }
+    if (operator === "not_empty") {
+      const passed =
+        value !== null &&
+        value !== undefined &&
+        value !== "" &&
+        (!Array.isArray(value) || value.length > 0);
+      return {
+        passed,
+        detail: passed ? null : `Field "${validation.path}" is empty`,
+      };
+    }
+
+    return { passed: true, detail: null };
+  } catch {
+    return { passed: false, detail: "Could not parse response body for validation" };
+  }
+}
+
+// ── Pro: SSL certificate check ────────────────────────────────────────────────
+
+async function checkSSL(url) {
+  return new Promise((resolve) => {
+    try {
+      const { hostname } = new URL(url);
+      const socket = tls.connect(443, hostname, { servername: hostname }, () => {
+        const cert = socket.getPeerCertificate();
+        socket.destroy();
+
+        if (!cert || !cert.valid_to) {
+          return resolve({ valid: false, expiresAt: null, daysRemaining: null });
+        }
+
+        const expiresAt = new Date(cert.valid_to);
+        const daysRemaining = Math.floor(
+          (expiresAt.getTime() - Date.now()) / 1000 / 60 / 60 / 24,
+        );
+
+        resolve({ valid: true, expiresAt, daysRemaining });
+      });
+
+      socket.on("error", () =>
+        resolve({ valid: false, expiresAt: null, daysRemaining: null }),
+      );
+      socket.setTimeout(5000, () => {
+        socket.destroy();
+        resolve({ valid: false, expiresAt: null, daysRemaining: null });
+      });
+    } catch {
+      resolve({ valid: false, expiresAt: null, daysRemaining: null });
+    }
+  });
+}
+
+// ── Pro: direct push notification (for schema/SSL alerts) ────────────────────
+
+async function sendPushNotificationDirect(userId, title, body) {
+  try {
+    const { data: subs } = await supabase
+      .from("push_subscriptions")
+      .select("id, subscription")
+      .eq("user_id", userId);
+
+    if (!subs || subs.length === 0) return;
+
+    const payload = JSON.stringify({ title, body, url: "/dashboard" });
+
+    await Promise.allSettled(
+      subs.map(({ id, subscription }) =>
+        webpush.sendNotification(subscription, payload).catch((err) => {
+          if (err.statusCode === 404 || err.statusCode === 410) {
+            return supabase.from("push_subscriptions").delete().eq("id", id);
+          }
+        }),
+      ),
+    );
+  } catch (err) {
+    console.error("[sendPushNotificationDirect] Failed:", err.message);
+  }
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 
-async function pingWithTiming(url, method = "GET", timeoutMs = 10000) {
+async function pingWithTiming(url, method = "GET", timeoutMs = 10000, options = {}) {
+  const {
+    customHeaders = {},
+    customBody = null,
+    authType = "none",
+    authValue = null,
+  } = options;
+
   return new Promise((resolve) => {
     const startTime = Date.now();
     const timings = {
@@ -88,26 +249,51 @@ async function pingWithTiming(url, method = "GET", timeoutMs = 10000) {
     const isHttps = parsedUrl.protocol === "https:";
     const transport = isHttps ? https : http;
 
-    const options = {
+    const headers = {
+      "User-Agent": "Pulse-Monitor/1.0",
+      ...customHeaders,
+    };
+
+    if (authType === "bearer" && authValue) {
+      headers["Authorization"] = `Bearer ${authValue}`;
+    } else if (authType === "api_key" && authValue) {
+      headers["X-API-Key"] = authValue;
+    } else if (authType === "basic" && authValue) {
+      headers["Authorization"] = `Basic ${Buffer.from(authValue).toString("base64")}`;
+    }
+
+    const methodUpper = method.toUpperCase();
+    const bodyStr =
+      customBody &&
+      ["POST", "PUT", "PATCH"].includes(methodUpper)
+        ? String(customBody)
+        : null;
+
+    if (bodyStr) {
+      headers["Content-Length"] = Buffer.byteLength(bodyStr);
+    }
+
+    const reqOptions = {
       hostname: parsedUrl.hostname,
       port: parsedUrl.port || (isHttps ? 443 : 80),
       path: parsedUrl.pathname + parsedUrl.search,
-      method: method.toUpperCase(),
+      method: methodUpper,
       timeout: timeoutMs,
-      headers: {
-        "User-Agent": "Pulse-Monitor/1.0",
-      },
+      headers,
     };
 
-    const req = transport.request(options, (res) => {
+    const req = transport.request(reqOptions, (res) => {
       timings.ttfb = Date.now() - startTime;
 
-      res.on("data", () => {});
+      let body = "";
+      res.on("data", (chunk) => { body += chunk; });
       res.on("end", () => {
         timings.total = Date.now() - startTime;
         resolve({
           statusCode: res.statusCode,
           timings,
+          body,
+          responseHeaders: res.headers,
           error: null,
         });
       });
@@ -136,6 +322,8 @@ async function pingWithTiming(url, method = "GET", timeoutMs = 10000) {
       resolve({
         statusCode: null,
         timings,
+        body: "",
+        responseHeaders: {},
         error: "timeout",
       });
     });
@@ -145,12 +333,38 @@ async function pingWithTiming(url, method = "GET", timeoutMs = 10000) {
       resolve({
         statusCode: null,
         timings,
+        body: "",
+        responseHeaders: {},
         error: err.message,
       });
     });
 
+    if (bodyStr) {
+      req.write(bodyStr);
+    }
     req.end();
   });
+}
+
+// Profile map — refreshed on each cron cycle
+let profileMap = {};
+
+async function refreshProfileMap(monitors) {
+  try {
+    const userIds = [...new Set((monitors ?? []).map((m) => m.user_id))];
+    if (userIds.length === 0) return;
+
+    const { data: profilesData } = await supabase
+      .from("profiles")
+      .select("id, is_pro")
+      .in("id", userIds);
+
+    profileMap = Object.fromEntries(
+      (profilesData ?? []).map((p) => [p.id, p]),
+    );
+  } catch (err) {
+    console.error("[refreshProfileMap] Failed:", err.message);
+  }
 }
 
 // Ping a single monitor
@@ -167,13 +381,41 @@ async function pingMonitor(monitor) {
       return;
     }
 
-    const result = await pingWithTiming(monitor.url, method, 10000);
+    const isPro = profileMap[monitor.user_id]?.is_pro ?? false;
 
-    const status =
+    const pingOptions = isPro
+      ? {
+          customHeaders: monitor.custom_headers ?? {},
+          customBody: decryptField(monitor.custom_body),
+          authType: monitor.auth_type ?? "none",
+          authValue: decryptField(monitor.auth_value),
+        }
+      : {};
+
+    const result = await pingWithTiming(monitor.url, method, 10000, pingOptions);
+
+    let status =
       result.statusCode === monitor.expected_status_code ? "up" : "down";
 
-    // Save ping result with timing breakdown
-    await supabase.from("pings").insert({
+    // ── Pro: response validation ──────────────────────────────────────────────
+    let validationPassed = null;
+    let validationDetail = null;
+
+    if (isPro && monitor.response_validation) {
+      const validation = await validateResponse(
+        result.body,
+        monitor.response_validation,
+      );
+      validationPassed = validation.passed;
+      validationDetail = validation.detail;
+
+      if (!validationPassed) {
+        status = "down";
+      }
+    }
+
+    // Build pingData object — extra Pro fields added below
+    const pingData = {
       monitor_id: monitor.id,
       status,
       response_time_ms: result.timings.total,
@@ -183,7 +425,105 @@ async function pingMonitor(monitor) {
       tls_handshake_ms: result.timings.tlsHandshake,
       ttfb_ms: result.timings.ttfb,
       error_detail: result.error,
-    });
+    };
+
+    // ── Pro: schema change detection ──────────────────────────────────────────
+    if (isPro) {
+      const bodyHash = hashResponseStructure(result.body);
+      const headersHash = hashHeaders(result.responseHeaders ?? {});
+
+      const { data: lastPing } = await supabase
+        .from("pings")
+        .select("response_body_hash, response_headers_hash")
+        .eq("monitor_id", monitor.id)
+        .eq("status", "up")
+        .order("checked_at", { ascending: false })
+        .limit(1)
+        .single();
+
+      const schemaChanged =
+        lastPing &&
+        lastPing.response_body_hash &&
+        lastPing.response_body_hash !== bodyHash;
+
+      const headersChanged =
+        lastPing &&
+        lastPing.response_headers_hash &&
+        lastPing.response_headers_hash !== headersHash;
+
+      if (schemaChanged || headersChanged) {
+        await supabase.from("schema_alerts").insert({
+          monitor_id: monitor.id,
+          type: "schema_change",
+          detail: schemaChanged
+            ? "Response structure changed"
+            : "Response headers changed",
+        });
+
+        await sendPushNotificationDirect(
+          monitor.user_id,
+          `🔄 ${monitor.name} — API structure changed`,
+          schemaChanged
+            ? "Response body structure has changed"
+            : "Response headers changed",
+        );
+
+        console.log(`[SCHEMA CHANGE] ${monitor.name}`);
+      }
+
+      pingData.response_body_hash = bodyHash;
+      pingData.response_headers_hash = headersHash;
+      pingData.schema_changed = schemaChanged ?? false;
+      pingData.validation_passed = validationPassed;
+      pingData.validation_detail = validationDetail;
+    }
+
+    // ── Pro: SSL monitoring ───────────────────────────────────────────────────
+    if (isPro && monitor.check_ssl && monitor.url.startsWith("https")) {
+      const ssl = await checkSSL(monitor.url);
+
+      pingData.ssl_valid = ssl.valid;
+      pingData.ssl_expires_at = ssl.expiresAt?.toISOString() ?? null;
+      pingData.ssl_days_remaining = ssl.daysRemaining;
+
+      if (ssl.valid && ssl.daysRemaining !== null && ssl.daysRemaining <= 30) {
+        const { data: recentSSLAlert } = await supabase
+          .from("schema_alerts")
+          .select("id")
+          .eq("monitor_id", monitor.id)
+          .eq("type", "ssl_expiry")
+          .gte(
+            "triggered_at",
+            new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+          )
+          .limit(1);
+
+        if (!recentSSLAlert?.length) {
+          await supabase.from("schema_alerts").insert({
+            monitor_id: monitor.id,
+            type: "ssl_expiry",
+            detail: `SSL certificate expires in ${ssl.daysRemaining} days`,
+          });
+
+          await sendPushNotificationDirect(
+            monitor.user_id,
+            `🔒 ${monitor.name} — SSL expiring soon`,
+            `Certificate expires in ${ssl.daysRemaining} days`,
+          );
+        }
+      }
+
+      if (!ssl.valid) {
+        await sendPushNotificationDirect(
+          monitor.user_id,
+          `🔴 ${monitor.name} — SSL certificate invalid`,
+          "Certificate may be expired or misconfigured",
+        );
+      }
+    }
+
+    // Save ping result
+    await supabase.from("pings").insert(pingData);
 
     // Check if we need to send an alert
     await handleAlert(monitor, status);
@@ -319,7 +659,6 @@ async function handleAlert(monitor, currentStatus) {
     const [latest, previous, beforeThat] = lastPings;
 
     // For DOWN alert: require 2 consecutive down pings before alerting
-    // This prevents false alerts from single network hiccups
     if (currentStatus === "down") {
       const twoConsecutiveDown =
         latest.status === "down" && previous.status === "down";
@@ -345,7 +684,6 @@ async function sendAlert(monitor, type, lastPings = []) {
     const lastResponseTime =
       lastPings.find((p) => p.response_time_ms)?.response_time_ms ?? null;
 
-    // Determine incident_id and downtime for this alert
     let incidentId;
     let downtimeMinutes = null;
 
@@ -366,7 +704,6 @@ async function sendAlert(monitor, type, lastPings = []) {
       }
     }
 
-    // Always record the alert first regardless of email/push success
     await supabase.from("alerts").insert({
       monitor_id: monitor.id,
       type,
@@ -376,7 +713,6 @@ async function sendAlert(monitor, type, lastPings = []) {
       incident_id: incidentId,
     });
 
-    // Then try email — failure won't affect alert recording
     const { data: user } = await supabase.auth.admin.getUserById(
       monitor.user_id,
     );
@@ -421,12 +757,10 @@ async function sendAlert(monitor, type, lastPings = []) {
       }
     }
 
-    // Webhook
     if (monitor.webhook_url && isValidHttpUrl(monitor.webhook_url)) {
       await sendWebhook(monitor, type, statusCode, lastResponseTime);
     }
 
-    // Push notification
     await sendPushNotification(monitor, type, statusCode, lastResponseTime);
   } catch (err) {
     console.error(`[sendAlert] Failed for ${monitor.name}:`, err.message);
@@ -525,7 +859,6 @@ async function sendWebhook(monitor, type, statusCode, lastResponseTime) {
 }
 
 // Send browser push notification to all subscribed devices for this monitor's owner
-// Note: NEXT_PUBLIC_APP_URL must be set in worker environment (e.g. https://api-monitor-seven.vercel.app)
 async function sendPushNotification(
   monitor,
   type,
@@ -556,7 +889,6 @@ async function sendPushNotification(
     await Promise.allSettled(
       subs.map(({ id, subscription }) =>
         webpush.sendNotification(subscription, payload).catch((err) => {
-          // Subscription is expired or invalid — clean it up
           if (err.statusCode === 404 || err.statusCode === 410) {
             return supabase.from("push_subscriptions").delete().eq("id", id);
           }
@@ -570,13 +902,75 @@ async function sendPushNotification(
   }
 }
 
+// ── Pro: extended ping history cleanup ────────────────────────────────────────
+
+async function cleanOldPings() {
+  try {
+    const { data: proProfiles } = await supabase
+      .from("profiles")
+      .select("id")
+      .eq("is_pro", true);
+
+    const proUserIds = proProfiles?.map((p) => p.id) ?? [];
+
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+    if (proUserIds.length > 0) {
+      const ninetyDaysAgo = new Date();
+      ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
+
+      // Delete old pings for Pro users (90 days)
+      const { data: proMonitors } = await supabase
+        .from("monitors")
+        .select("id")
+        .in("user_id", proUserIds);
+
+      const proMonitorIds = proMonitors?.map((m) => m.id) ?? [];
+
+      if (proMonitorIds.length > 0) {
+        await supabase
+          .from("pings")
+          .delete()
+          .in("monitor_id", proMonitorIds)
+          .lt("checked_at", ninetyDaysAgo.toISOString());
+      }
+
+      // Delete old pings for free users (7 days)
+      if (proMonitorIds.length > 0) {
+        await supabase
+          .from("pings")
+          .delete()
+          .not("monitor_id", "in", `(${proMonitorIds.map((id) => `'${id}'`).join(",")})`)
+          .lt("checked_at", sevenDaysAgo.toISOString());
+      } else {
+        await supabase
+          .from("pings")
+          .delete()
+          .lt("checked_at", sevenDaysAgo.toISOString());
+      }
+    } else {
+      await supabase
+        .from("pings")
+        .delete()
+        .lt("checked_at", sevenDaysAgo.toISOString());
+    }
+
+    console.log("[CLEANUP] Old pings deleted");
+  } catch (err) {
+    console.error("[CLEANUP] Failed:", err.message);
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+
 const WORKER_URL =
   process.env.WORKER_URL || `http://localhost:${process.env.PORT || 3001}`;
 
 let lastPingTime = null;
 
-// Main job — runs every 5 minutes
-cron.schedule("*/5 * * * *", async () => {
+// Main job — runs every minute, filters by each monitor's interval
+cron.schedule("* * * * *", async () => {
   try {
     lastPingTime = new Date().toISOString();
     console.log("Running monitor checks...");
@@ -596,7 +990,19 @@ cron.schedule("*/5 * * * *", async () => {
       return;
     }
 
-    await Promise.allSettled(monitors.map(pingMonitor));
+    await refreshProfileMap(monitors);
+
+    const now = new Date();
+
+    const monitorsToRun = monitors.filter((monitor) => {
+      const isPro = profileMap[monitor.user_id]?.is_pro ?? false;
+      const interval = monitor.check_interval_minutes ?? 5;
+      // Pro users can have 1-min intervals; free users minimum 5 min
+      const effectiveInterval = isPro ? interval : Math.max(5, interval);
+      return now.getMinutes() % effectiveInterval === 0;
+    });
+
+    await Promise.allSettled(monitorsToRun.map(pingMonitor));
   } catch (err) {
     console.error("[CRON ERROR] Monitor check failed:", err);
   }
@@ -612,21 +1018,9 @@ cron.schedule("*/4 * * * *", async () => {
   }
 });
 
-// Daily job — delete pings older than 7 days
+// Daily job — delete old pings (respects Pro 90-day vs free 7-day retention)
 cron.schedule("0 0 * * *", async () => {
-  const cutoff = new Date();
-  cutoff.setDate(cutoff.getDate() - 7);
-
-  const { error } = await supabase
-    .from("pings")
-    .delete()
-    .lt("checked_at", cutoff.toISOString());
-
-  if (error) {
-    console.error("Failed to clean old pings:", error);
-  } else {
-    console.log("Old pings cleaned up");
-  }
+  await cleanOldPings();
 });
 
 // Health check endpoint
