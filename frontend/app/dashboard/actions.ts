@@ -179,6 +179,7 @@ export async function addMonitor(formData: FormData) {
   const check_ssl = isPro ? formData.get("check_ssl") === "on" : false;
 
   const { error } = await supabase.from("monitors").insert({
+
     project_id: project.id,
     name,
     url,
@@ -362,7 +363,8 @@ export async function editMonitor(monitorId: string, formData: FormData) {
   const updateAuthValue = rawAuthValue !== null && rawAuthValue !== "";
 
   const raw_custom_body = isPro ? ((formData.get("custom_body") as string)?.trim() || null) : null;
-  const custom_body = raw_custom_body ? encrypt(raw_custom_body) : null;
+  // Only update custom_body if a new value was provided (empty = keep existing)
+  const updateCustomBody = raw_custom_body !== null && raw_custom_body !== "";
 
   let response_validation: { path: string; operator: string; expected: string } | null = null;
   if (isPro) {
@@ -387,11 +389,11 @@ export async function editMonitor(monitorId: string, formData: FormData) {
     webhook_url,
     ...(isPro && {
       custom_headers,
-      custom_body,
       auth_type,
       response_validation,
       check_ssl,
       ...(updateAuthValue && { auth_value: encrypt(rawAuthValue!) }),
+      ...(updateCustomBody && { custom_body: encrypt(raw_custom_body!) }),
     }),
   };
 

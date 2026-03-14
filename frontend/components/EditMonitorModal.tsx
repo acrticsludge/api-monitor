@@ -39,6 +39,7 @@ export default function EditMonitorModal({
   const [loading, setLoading] = useState(false);
   const [url, setUrl] = useState(monitor.url);
   const [method, setMethod] = useState(monitor.method || "GET");
+  const [bodyRevealed, setBodyRevealed] = useState(false);
   const router = useRouter();
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -276,16 +277,32 @@ export default function EditMonitorModal({
 
                   {["POST", "PUT", "PATCH"].includes(method) && (
                     <Field label="Request Body">
-                      <textarea
-                        name="custom_body"
-                        defaultValue={monitor.custom_body || ""}
-                        placeholder='{"username": "user", "password": "pass"}'
-                        rows={3}
-                        className="w-full bg-[#f0f0f0] dark:bg-[#0a0a0a] border border-black/[0.08] dark:border-white/[0.1] rounded-xl px-3.5 py-2.5 text-[#080808] dark:text-white text-sm placeholder-neutral-400 dark:placeholder-neutral-600 focus:outline-none focus:border-[#00cc6a]/50 dark:focus:border-[#00ff87]/50 focus:ring-2 focus:ring-[#00cc6a]/10 dark:focus:ring-[#00ff87]/10 transition-all duration-200 resize-none"
-                        style={{ fontFamily: "'DM Mono', monospace" }}
-                      />
+                      {monitor.custom_body && !bodyRevealed ? (
+                        <div className="flex items-center justify-between bg-[#f0f0f0] dark:bg-[#0a0a0a] border border-black/[0.08] dark:border-white/[0.1] rounded-xl px-3.5 py-2.5">
+                          <span className="text-neutral-400 dark:text-neutral-600 text-sm tracking-widest" style={{ fontFamily: "'DM Mono', monospace" }}>
+                            ••••••••••••••••
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => setBodyRevealed(true)}
+                            className="text-[11px] text-neutral-500 hover:text-[#00cc6a] dark:hover:text-[#00ff87] transition-colors ml-3 shrink-0"
+                            style={{ fontFamily: "'DM Mono', monospace" }}
+                          >
+                            Edit
+                          </button>
+                        </div>
+                      ) : (
+                        <textarea
+                          name="custom_body"
+                          defaultValue={bodyRevealed ? "" : ""}
+                          placeholder='{"username": "user", "password": "pass"}'
+                          rows={3}
+                          className="w-full bg-[#f0f0f0] dark:bg-[#0a0a0a] border border-black/[0.08] dark:border-white/[0.1] rounded-xl px-3.5 py-2.5 text-[#080808] dark:text-white text-sm placeholder-neutral-400 dark:placeholder-neutral-600 focus:outline-none focus:border-[#00cc6a]/50 dark:focus:border-[#00ff87]/50 focus:ring-2 focus:ring-[#00cc6a]/10 dark:focus:ring-[#00ff87]/10 transition-all duration-200 resize-none"
+                          style={{ fontFamily: "'DM Mono', monospace" }}
+                        />
+                      )}
                       <p className="text-[10px] text-neutral-500 mt-1" style={{ fontFamily: "'DM Mono', monospace" }}>
-                        Sent as raw body — add Content-Type header above if needed
+                        {monitor.custom_body && !bodyRevealed ? "Body configured — click Edit to replace" : "Leave blank to keep existing body · Sent as raw body"}
                       </p>
                     </Field>
                   )}

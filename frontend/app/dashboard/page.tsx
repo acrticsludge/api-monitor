@@ -285,6 +285,12 @@ export default async function DashboardPage({
 
         <StatusPageLink userId={activeProject?.id ?? user.id} />
 
+        {isPro && (
+          <p className="text-[10px] text-neutral-500 -mt-1" style={{ fontFamily: "'DM Mono', monospace" }}>
+            Email alerts active · alerts@pulsemonitor.dev
+          </p>
+        )}
+
         <div className="flex items-center gap-4 py-1">
           <div className="flex-1 h-px bg-black/[0.06] dark:bg-white/[0.04]" />
           <span

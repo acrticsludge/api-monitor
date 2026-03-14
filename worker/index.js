@@ -713,48 +713,70 @@ async function sendAlert(monitor, type, lastPings = []) {
       incident_id: incidentId,
     });
 
-    const { data: user } = await supabase.auth.admin.getUserById(
-      monitor.user_id,
-    );
-    if (user?.user?.email) {
-      const safeName = escapeHtml(monitor.name);
-      const safeUrl = escapeHtml(monitor.url);
-      const isDown = type === "down";
+    const isPro = profileMap[monitor.user_id]?.is_pro ?? false;
 
-      const subject = isDown
-        ? `🔴 ${monitor.name} is down`
-        : `🟢 ${monitor.name} has recovered`;
+    if (isPro) {
+      const { data: user } = await supabase.auth.admin.getUserById(
+        monitor.user_id,
+      );
+      if (user?.user?.email) {
+        const safeName = escapeHtml(monitor.name);
+        const safeUrl = escapeHtml(monitor.url);
+        const isDown = type === "down";
+        const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://pulsemonitor.dev";
 
-      const html = isDown
-        ? `
-          <h2>${safeName} is down</h2>
-          <p><strong>URL:</strong> ${safeUrl}</p>
-          <p><strong>Status Code:</strong> ${statusCode ?? "No response (timeout)"}</p>
-          <p><strong>Last Response Time:</strong> ${lastResponseTime ? lastResponseTime + "ms" : "N/A"}</p>
-          <p><strong>Expected Status:</strong> ${monitor.expected_status_code}</p>
-          <p><strong>Time:</strong> ${new Date().toUTCString()}</p>
-          <p>Check your <a href="${process.env.NEXT_PUBLIC_APP_URL}/dashboard/monitors/${monitor.id}">monitor dashboard</a> for more details.</p>
-        `
-        : `
-          <h2>${safeName} has recovered</h2>
-          <p><strong>URL:</strong> ${safeUrl}</p>
-          <p><strong>Status Code:</strong> ${statusCode ?? "N/A"}</p>
-          <p><strong>Response Time:</strong> ${lastResponseTime ? lastResponseTime + "ms" : "N/A"}</p>
-          <p><strong>Time:</strong> ${new Date().toUTCString()}</p>
-        `;
+        const subject = isDown
+          ? `🔴 ${monitor.name} is down`
+          : `🟢 ${monitor.name} has recovered`;
 
-      const { error } = await resend.emails.send({
-        from: "onboarding@resend.dev",
-        to: user.user.email,
-        subject,
-        html,
-      });
+        const html = isDown
+          ? `
+            <div style="font-family: monospace; max-width: 520px; margin: 0 auto; background: #0f0f0f; color: #d4d4d4; padding: 32px; border-radius: 12px;">
+              <h2 style="color: #ff4444; margin-top: 0;">🔴 ${safeName} is down</h2>
+              <table style="width: 100%; border-collapse: collapse;">
+                <tr><td style="padding: 6px 0; color: #737373;">URL</td><td>${safeUrl}</td></tr>
+                <tr><td style="padding: 6px 0; color: #737373;">Status Code</td><td>${statusCode ?? "No response (timeout)"}</td></tr>
+                <tr><td style="padding: 6px 0; color: #737373;">Last Response Time</td><td>${lastResponseTime ? lastResponseTime + "ms" : "N/A"}</td></tr>
+                <tr><td style="padding: 6px 0; color: #737373;">Expected Status</td><td>${monitor.expected_status_code}</td></tr>
+                <tr><td style="padding: 6px 0; color: #737373;">Time</td><td>${new Date().toUTCString()}</td></tr>
+              </table>
+              <a href="${appUrl}/dashboard/monitors/${monitor.id}" style="display: inline-block; margin-top: 24px; background: #00ff87; color: #000; font-weight: bold; padding: 10px 20px; border-radius: 8px; text-decoration: none;">
+                View Monitor →
+              </a>
+              <p style="margin-top: 24px; color: #525252; font-size: 11px;">Pulse API Monitor · pulsemonitor.dev</p>
+            </div>
+          `
+          : `
+            <div style="font-family: monospace; max-width: 520px; margin: 0 auto; background: #0f0f0f; color: #d4d4d4; padding: 32px; border-radius: 12px;">
+              <h2 style="color: #00ff87; margin-top: 0;">🟢 ${safeName} has recovered</h2>
+              <table style="width: 100%; border-collapse: collapse;">
+                <tr><td style="padding: 6px 0; color: #737373;">URL</td><td>${safeUrl}</td></tr>
+                <tr><td style="padding: 6px 0; color: #737373;">Status Code</td><td>${statusCode ?? "N/A"}</td></tr>
+                <tr><td style="padding: 6px 0; color: #737373;">Response Time</td><td>${lastResponseTime ? lastResponseTime + "ms" : "N/A"}</td></tr>
+                <tr><td style="padding: 6px 0; color: #737373;">Time</td><td>${new Date().toUTCString()}</td></tr>
+              </table>
+              <a href="${appUrl}/dashboard/monitors/${monitor.id}" style="display: inline-block; margin-top: 24px; background: #00ff87; color: #000; font-weight: bold; padding: 10px 20px; border-radius: 8px; text-decoration: none;">
+                View Monitor →
+              </a>
+              <p style="margin-top: 24px; color: #525252; font-size: 11px;">Pulse API Monitor · pulsemonitor.dev</p>
+            </div>
+          `;
 
-      if (error) {
-        console.error(`Failed to send email alert:`, error);
-      } else {
-        console.log(`Alert sent to ${user.user.email} — ${type}`);
+        const { error } = await resend.emails.send({
+          from: process.env.RESEND_FROM_EMAIL ?? "alerts@pulsemonitor.dev",
+          to: user.user.email,
+          subject,
+          html,
+        });
+
+        if (error) {
+          console.error(`Failed to send email alert:`, error);
+        } else {
+          console.log(`Email sent to ${user.user.email} — ${type}`);
+        }
       }
+    } else {
+      console.log(`[EMAIL SKIPPED] ${monitor.name} — user is on free tier`);
     }
 
     if (monitor.webhook_url && isValidHttpUrl(monitor.webhook_url)) {

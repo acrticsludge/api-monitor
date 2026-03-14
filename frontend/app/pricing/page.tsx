@@ -216,7 +216,7 @@ export default function PricingPage() {
                 { label: "Unlimited monitors per project" },
                 { label: "1 minute check intervals" },
                 { label: "30 & 90 day history" },
-                { label: "Email alerts" },
+                { label: "Email alerts (via alerts@pulsemonitor.dev)" },
                 { label: "Custom HTTP headers & auth" },
                 { label: "Response validation checks" },
                 { label: "API schema change detection" },

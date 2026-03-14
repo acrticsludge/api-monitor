@@ -122,7 +122,7 @@ export function formatIncidentReport(report: IncidentReport): string {
   lines.push(``);
 
   lines.push(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`);
-  lines.push(`Pulse API Monitor · pulse.app`);
+  lines.push(`Pulse API Monitor · pulsemonitor.dev`);
 
   return lines.join("\n");
 }
