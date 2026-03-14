@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { editMonitor } from "../app/dashboard/actions";
+import { editMonitor, getDecryptedBody } from "../app/dashboard/actions";
 
 type ResponseValidation = {
   path: string;
@@ -40,6 +40,8 @@ export default function EditMonitorModal({
   const [url, setUrl] = useState(monitor.url);
   const [method, setMethod] = useState(monitor.method || "GET");
   const [bodyRevealed, setBodyRevealed] = useState(false);
+  const [decryptedBody, setDecryptedBody] = useState<string | null>(null);
+  const [bodyLoading, setBodyLoading] = useState(false);
   const router = useRouter();
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -284,17 +286,25 @@ export default function EditMonitorModal({
                           </span>
                           <button
                             type="button"
-                            onClick={() => setBodyRevealed(true)}
-                            className="text-[11px] text-neutral-500 hover:text-[#00cc6a] dark:hover:text-[#00ff87] transition-colors ml-3 shrink-0"
+                            disabled={bodyLoading}
+                            onClick={async () => {
+                              setBodyLoading(true);
+                              const val = await getDecryptedBody(monitor.id);
+                              setDecryptedBody(val ?? "");
+                              setBodyRevealed(true);
+                              setBodyLoading(false);
+                            }}
+                            className="text-[11px] text-neutral-500 hover:text-[#00cc6a] dark:hover:text-[#00ff87] transition-colors ml-3 shrink-0 disabled:opacity-50"
                             style={{ fontFamily: "'DM Mono', monospace" }}
                           >
-                            Edit
+                            {bodyLoading ? "Loading..." : "Edit"}
                           </button>
                         </div>
                       ) : (
                         <textarea
                           name="custom_body"
-                          defaultValue={bodyRevealed ? "" : ""}
+                          value={decryptedBody ?? ""}
+                          onChange={(e) => setDecryptedBody(e.target.value)}
                           placeholder='{"username": "user", "password": "pass"}'
                           rows={3}
                           className="w-full bg-[#f0f0f0] dark:bg-[#0a0a0a] border border-black/[0.08] dark:border-white/[0.1] rounded-xl px-3.5 py-2.5 text-[#080808] dark:text-white text-sm placeholder-neutral-400 dark:placeholder-neutral-600 focus:outline-none focus:border-[#00cc6a]/50 dark:focus:border-[#00ff87]/50 focus:ring-2 focus:ring-[#00cc6a]/10 dark:focus:ring-[#00ff87]/10 transition-all duration-200 resize-none"
@@ -302,7 +312,7 @@ export default function EditMonitorModal({
                         />
                       )}
                       <p className="text-[10px] text-neutral-500 mt-1" style={{ fontFamily: "'DM Mono', monospace" }}>
-                        {monitor.custom_body && !bodyRevealed ? "Body configured — click Edit to replace" : "Leave blank to keep existing body · Sent as raw body"}
+                        {monitor.custom_body && !bodyRevealed ? "Body configured — click Edit to load and modify" : "Sent as raw body"}
                       </p>
                     </Field>
                   )}

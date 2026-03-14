@@ -410,6 +410,26 @@ export async function editMonitor(monitorId: string, formData: FormData) {
   return {};
 }
 
+export async function getDecryptedBody(monitorId: string): Promise<string | null> {
+  if (!UUID_RE.test(monitorId)) return null;
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return null;
+
+  const { data } = await supabase
+    .from("monitors")
+    .select("custom_body")
+    .eq("id", monitorId)
+    .eq("user_id", user.id)
+    .single();
+
+  return decrypt(data?.custom_body ?? null);
+}
+
 export async function deleteMonitor(formData: FormData) {
   const supabase = await createClient();
   const {
