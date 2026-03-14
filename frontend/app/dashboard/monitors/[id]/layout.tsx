@@ -118,7 +118,7 @@ export default async function MonitorLayout({
       </div>
 
       {/* Main layout */}
-      <div className="relative z-10 max-w-7xl mx-auto flex">
+      <div className="relative z-10 max-w-7xl mx-auto flex flex-col md:flex-row">
         <MonitorSidebar monitorId={id} isPro={isPro} />
         <main className="flex-1 min-w-0 p-5 sm:p-6">{children}</main>
       </div>
