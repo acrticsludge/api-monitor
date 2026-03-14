@@ -60,9 +60,11 @@ export function usePushNotifications(userId: string) {
       });
 
       const supabase = createClient();
+      // Remove all existing subs for this user so stale origin subs don't linger
+      await supabase.from("push_subscriptions").delete().eq("user_id", userId);
       await supabase.from("push_subscriptions").insert({
         user_id: userId,
-        subscription: sub.toJSON(),
+        subscription: { ...sub.toJSON(), origin: window.location.origin },
       });
 
       setSubscribed(true);

@@ -199,6 +199,12 @@ async function checkSSL(url) {
 
 // ── Pro: direct push notification (for schema/SSL alerts) ────────────────────
 
+// Returns true if the subscription belongs to this app's origin (or has no origin = legacy)
+function isOwnOrigin(subscription) {
+  if (!subscription.origin) return true; // legacy sub, keep sending
+  return subscription.origin === APP_URL;
+}
+
 async function sendPushNotificationDirect(userId, title, body) {
   try {
     const { data: subs } = await supabase
@@ -211,7 +217,7 @@ async function sendPushNotificationDirect(userId, title, body) {
     const payload = JSON.stringify({ title, body, url: `${APP_URL}/dashboard` });
 
     await Promise.allSettled(
-      subs.map(({ id, subscription }) =>
+      subs.filter(({ subscription }) => isOwnOrigin(subscription)).map(({ id, subscription }) =>
         webpush.sendNotification(subscription, payload).catch((err) => {
           if (err.statusCode === 404 || err.statusCode === 410) {
             return supabase.from("push_subscriptions").delete().eq("id", id);
@@ -565,7 +571,7 @@ async function sendAnomalyPushNotification(monitor, baselineMs, currentMs) {
     });
 
     await Promise.allSettled(
-      subs.map(({ id, subscription }) =>
+      subs.filter(({ subscription }) => isOwnOrigin(subscription)).map(({ id, subscription }) =>
         webpush.sendNotification(subscription, payload).catch((err) => {
           if (err.statusCode === 404 || err.statusCode === 410) {
             return supabase.from("push_subscriptions").delete().eq("id", id);
@@ -911,7 +917,7 @@ async function sendPushNotification(
     });
 
     await Promise.allSettled(
-      subs.map(({ id, subscription }) =>
+      subs.filter(({ subscription }) => isOwnOrigin(subscription)).map(({ id, subscription }) =>
         webpush.sendNotification(subscription, payload).catch((err) => {
           if (err.statusCode === 404 || err.statusCode === 410) {
             return supabase.from("push_subscriptions").delete().eq("id", id);
