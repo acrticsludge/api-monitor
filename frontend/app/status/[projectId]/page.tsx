@@ -53,9 +53,9 @@ type Ping = {
 };
 
 function uptimeColor(pct: number): string {
-  if (pct === 100) return "text-[#00cc6a] dark:text-[#00ff87]";
-  if (pct >= 90) return "text-yellow-500 dark:text-yellow-400";
-  return "text-red-500 dark:text-red-400";
+  if (pct === 100) return "text-[#00cc6a] dark:text-[#00d294]";
+  if (pct >= 90) return "text-[#f99c00] dark:text-[#f99c00]";
+  return "text-[#fb2c36] dark:text-[#fb2c36]";
 }
 
 export default async function StatusPage({
@@ -187,10 +187,10 @@ export default async function StatusPage({
     return (
       <div
         className="min-h-screen bg-[#080808] flex items-center justify-center"
-        style={{ fontFamily: "'DM Mono', monospace" }}
+        style={{ fontFamily: "'Geist Mono', monospace" }}
       >
         <link
-          href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;500;600;700;800&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500;600;700&display=swap"
           rel="stylesheet"
         />
         <p className="text-neutral-500 text-sm">
@@ -203,11 +203,11 @@ export default async function StatusPage({
   return (
     <div
       className="min-h-screen bg-[#f8f8f8] dark:bg-[#080808] text-[#080808] dark:text-white"
-      style={{ fontFamily: "'Syne', sans-serif" }}
+      style={{ fontFamily: "'Geist', sans-serif" }}
     >
       <AutoRefresh />
       <link
-        href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;500;600;700;800&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500;600;700&display=swap"
         rel="stylesheet"
       />
 
@@ -226,7 +226,7 @@ export default async function StatusPage({
       <header className="sticky top-0 z-50 border-b border-black/[0.06] dark:border-white/[0.06] bg-[#f8f8f8]/80 dark:bg-[#080808]/80 backdrop-blur-xl">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-lg bg-[#00cc6a] dark:bg-[#00ff87] flex items-center justify-center shadow-[0_0_16px_rgba(0,204,106,0.35)] dark:shadow-[0_0_16px_rgba(0,255,135,0.35)]">
+            <div className="w-7 h-7 rounded-lg bg-[#00cc6a] dark:bg-[#00d294] flex items-center justify-center shadow-[0_0_16px_rgba(0,204,106,0.35)] dark:shadow-[0_0_16px_rgba(0,255,135,0.35)]">
               <svg
                 className="w-3.5 h-3.5 text-black"
                 fill="none"
@@ -248,7 +248,7 @@ export default async function StatusPage({
           <div className="flex items-center gap-3">
             <p
               className="text-[11px] text-neutral-400 dark:text-neutral-500"
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               {project.name} · Status
             </p>
@@ -260,10 +260,10 @@ export default async function StatusPage({
       <main className="relative max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-4">
         {/* Overall status banner */}
         {overallStatus === "operational" && (
-          <div className="flex items-center gap-4 bg-[#00cc6a]/[0.06] dark:bg-[#00ff87]/[0.06] border border-[#00cc6a]/20 dark:border-[#00ff87]/20 rounded-2xl px-5 py-5">
-            <div className="w-10 h-10 rounded-xl bg-[#00cc6a]/10 dark:bg-[#00ff87]/10 border border-[#00cc6a]/20 dark:border-[#00ff87]/20 flex items-center justify-center shrink-0">
+          <div className="flex items-center gap-4 bg-[#00cc6a]/[0.06] dark:bg-[#00d294]/[0.06] border border-[#00cc6a]/20 dark:border-[#00d294]/20 rounded-2xl px-5 py-5">
+            <div className="w-10 h-10 rounded-xl bg-[#00cc6a]/10 dark:bg-[#00d294]/10 border border-[#00cc6a]/20 dark:border-[#00d294]/20 flex items-center justify-center shrink-0">
               <svg
-                className="w-5 h-5 text-[#00cc6a] dark:text-[#00ff87]"
+                className="w-5 h-5 text-[#00cc6a] dark:text-[#00d294]"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -277,12 +277,12 @@ export default async function StatusPage({
               </svg>
             </div>
             <div>
-              <p className="text-base font-bold text-[#00cc6a] dark:text-[#00ff87]">
+              <p className="text-base font-bold text-[#00cc6a] dark:text-[#00d294]">
                 All Systems Operational
               </p>
               <p
                 className="text-xs text-neutral-500 mt-0.5"
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               >
                 All {monitorList.length} endpoint
                 {monitorList.length !== 1 ? "s" : ""} responding normally
@@ -292,10 +292,10 @@ export default async function StatusPage({
         )}
 
         {overallStatus === "degraded" && (
-          <div className="flex items-center gap-4 bg-yellow-400/[0.06] border border-yellow-400/20 rounded-2xl px-5 py-5">
-            <div className="w-10 h-10 rounded-xl bg-yellow-400/10 border border-yellow-400/20 flex items-center justify-center shrink-0">
+          <div className="flex items-center gap-4 bg-[#f99c00]/[0.06] border border-[#f99c00]/20 rounded-2xl px-5 py-5">
+            <div className="w-10 h-10 rounded-xl bg-[#f99c00]/10 border border-[#f99c00]/20 flex items-center justify-center shrink-0">
               <svg
-                className="w-5 h-5 text-yellow-500 dark:text-yellow-400"
+                className="w-5 h-5 text-[#f99c00] dark:text-[#f99c00]"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -309,12 +309,12 @@ export default async function StatusPage({
               </svg>
             </div>
             <div>
-              <p className="text-base font-bold text-yellow-500 dark:text-yellow-400">
+              <p className="text-base font-bold text-[#f99c00] dark:text-[#f99c00]">
                 Degraded Performance
               </p>
               <p
                 className="text-xs text-neutral-500 mt-0.5"
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               >
                 {downCount} of {checkedMonitors.length} endpoints experiencing
                 issues
@@ -324,10 +324,10 @@ export default async function StatusPage({
         )}
 
         {overallStatus === "outage" && (
-          <div className="flex items-center gap-4 bg-red-400/[0.06] border border-red-400/20 rounded-2xl px-5 py-5">
-            <div className="w-10 h-10 rounded-xl bg-red-400/10 border border-red-400/20 flex items-center justify-center shrink-0">
+          <div className="flex items-center gap-4 bg-[#fb2c36]/[0.06] border border-[#fb2c36]/20 rounded-2xl px-5 py-5">
+            <div className="w-10 h-10 rounded-xl bg-[#fb2c36]/10 border border-[#fb2c36]/20 flex items-center justify-center shrink-0">
               <svg
-                className="w-5 h-5 text-red-500 dark:text-red-400"
+                className="w-5 h-5 text-[#fb2c36] dark:text-[#fb2c36]"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -341,12 +341,12 @@ export default async function StatusPage({
               </svg>
             </div>
             <div>
-              <p className="text-base font-bold text-red-500 dark:text-red-400">
+              <p className="text-base font-bold text-[#fb2c36] dark:text-[#fb2c36]">
                 Major Outage
               </p>
               <p
                 className="text-xs text-neutral-500 mt-0.5"
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               >
                 All endpoints are currently down
               </p>
@@ -362,7 +362,7 @@ export default async function StatusPage({
               </p>
               <p
                 className="text-xs text-neutral-400 dark:text-neutral-600 mt-0.5"
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               >
                 No active endpoints to display
               </p>
@@ -376,7 +376,7 @@ export default async function StatusPage({
             <div className="bg-white dark:bg-[#0f0f0f] border border-black/[0.06] dark:border-white/[0.06] rounded-2xl px-4 py-3 text-center shadow-[0_1px_3px_rgba(0,0,0,0.04)] dark:shadow-none">
               <p
                 className="text-[10px] tracking-[0.12em] uppercase text-neutral-400 dark:text-neutral-500 mb-1"
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               >
                 Total
               </p>
@@ -387,23 +387,23 @@ export default async function StatusPage({
             <div className="bg-white dark:bg-[#0f0f0f] border border-black/[0.06] dark:border-white/[0.06] rounded-2xl px-4 py-3 text-center shadow-[0_1px_3px_rgba(0,0,0,0.04)] dark:shadow-none">
               <p
                 className="text-[10px] tracking-[0.12em] uppercase text-neutral-400 dark:text-neutral-500 mb-1"
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               >
                 Online
               </p>
-              <p className="text-2xl font-extrabold text-[#00cc6a] dark:text-[#00ff87] tabular-nums">
+              <p className="text-2xl font-extrabold text-[#00cc6a] dark:text-[#00d294] tabular-nums">
                 {upCount}
               </p>
             </div>
             <div className="bg-white dark:bg-[#0f0f0f] border border-black/[0.06] dark:border-white/[0.06] rounded-2xl px-4 py-3 text-center shadow-[0_1px_3px_rgba(0,0,0,0.04)] dark:shadow-none">
               <p
                 className="text-[10px] tracking-[0.12em] uppercase text-neutral-400 dark:text-neutral-500 mb-1"
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               >
                 Down
               </p>
               <p
-                className={`text-2xl font-extrabold tabular-nums ${downCount > 0 ? "text-red-500 dark:text-red-400" : "text-neutral-400 dark:text-neutral-600"}`}
+                className={`text-2xl font-extrabold tabular-nums ${downCount > 0 ? "text-[#fb2c36] dark:text-[#fb2c36]" : "text-neutral-400 dark:text-neutral-600"}`}
               >
                 {downCount}
               </p>
@@ -417,7 +417,7 @@ export default async function StatusPage({
             <div className="px-5 py-4 border-b border-black/[0.06] dark:border-white/[0.06]">
               <p
                 className="text-[10px] tracking-[0.12em] uppercase text-neutral-400 dark:text-neutral-500"
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               >
                 Endpoints
               </p>
@@ -438,7 +438,7 @@ export default async function StatusPage({
                     </p>
                     <p
                       className="text-xs text-neutral-400 dark:text-neutral-500 truncate mt-0.5"
-                      style={{ fontFamily: "'DM Mono', monospace" }}
+                      style={{ fontFamily: "'Geist Mono', monospace" }}
                     >
                       {monitor.url}
                     </p>
@@ -450,9 +450,9 @@ export default async function StatusPage({
                               key={segIdx}
                               className={`flex-1 h-1.5 ${segIdx === 0 ? "rounded-l-sm" : ""} ${segIdx === 3 ? "rounded-r-sm" : ""} ${
                                 seg === "up"
-                                  ? "bg-[#00cc6a] dark:bg-[#00ff87]"
+                                  ? "bg-[#00cc6a] dark:bg-[#00d294]"
                                   : seg === "down"
-                                    ? "bg-red-500 dark:bg-red-400"
+                                    ? "bg-[#fb2c36] dark:bg-[#fb2c36]"
                                     : "bg-black/[0.08] dark:bg-white/[0.08]"
                               }`}
                             />
@@ -467,13 +467,13 @@ export default async function StatusPage({
                       <div className="text-right hidden sm:block">
                         <p
                           className="text-[10px] tracking-[0.1em] uppercase text-neutral-400 dark:text-neutral-600 mb-0.5"
-                          style={{ fontFamily: "'DM Mono', monospace" }}
+                          style={{ fontFamily: "'Geist Mono', monospace" }}
                         >
                           Uptime
                         </p>
                         <p
                           className={`text-sm font-bold tabular-nums ${uptimeColor(monitor.uptimePct)}`}
-                          style={{ fontFamily: "'DM Mono', monospace" }}
+                          style={{ fontFamily: "'Geist Mono', monospace" }}
                         >
                           {monitor.uptimePct}%
                         </p>
@@ -483,7 +483,7 @@ export default async function StatusPage({
                     <div className="hidden sm:block text-right">
                       <p
                         className="text-[10px] tracking-[0.1em] uppercase text-neutral-400 dark:text-neutral-600 mb-0.5"
-                        style={{ fontFamily: "'DM Mono', monospace" }}
+                        style={{ fontFamily: "'Geist Mono', monospace" }}
                       >
                         Health
                       </p>
@@ -497,27 +497,27 @@ export default async function StatusPage({
 
                     {monitor.latestStatus === "up" ? (
                       <span
-                        className="inline-flex items-center gap-1.5 text-[11px] font-medium text-[#00cc6a] dark:text-[#00ff87]"
-                        style={{ fontFamily: "'DM Mono', monospace" }}
+                        className="inline-flex items-center gap-1.5 text-[11px] font-medium text-[#00cc6a] dark:text-[#00d294]"
+                        style={{ fontFamily: "'Geist Mono', monospace" }}
                       >
                         <span className="relative flex w-1.5 h-1.5">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00cc6a] dark:bg-[#00ff87] opacity-50" />
-                          <span className="relative inline-flex rounded-full w-1.5 h-1.5 bg-[#00cc6a] dark:bg-[#00ff87]" />
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00cc6a] dark:bg-[#00d294] opacity-50" />
+                          <span className="relative inline-flex rounded-full w-1.5 h-1.5 bg-[#00cc6a] dark:bg-[#00d294]" />
                         </span>
                         UP
                       </span>
                     ) : monitor.latestStatus === "down" ? (
                       <span
-                        className="inline-flex items-center gap-1.5 text-[11px] font-medium text-red-500 dark:text-red-400"
-                        style={{ fontFamily: "'DM Mono', monospace" }}
+                        className="inline-flex items-center gap-1.5 text-[11px] font-medium text-[#fb2c36] dark:text-[#fb2c36]"
+                        style={{ fontFamily: "'Geist Mono', monospace" }}
                       >
-                        <span className="w-1.5 h-1.5 rounded-full bg-red-500 dark:bg-red-400" />
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#fb2c36] dark:bg-[#fb2c36]" />
                         DOWN
                       </span>
                     ) : (
                       <span
                         className="inline-flex items-center gap-1.5 text-[11px] font-medium text-neutral-400 dark:text-neutral-500"
-                        style={{ fontFamily: "'DM Mono', monospace" }}
+                        style={{ fontFamily: "'Geist Mono', monospace" }}
                       >
                         <span className="w-1.5 h-1.5 rounded-full bg-neutral-400 dark:bg-neutral-600" />
                         PENDING
@@ -532,14 +532,14 @@ export default async function StatusPage({
 
         <p
           className="text-[10px] text-neutral-600 text-center mt-6"
-          style={{ fontFamily: "'DM Mono', monospace" }}
+          style={{ fontFamily: "'Geist Mono', monospace" }}
         >
           Health scores are based on response time trends and uptime over the last 20 checks
         </p>
 
         <p
           className="text-center text-[10px] text-neutral-400 dark:text-neutral-700 tracking-[0.1em] uppercase pt-4"
-          style={{ fontFamily: "'DM Mono', monospace" }}
+          style={{ fontFamily: "'Geist Mono', monospace" }}
         >
           Powered by Pulse · Auto-refreshes every 60s
         </p>

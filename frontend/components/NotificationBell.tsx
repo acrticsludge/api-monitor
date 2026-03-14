@@ -39,7 +39,7 @@ export default function NotificationBell({ userId }: { userId: string }) {
         isDenied
           ? "border-black/[0.06] dark:border-white/[0.06] text-neutral-300 dark:text-neutral-700 cursor-not-allowed bg-transparent"
           : subscribed
-            ? "border-[#00cc6a]/30 dark:border-[#00ff87]/30 text-[#00cc6a] dark:text-[#00ff87] bg-[#00cc6a]/[0.06] dark:bg-[#00ff87]/[0.06] hover:bg-[#00cc6a]/[0.1] dark:hover:bg-[#00ff87]/[0.1]"
+            ? "border-[#00cc6a]/30 dark:border-[#00d294]/30 text-[#00cc6a] dark:text-[#00d294] bg-[#00cc6a]/[0.06] dark:bg-[#00d294]/[0.06] hover:bg-[#00cc6a]/[0.1] dark:hover:bg-[#00d294]/[0.1]"
             : "border-black/[0.08] dark:border-white/[0.08] bg-transparent text-neutral-500 dark:text-neutral-400 hover:bg-black/[0.05] dark:hover:bg-white/[0.06] hover:text-neutral-800 dark:hover:text-white"
       }`}
     >

@@ -35,8 +35,8 @@ export default function CheckNowButton({ monitorId }: { monitorId: string }) {
     <div className="flex items-center gap-3">
       {result && (
         <span
-          className={`text-[11px] font-medium ${result.status === "up" ? "text-[#00ff87]" : "text-red-400"}`}
-          style={{ fontFamily: "'DM Mono', monospace" }}
+          className={`text-[11px] font-medium ${result.status === "up" ? "text-[#00d294]" : "text-[#fb2c36]"}`}
+          style={{ fontFamily: "'Geist Mono', monospace" }}
         >
           {result.status.toUpperCase()}
           {result.response_time_ms != null ? ` · ${result.response_time_ms}ms` : ""}
@@ -46,8 +46,8 @@ export default function CheckNowButton({ monitorId }: { monitorId: string }) {
       <button
         onClick={handleCheck}
         disabled={loading}
-        className="inline-flex items-center gap-1.5 bg-[#00ff87] hover:bg-[#00e87a] disabled:opacity-40 disabled:cursor-not-allowed text-black text-xs font-bold tracking-[0.06em] uppercase px-3.5 py-2 rounded-lg transition-all duration-150 shadow-[0_0_16px_rgba(0,255,135,0.25)] hover:shadow-[0_0_24px_rgba(0,255,135,0.4)]"
-        style={{ fontFamily: "'Syne', sans-serif" }}
+        className="inline-flex items-center gap-1.5 bg-[#00d294] hover:bg-[#00e87a] disabled:opacity-40 disabled:cursor-not-allowed text-black text-xs font-bold tracking-[0.06em] uppercase px-3.5 py-2 rounded-lg transition-all duration-150 shadow-[0_0_16px_rgba(0,255,135,0.25)] hover:shadow-[0_0_24px_rgba(0,255,135,0.4)]"
+        style={{ fontFamily: "'Geist', sans-serif" }}
       >
         {loading ? (
           <>

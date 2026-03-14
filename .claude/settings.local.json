@@ -19,7 +19,9 @@
       "Bash(node -e \":*)",
       "Bash(npm run:*)",
       "Bash(npx next:*)",
-      "Bash(echo \"EXIT:$?\")"
+      "Bash(echo \"EXIT:$?\")",
+      "WebFetch(domain:skyblockmutations.vercel.app)",
+      "Bash(curl -s \"https://skyblockmutations.vercel.app/\")"
     ]
   }
 }

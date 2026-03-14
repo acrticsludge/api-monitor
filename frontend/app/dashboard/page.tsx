@@ -146,10 +146,10 @@ export default async function DashboardPage({
   return (
     <div
       className="min-h-screen bg-[#f8f8f8] dark:bg-[#080808] text-[#080808] dark:text-white"
-      style={{ fontFamily: "'Syne', sans-serif" }}
+      style={{ fontFamily: "'Geist', sans-serif" }}
     >
       <link
-        href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;500;600;700;800&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500;600;700&display=swap"
         rel="stylesheet"
       />
 
@@ -168,7 +168,7 @@ export default async function DashboardPage({
       <header className="sticky top-0 z-50 border-b border-black/[0.06] dark:border-white/[0.06] bg-[#f8f8f8]/80 dark:bg-[#080808]/80 backdrop-blur-xl">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-lg bg-[#00cc6a] dark:bg-[#00ff87] flex items-center justify-center shadow-[0_0_16px_rgba(0,204,106,0.3)] dark:shadow-[0_0_16px_rgba(0,255,135,0.35)]">
+            <div className="w-7 h-7 rounded-lg bg-[#00cc6a] dark:bg-[#00d294] flex items-center justify-center shadow-[0_0_16px_rgba(0,204,106,0.3)] dark:shadow-[0_0_16px_rgba(0,255,135,0.35)]">
               <svg
                 className="w-3.5 h-3.5 text-black"
                 fill="none"
@@ -190,8 +190,8 @@ export default async function DashboardPage({
           <div className="flex items-center gap-3">
             {isPro && (
               <span
-                className="hidden sm:inline-flex items-center text-[10px] font-semibold tracking-[0.08em] uppercase text-[#00cc6a] dark:text-[#00ff87] border border-[#00cc6a]/30 dark:border-[#00ff87]/30 rounded-md px-2 py-1"
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                className="hidden sm:inline-flex items-center text-[10px] font-semibold tracking-[0.08em] uppercase text-[#00cc6a] dark:text-[#00d294] border border-[#00cc6a]/30 dark:border-[#00d294]/30 rounded-md px-2 py-1"
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               >
                 Pro
               </span>
@@ -199,20 +199,20 @@ export default async function DashboardPage({
             <Link
               href="/pricing"
               className="hidden sm:block text-[11px] font-semibold tracking-[0.08em] uppercase text-neutral-500 dark:text-neutral-400 hover:text-[#080808] dark:hover:text-white transition-colors duration-150"
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               Pricing
             </Link>
             <Link
               href="/docs"
               className="hidden sm:block text-[11px] font-semibold tracking-[0.08em] uppercase text-neutral-500 dark:text-neutral-400 hover:text-[#080808] dark:hover:text-white transition-colors duration-150"
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               Docs
             </Link>
             <span
               className="hidden sm:block text-xs text-neutral-500 dark:text-neutral-400"
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               {user.email}
             </span>
@@ -242,8 +242,8 @@ export default async function DashboardPage({
 
         <div className="mb-6">
           <p
-            className="text-[11px] tracking-[0.14em] uppercase text-[#00cc6a] dark:text-[#00ff87] mb-2 font-medium"
-            style={{ fontFamily: "'DM Mono', monospace" }}
+            className="text-[11px] tracking-[0.14em] uppercase text-[#00cc6a] dark:text-[#00d294] mb-2 font-medium"
+            style={{ fontFamily: "'Geist Mono', monospace" }}
           >
             &gt; overview
           </p>
@@ -252,7 +252,7 @@ export default async function DashboardPage({
           </h1>
           <p
             className="text-sm text-neutral-500 dark:text-neutral-400 mt-1"
-            style={{ fontFamily: "'DM Mono', monospace" }}
+            style={{ fontFamily: "'Geist Mono', monospace" }}
           >
             {monitorList.length === 0
               ? "No endpoints configured yet"
@@ -261,17 +261,17 @@ export default async function DashboardPage({
         </div>
 
         {hasViolations && downgradeViolations && (
-          <div className="relative bg-yellow-400/[0.04] border border-yellow-400/25 rounded-2xl p-4 overflow-hidden">
-            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-yellow-400/40 to-transparent" />
+          <div className="relative bg-[#f99c00]/[0.04] border border-[#f99c00]/25 rounded-2xl p-4 overflow-hidden">
+            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#f99c00]/40 to-transparent" />
             <div className="flex items-start gap-3">
-              <svg className="w-4 h-4 text-yellow-400 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <svg className="w-4 h-4 text-[#f99c00] flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
               </svg>
               <div className="flex-1 min-w-0">
-                <p className="text-yellow-400 text-xs font-semibold mb-1" style={{ fontFamily: "'Syne', sans-serif" }}>
+                <p className="text-[#f99c00] text-xs font-semibold mb-1" style={{ fontFamily: "'Geist', sans-serif" }}>
                   Pro subscription ended — free tier limits apply
                 </p>
-                <p className="text-yellow-400/70 text-[11px] leading-relaxed" style={{ fontFamily: "'DM Mono', monospace" }}>
+                <p className="text-[#f99c00]/70 text-[11px] leading-relaxed" style={{ fontFamily: "'Geist Mono', monospace" }}>
                   {[
                     downgradeViolations.fastIntervals > 0 &&
                       `${downgradeViolations.fastIntervals} monitor${downgradeViolations.fastIntervals > 1 ? "s have" : " has"} a check interval under 5 min`,
@@ -281,9 +281,9 @@ export default async function DashboardPage({
                     .filter(Boolean)
                     .join(" · ")}
                 </p>
-                <p className="text-yellow-400/50 text-[11px] mt-1" style={{ fontFamily: "'DM Mono', monospace" }}>
+                <p className="text-[#f99c00]/50 text-[11px] mt-1" style={{ fontFamily: "'Geist Mono', monospace" }}>
                   These monitors will continue running until the settings are updated or you{" "}
-                  <a href="/pricing" className="underline hover:text-yellow-400/80 transition-colors">reactivate Pro</a>.
+                  <a href="/pricing" className="underline hover:text-[#f99c00]/80 transition-colors">reactivate Pro</a>.
                 </p>
               </div>
             </div>
@@ -301,26 +301,26 @@ export default async function DashboardPage({
           <div className="flex flex-col gap-0.5">
             <p
               className="text-[10px] tracking-[0.12em] uppercase text-neutral-500 whitespace-nowrap"
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               Overall Uptime
             </p>
             <p
               className="text-xs text-neutral-500 dark:text-neutral-400"
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               Current session
             </p>
           </div>
           <div className="flex-1 h-1.5 bg-black/[0.06] dark:bg-white/[0.06] rounded-full overflow-hidden">
             <div
-              className="h-full bg-[#00cc6a] dark:bg-[#00ff87] rounded-full shadow-[0_0_8px_rgba(0,204,106,0.4)] dark:shadow-[0_0_8px_rgba(0,255,135,0.5)] transition-all duration-700"
+              className="h-full bg-[#00cc6a] dark:bg-[#00d294] rounded-full shadow-[0_0_8px_rgba(0,204,106,0.4)] dark:shadow-[0_0_8px_rgba(0,255,135,0.5)] transition-all duration-700"
               style={{ width: `${uptimePct}%` }}
             />
           </div>
           <p
-            className="text-sm font-bold text-[#00cc6a] dark:text-[#00ff87] tabular-nums"
-            style={{ fontFamily: "'DM Mono', monospace" }}
+            className="text-sm font-bold text-[#00cc6a] dark:text-[#00d294] tabular-nums"
+            style={{ fontFamily: "'Geist Mono', monospace" }}
           >
             {uptimePct}%
           </p>
@@ -329,7 +329,7 @@ export default async function DashboardPage({
         <StatusPageLink userId={activeProject?.id ?? user.id} />
 
         {isPro && (
-          <p className="text-[10px] text-neutral-500 -mt-1" style={{ fontFamily: "'DM Mono', monospace" }}>
+          <p className="text-[10px] text-neutral-500 -mt-1" style={{ fontFamily: "'Geist Mono', monospace" }}>
             Email alerts active · alerts@pulsemonitor.dev
           </p>
         )}
@@ -338,7 +338,7 @@ export default async function DashboardPage({
           <div className="flex-1 h-px bg-black/[0.06] dark:bg-white/[0.04]" />
           <span
             className="text-[10px] tracking-[0.15em] uppercase text-neutral-400 dark:text-neutral-600 whitespace-nowrap"
-            style={{ fontFamily: "'DM Mono', monospace" }}
+            style={{ fontFamily: "'Geist Mono', monospace" }}
           >
             Endpoints
           </span>
@@ -346,14 +346,14 @@ export default async function DashboardPage({
         </div>
 
         {anomalies && anomalies.length > 0 && (
-          <div className="relative bg-yellow-400/[0.06] border border-yellow-400/20 rounded-2xl p-4 mb-6 overflow-hidden">
-            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-yellow-400/40 to-transparent" />
+          <div className="relative bg-[#f99c00]/[0.06] border border-[#f99c00]/20 rounded-2xl p-4 mb-6 overflow-hidden">
+            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#f99c00]/40 to-transparent" />
             <div className="flex items-start gap-3">
-              <span className="text-yellow-400 text-lg">⚠️</span>
+              <span className="text-[#f99c00] text-lg">⚠️</span>
               <div>
                 <p
-                  className="text-yellow-400 text-xs font-bold uppercase tracking-wider mb-1"
-                  style={{ fontFamily: "'Syne', sans-serif" }}
+                  className="text-[#f99c00] text-xs font-bold uppercase tracking-wider mb-1"
+                  style={{ fontFamily: "'Geist', sans-serif" }}
                 >
                   Performance Degradation Detected
                 </p>
@@ -361,7 +361,7 @@ export default async function DashboardPage({
                   <p
                     key={a.id}
                     className="text-neutral-400 text-xs"
-                    style={{ fontFamily: "'DM Mono', monospace" }}
+                    style={{ fontFamily: "'Geist Mono', monospace" }}
                   >
                     {(a.monitors as unknown as { name: string } | null)?.name} —
                     averaging {a.current_avg_ms}ms (
@@ -379,7 +379,7 @@ export default async function DashboardPage({
             <div>
               <p
                 className="text-[10px] tracking-[0.12em] uppercase text-neutral-500"
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               >
                 Endpoints
               </p>
@@ -436,7 +436,7 @@ export default async function DashboardPage({
                         <th
                           key={h}
                           className="px-4 py-3 text-left text-[10px] font-semibold tracking-[0.1em] uppercase text-neutral-500"
-                          style={{ fontFamily: "'DM Mono', monospace" }}
+                          style={{ fontFamily: "'Geist Mono', monospace" }}
                         >
                           {h}
                         </th>
@@ -455,7 +455,7 @@ export default async function DashboardPage({
                           <td className="px-4 py-4 text-sm font-semibold">
                             <Link
                               href={`/dashboard/monitors/${monitor.id}`}
-                              className="text-[#080808] dark:text-white hover:text-[#00cc6a] dark:hover:text-[#00ff87] transition-colors duration-150"
+                              className="text-[#080808] dark:text-white hover:text-[#00cc6a] dark:hover:text-[#00d294] transition-colors duration-150"
                             >
                               {monitor.name}
                             </Link>
@@ -463,7 +463,7 @@ export default async function DashboardPage({
                           <td className="px-4 py-4 max-w-40">
                             <span
                               className="block truncate text-xs text-neutral-500 dark:text-neutral-400"
-                              style={{ fontFamily: "'DM Mono', monospace" }}
+                              style={{ fontFamily: "'Geist Mono', monospace" }}
                               title={monitor.url}
                             >
                               {monitor.url}
@@ -473,7 +473,7 @@ export default async function DashboardPage({
                             {!monitor.is_active ? (
                               <span
                                 className="inline-flex items-center gap-1.5 text-[11px] font-medium text-neutral-400 dark:text-neutral-600"
-                                style={{ fontFamily: "'DM Mono', monospace" }}
+                                style={{ fontFamily: "'Geist Mono', monospace" }}
                               >
                                 <span className="w-1.5 h-1.5 rounded-full bg-neutral-300 dark:bg-neutral-700" />
                                 PAUSED
@@ -488,7 +488,7 @@ export default async function DashboardPage({
                           <td className="px-4 py-4">
                             <span
                               className={`text-xs font-medium ${responseTimeColor(ping?.response_time_ms ?? null)}`}
-                              style={{ fontFamily: "'DM Mono', monospace" }}
+                              style={{ fontFamily: "'Geist Mono', monospace" }}
                             >
                               {ping?.response_time_ms != null
                                 ? `${ping.response_time_ms}ms`
@@ -513,7 +513,7 @@ export default async function DashboardPage({
                           <td className="px-4 py-4">
                             <span
                               className="text-xs text-neutral-500 dark:text-neutral-400"
-                              style={{ fontFamily: "'DM Mono', monospace" }}
+                              style={{ fontFamily: "'Geist Mono', monospace" }}
                             >
                               {ping ? <LocalTime iso={ping.checked_at} /> : "—"}
                             </span>
@@ -538,7 +538,7 @@ export default async function DashboardPage({
                                 />
                                 <button
                                   type="submit"
-                                  className="text-xs font-medium text-neutral-500 dark:text-neutral-400 hover:text-[#00cc6a] dark:hover:text-[#00ff87] transition-colors duration-150"
+                                  className="text-xs font-medium text-neutral-500 dark:text-neutral-400 hover:text-[#00cc6a] dark:hover:text-[#00d294] transition-colors duration-150"
                                 >
                                   {monitor.is_active ? "Pause" : "Resume"}
                                 </button>
@@ -551,7 +551,7 @@ export default async function DashboardPage({
                                 />
                                 <button
                                   type="submit"
-                                  className="text-xs font-medium text-neutral-400 dark:text-neutral-600 hover:text-red-500 dark:hover:text-red-400 transition-colors duration-150"
+                                  className="text-xs font-medium text-neutral-400 dark:text-neutral-600 hover:text-[#fb2c36] dark:hover:text-[#fb2c36] transition-colors duration-150"
                                 >
                                   Remove
                                 </button>
@@ -577,13 +577,13 @@ export default async function DashboardPage({
                         <div className="min-w-0">
                           <Link
                             href={`/dashboard/monitors/${monitor.id}`}
-                            className="block text-sm font-semibold text-[#080808] dark:text-white truncate hover:text-[#00cc6a] dark:hover:text-[#00ff87] transition-colors"
+                            className="block text-sm font-semibold text-[#080808] dark:text-white truncate hover:text-[#00cc6a] dark:hover:text-[#00d294] transition-colors"
                           >
                             {monitor.name}
                           </Link>
                           <p
                             className="text-xs text-neutral-500 dark:text-neutral-400 truncate mt-0.5"
-                            style={{ fontFamily: "'DM Mono', monospace" }}
+                            style={{ fontFamily: "'Geist Mono', monospace" }}
                           >
                             {monitor.url}
                           </p>
@@ -591,7 +591,7 @@ export default async function DashboardPage({
                         {!monitor.is_active ? (
                           <span
                             className="inline-flex items-center gap-1.5 text-[11px] font-medium text-neutral-400 dark:text-neutral-600 shrink-0"
-                            style={{ fontFamily: "'DM Mono', monospace" }}
+                            style={{ fontFamily: "'Geist Mono', monospace" }}
                           >
                             <span className="w-1.5 h-1.5 rounded-full bg-neutral-300 dark:bg-neutral-700" />
                             PAUSED
@@ -607,13 +607,13 @@ export default async function DashboardPage({
                         <div>
                           <p
                             className="text-[10px] uppercase tracking-widest text-neutral-500 mb-0.5"
-                            style={{ fontFamily: "'DM Mono', monospace" }}
+                            style={{ fontFamily: "'Geist Mono', monospace" }}
                           >
                             Response
                           </p>
                           <p
                             className={`text-xs font-medium ${responseTimeColor(ping?.response_time_ms ?? null)}`}
-                            style={{ fontFamily: "'DM Mono', monospace" }}
+                            style={{ fontFamily: "'Geist Mono', monospace" }}
                           >
                             {ping?.response_time_ms != null
                               ? `${ping.response_time_ms}ms`
@@ -623,7 +623,7 @@ export default async function DashboardPage({
                         <div>
                           <p
                             className="text-[10px] uppercase tracking-widest text-neutral-500 mb-0.5"
-                            style={{ fontFamily: "'DM Mono', monospace" }}
+                            style={{ fontFamily: "'Geist Mono', monospace" }}
                           >
                             Health
                           </p>
@@ -644,13 +644,13 @@ export default async function DashboardPage({
                         <div>
                           <p
                             className="text-[10px] uppercase tracking-widest text-neutral-500 mb-0.5"
-                            style={{ fontFamily: "'DM Mono', monospace" }}
+                            style={{ fontFamily: "'Geist Mono', monospace" }}
                           >
                             Interval
                           </p>
                           <p
                             className="text-xs text-neutral-500 dark:text-neutral-400"
-                            style={{ fontFamily: "'DM Mono', monospace" }}
+                            style={{ fontFamily: "'Geist Mono', monospace" }}
                           >
                             {monitor.check_interval_minutes ?? "—"}m
                           </p>
@@ -667,7 +667,7 @@ export default async function DashboardPage({
                           />
                           <button
                             type="submit"
-                            className="text-xs font-medium text-neutral-500 dark:text-neutral-400 hover:text-[#00cc6a] dark:hover:text-[#00ff87] transition-colors"
+                            className="text-xs font-medium text-neutral-500 dark:text-neutral-400 hover:text-[#00cc6a] dark:hover:text-[#00d294] transition-colors"
                           >
                             {monitor.is_active ? "Pause" : "Resume"}
                           </button>
@@ -676,7 +676,7 @@ export default async function DashboardPage({
                           <input type="hidden" name="id" value={monitor.id} />
                           <button
                             type="submit"
-                            className="text-xs font-medium text-neutral-400 dark:text-neutral-600 hover:text-red-500 dark:hover:text-red-400 transition-colors"
+                            className="text-xs font-medium text-neutral-400 dark:text-neutral-600 hover:text-[#fb2c36] dark:hover:text-[#fb2c36] transition-colors"
                           >
                             Remove
                           </button>
@@ -693,7 +693,7 @@ export default async function DashboardPage({
         {monitorList.length > 0 && (
           <p
             className="text-[10px] text-neutral-500 mt-3"
-            style={{ fontFamily: "'DM Mono', monospace" }}
+            style={{ fontFamily: "'Geist Mono', monospace" }}
           >
             Click any monitor for detailed health insights and ping history →
           </p>
@@ -701,18 +701,18 @@ export default async function DashboardPage({
 
         {/* Upgrade banner for free users */}
         {!isPro && (
-          <div className="relative bg-white dark:bg-[#0f0f0f] border border-[#00cc6a]/10 dark:border-[#00ff87]/10 rounded-2xl p-4 mt-2 flex items-center justify-between gap-4 shadow-[0_1px_3px_rgba(0,0,0,0.05)] dark:shadow-none">
-            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00cc6a]/20 dark:via-[#00ff87]/20 to-transparent" />
+          <div className="relative bg-white dark:bg-[#0f0f0f] border border-[#00cc6a]/10 dark:border-[#00d294]/10 rounded-2xl p-4 mt-2 flex items-center justify-between gap-4 shadow-[0_1px_3px_rgba(0,0,0,0.05)] dark:shadow-none">
+            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00cc6a]/20 dark:via-[#00d294]/20 to-transparent" />
             <div className="min-w-0">
               <p
                 className="text-[#080808] dark:text-white text-sm font-semibold"
-                style={{ fontFamily: "'Syne', sans-serif" }}
+                style={{ fontFamily: "'Geist', sans-serif" }}
               >
                 Upgrade to Pro
               </p>
               <p
                 className="text-neutral-500 text-xs mt-0.5 truncate"
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               >
                 1 min intervals · SSL monitoring · schema detection · 90 day
                 history
@@ -720,8 +720,8 @@ export default async function DashboardPage({
             </div>
             <Link
               href="/pricing"
-              className="text-xs bg-[#00cc6a] dark:bg-[#00ff87] text-black font-bold px-4 py-2 rounded-xl flex-shrink-0"
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              className="text-xs bg-[#00cc6a] dark:bg-[#00d294] text-black font-bold px-4 py-2 rounded-xl flex-shrink-0"
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               See Pro →
             </Link>
@@ -733,7 +733,7 @@ export default async function DashboardPage({
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-3">
           <span
             className="text-[11px] text-neutral-400 dark:text-neutral-600 tracking-[0.1em] uppercase"
-            style={{ fontFamily: "'DM Mono', monospace" }}
+            style={{ fontFamily: "'Geist Mono', monospace" }}
           >
             Pulse · API Monitor
           </span>
@@ -752,7 +752,7 @@ export default async function DashboardPage({
                 key={href}
                 href={href}
                 className="text-[11px] text-neutral-500 dark:text-neutral-500 hover:text-[#080808] dark:hover:text-white transition-colors duration-150"
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               >
                 {label}
               </Link>
@@ -766,9 +766,9 @@ export default async function DashboardPage({
 
 function responseTimeColor(ms: number | null): string {
   if (ms === null) return "text-neutral-400 dark:text-neutral-600";
-  if (ms < 300) return "text-[#00cc6a] dark:text-[#00ff87]";
-  if (ms < 1000) return "text-yellow-500 dark:text-yellow-400";
-  return "text-red-500 dark:text-red-400";
+  if (ms < 300) return "text-[#00cc6a] dark:text-[#00d294]";
+  if (ms < 1000) return "text-[#f99c00] dark:text-[#f99c00]";
+  return "text-[#fb2c36] dark:text-[#fb2c36]";
 }
 
 function StatCard({
@@ -782,18 +782,18 @@ function StatCard({
 }) {
   const valueColor =
     color === "green"
-      ? "text-[#00cc6a] dark:text-[#00ff87]"
+      ? "text-[#00cc6a] dark:text-[#00d294]"
       : color === "red"
-        ? "text-red-500 dark:text-red-400"
+        ? "text-[#fb2c36] dark:text-[#fb2c36]"
         : color === "yellow"
-          ? "text-yellow-500 dark:text-yellow-400"
+          ? "text-[#f99c00] dark:text-[#f99c00]"
           : "text-[#080808] dark:text-white";
 
   return (
     <div className="bg-white dark:bg-[#0f0f0f] border border-black/[0.06] dark:border-white/[0.06] rounded-2xl px-4 py-4 hover:border-black/[0.1] dark:hover:border-white/[0.1] transition-all duration-200 shadow-[0_1px_3px_rgba(0,0,0,0.05)] dark:shadow-none">
       <p
         className="text-[10px] tracking-[0.12em] uppercase text-neutral-500 mb-2"
-        style={{ fontFamily: "'DM Mono', monospace" }}
+        style={{ fontFamily: "'Geist Mono', monospace" }}
       >
         {label}
       </p>
@@ -815,7 +815,7 @@ function StatusBadge({
     return (
       <span
         className="inline-flex items-center gap-1.5 text-[11px] font-medium text-neutral-400 dark:text-neutral-500"
-        style={{ fontFamily: "'DM Mono', monospace" }}
+        style={{ fontFamily: "'Geist Mono', monospace" }}
       >
         <span className="w-1.5 h-1.5 rounded-full bg-neutral-300 dark:bg-neutral-600" />
         PENDING
@@ -825,21 +825,21 @@ function StatusBadge({
 
   return status === "up" ? (
     <span
-      className="inline-flex items-center gap-1.5 text-[11px] font-medium text-[#00cc6a] dark:text-[#00ff87]"
-      style={{ fontFamily: "'DM Mono', monospace" }}
+      className="inline-flex items-center gap-1.5 text-[11px] font-medium text-[#00cc6a] dark:text-[#00d294]"
+      style={{ fontFamily: "'Geist Mono', monospace" }}
     >
       <span className="relative flex w-1.5 h-1.5">
-        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00cc6a] dark:bg-[#00ff87] opacity-50" />
-        <span className="relative inline-flex rounded-full w-1.5 h-1.5 bg-[#00cc6a] dark:bg-[#00ff87]" />
+        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00cc6a] dark:bg-[#00d294] opacity-50" />
+        <span className="relative inline-flex rounded-full w-1.5 h-1.5 bg-[#00cc6a] dark:bg-[#00d294]" />
       </span>
       UP{statusCode ? ` · ${statusCode}` : ""}
     </span>
   ) : (
     <span
-      className="inline-flex items-center gap-1.5 text-[11px] font-medium text-red-500 dark:text-red-400"
-      style={{ fontFamily: "'DM Mono', monospace" }}
+      className="inline-flex items-center gap-1.5 text-[11px] font-medium text-[#fb2c36] dark:text-[#fb2c36]"
+      style={{ fontFamily: "'Geist Mono', monospace" }}
     >
-      <span className="w-1.5 h-1.5 rounded-full bg-red-500 dark:bg-red-400" />
+      <span className="w-1.5 h-1.5 rounded-full bg-[#fb2c36] dark:bg-[#fb2c36]" />
       DOWN{statusCode ? ` · ${statusCode}` : ""}
     </span>
   );

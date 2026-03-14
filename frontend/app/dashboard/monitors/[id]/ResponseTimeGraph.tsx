@@ -135,7 +135,7 @@ export default function ResponseTimeGraph({ pings: initialPings, monitorId, isPr
     backgroundColor: "#111111",
     border: "1px solid rgba(255,255,255,0.06)",
     borderRadius: "12px",
-    fontFamily: "DM Mono",
+    fontFamily: "Geist Mono",
     fontSize: "11px",
     color: "#d4d4d4",
   };
@@ -143,27 +143,27 @@ export default function ResponseTimeGraph({ pings: initialPings, monitorId, isPr
   const axisTickStyle = {
     fill: "#a3a3a3",
     fontSize: 10,
-    fontFamily: "DM Mono",
+    fontFamily: "Geist Mono",
   };
 
   const availableRanges = isPro ? RANGES : [RANGES[0]];
 
   return (
     <div className="relative bg-white dark:bg-[#0f0f0f] border border-black/[0.06] dark:border-white/[0.06] rounded-2xl p-3 sm:p-5 overflow-hidden">
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00cc6a]/40 dark:via-[#00ff87]/40 to-transparent" />
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00cc6a]/40 dark:via-[#00d294]/40 to-transparent" />
 
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div>
           <p
             className="text-[10px] tracking-[0.15em] uppercase text-neutral-400 dark:text-neutral-500 font-medium"
-            style={{ fontFamily: "'DM Mono', monospace" }}
+            style={{ fontFamily: "'Geist Mono', monospace" }}
           >
             Response Time
           </p>
           <p
             className="text-lg font-bold text-[#080808] dark:text-white mt-0.5"
-            style={{ fontFamily: "'Syne', sans-serif" }}
+            style={{ fontFamily: "'Geist', sans-serif" }}
           >
             Performance Trends
           </p>
@@ -177,10 +177,10 @@ export default function ResponseTimeGraph({ pings: initialPings, monitorId, isPr
               onClick={() => setRangeDays(r.days)}
               className={`text-[10px] px-2 py-1 rounded-md transition-all ${
                 rangeDays === r.days
-                  ? "bg-[#00cc6a]/10 dark:bg-[#00ff87]/10 text-[#00cc6a] dark:text-[#00ff87] font-semibold"
+                  ? "bg-[#00cc6a]/10 dark:bg-[#00d294]/10 text-[#00cc6a] dark:text-[#00d294] font-semibold"
                   : "text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300"
               }`}
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               {r.label}
             </button>
@@ -188,7 +188,7 @@ export default function ResponseTimeGraph({ pings: initialPings, monitorId, isPr
           {!isPro && (
             <span
               className="text-[10px] text-neutral-600 dark:text-neutral-700 ml-1"
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              style={{ fontFamily: "'Geist Mono', monospace" }}
               title="30/90 day range requires Pro"
             >
               30d/90d — Pro
@@ -208,13 +208,13 @@ export default function ResponseTimeGraph({ pings: initialPings, monitorId, isPr
             <div key={label}>
               <p
                 className="text-[10px] tracking-[0.1em] uppercase text-neutral-400 dark:text-neutral-500 mb-0.5"
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               >
                 {label}
               </p>
               <p
                 className="text-sm font-semibold text-[#080808] dark:text-neutral-200 tabular-nums"
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               >
                 {value}
               </p>
@@ -231,10 +231,10 @@ export default function ResponseTimeGraph({ pings: initialPings, monitorId, isPr
             onClick={() => setTab(t)}
             className={
               tab === t
-                ? "text-xs font-semibold text-[#00cc6a] dark:text-[#00ff87] border-b-2 border-[#00cc6a] dark:border-[#00ff87] pb-2 px-1 -mb-px transition-colors"
+                ? "text-xs font-semibold text-[#00cc6a] dark:text-[#00d294] border-b-2 border-[#00cc6a] dark:border-[#00d294] pb-2 px-1 -mb-px transition-colors"
                 : "text-xs text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300 pb-2 px-1 -mb-px transition-colors border-b-2 border-transparent"
             }
-            style={{ fontFamily: "'DM Mono', monospace" }}
+            style={{ fontFamily: "'Geist Mono', monospace" }}
           >
             {t === "timeline" ? "Timeline" : "Daily Average"}
           </button>
@@ -253,7 +253,7 @@ export default function ResponseTimeGraph({ pings: initialPings, monitorId, isPr
         <div className="h-[200px] flex items-center justify-center">
           <p
             className="text-neutral-500 dark:text-neutral-600 text-xs"
-            style={{ fontFamily: "'DM Mono', monospace" }}
+            style={{ fontFamily: "'Geist Mono', monospace" }}
           >
             No data available yet — check back after a few pings
           </p>
@@ -305,19 +305,19 @@ export default function ResponseTimeGraph({ pings: initialPings, monitorId, isPr
                 strokeDasharray="4 4"
                 label={{
                   value: "avg",
-                  fill: "#00ff87",
+                  fill: "#00d294",
                   fontSize: 9,
-                  fontFamily: "DM Mono",
+                  fontFamily: "Geist Mono",
                 }}
               />
             )}
             <Line
               type="monotone"
               dataKey="ms"
-              stroke="#00ff87"
+              stroke="#00d294"
               strokeWidth={1.5}
               dot={false}
-              activeDot={{ r: 3, fill: "#00ff87", strokeWidth: 0 }}
+              activeDot={{ r: 3, fill: "#00d294", strokeWidth: 0 }}
             />
           </LineChart>
         </ResponsiveContainer>
@@ -356,7 +356,7 @@ export default function ResponseTimeGraph({ pings: initialPings, monitorId, isPr
               ]}
               labelStyle={{ color: "#737373", marginBottom: "4px" }}
             />
-            <Bar dataKey="avgMs" fill="#00ff87" opacity={0.7} radius={[4, 4, 0, 0]} />
+            <Bar dataKey="avgMs" fill="#00d294" opacity={0.7} radius={[4, 4, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       )}

@@ -34,10 +34,10 @@ function StatusCodeBadge({ code }: { code: number }) {
     <span
       className={`text-[11px] px-1.5 py-0.5 rounded font-medium ${
         isError
-          ? "bg-red-400/10 text-red-400 border border-red-400/20"
-          : "bg-[#00ff87]/10 text-[#00ff87] border border-[#00ff87]/20"
+          ? "bg-[#fb2c36]/10 text-[#fb2c36] border border-[#fb2c36]/20"
+          : "bg-[#00d294]/10 text-[#00d294] border border-[#00d294]/20"
       }`}
-      style={{ fontFamily: "'DM Mono', monospace" }}
+      style={{ fontFamily: "'Geist Mono', monospace" }}
       title={STATUS_CODE_MEANINGS[code]}
     >
       {code}
@@ -131,31 +131,31 @@ export default async function IncidentsPage({
     <div>
       <div className="mb-6">
         <p
-          className="text-[11px] tracking-[0.14em] uppercase text-[#00ff87] mb-1.5 font-medium"
-          style={{ fontFamily: "'DM Mono', monospace" }}
+          className="text-[11px] tracking-[0.14em] uppercase text-[#00d294] mb-1.5 font-medium"
+          style={{ fontFamily: "'Geist Mono', monospace" }}
         >
           &gt; incidents
         </p>
         <h2
           className="text-2xl font-extrabold tracking-tight text-foreground"
-          style={{ fontFamily: "'Syne', sans-serif" }}
+          style={{ fontFamily: "'Geist', sans-serif" }}
         >
           Incidents & Alerts
         </h2>
         <p
           className="text-neutral-500 text-xs mt-1"
-          style={{ fontFamily: "'DM Mono', monospace" }}
+          style={{ fontFamily: "'Geist Mono', monospace" }}
         >
           All downtime events, anomalies and recovery alerts
         </p>
       </div>
 
       {recentAnomalies.length > 0 && (
-        <Alert className="mb-4 bg-yellow-400/[0.04] border-yellow-400/20 text-yellow-400">
+        <Alert className="mb-4 bg-[#f99c00]/[0.04] border-[#f99c00]/20 text-[#f99c00]">
           <AlertTriangle className="h-4 w-4" />
           <AlertDescription
-            className="text-yellow-400"
-            style={{ fontFamily: "'DM Mono', monospace", fontSize: "12px" }}
+            className="text-[#f99c00]"
+            style={{ fontFamily: "'Geist Mono', monospace", fontSize: "12px" }}
           >
             Performance degradation detected in the last 24 hours (
             {recentAnomalies.length} anomal
@@ -166,10 +166,10 @@ export default async function IncidentsPage({
 
       {items.length === 0 ? (
         <div className="relative bg-card border border-border rounded-2xl p-10 text-center overflow-hidden">
-          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00ff87]/40 to-transparent" />
-          <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-[#00ff87]/[0.06] border border-[#00ff87]/10 mb-3">
+          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00d294]/40 to-transparent" />
+          <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-[#00d294]/[0.06] border border-[#00d294]/10 mb-3">
             <svg
-              className="w-5 h-5 text-[#00ff87]"
+              className="w-5 h-5 text-[#00d294]"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -184,20 +184,20 @@ export default async function IncidentsPage({
           </div>
           <p
             className="text-xs text-neutral-400 font-medium"
-            style={{ fontFamily: "'DM Mono', monospace" }}
+            style={{ fontFamily: "'Geist Mono', monospace" }}
           >
             All clear — no incidents recorded
           </p>
           <p
             className="text-[11px] text-neutral-600 mt-1"
-            style={{ fontFamily: "'DM Mono', monospace" }}
+            style={{ fontFamily: "'Geist Mono', monospace" }}
           >
             Incidents appear here when a monitor goes down or recovers
           </p>
         </div>
       ) : (
         <div className="relative bg-card border border-border rounded-2xl overflow-hidden">
-          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00ff87]/40 to-transparent" />
+          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00d294]/40 to-transparent" />
           <Table>
             <TableHeader>
               <TableRow className="border-border hover:bg-transparent">
@@ -205,7 +205,7 @@ export default async function IncidentsPage({
                   <TableHead
                     key={h}
                     className="text-neutral-500 text-[11px] py-3"
-                    style={{ fontFamily: "'DM Mono', monospace" }}
+                    style={{ fontFamily: "'Geist Mono', monospace" }}
                   >
                     {h}
                   </TableHead>
@@ -225,10 +225,10 @@ export default async function IncidentsPage({
                           variant="outline"
                           className={
                             item.type === "down"
-                              ? "text-red-400 border-red-400/20 bg-red-400/10 text-[10px]"
-                              : "text-[#00ff87] border-[#00ff87]/20 bg-[#00ff87]/10 text-[10px]"
+                              ? "text-[#fb2c36] border-[#fb2c36]/20 bg-[#fb2c36]/10 text-[10px]"
+                              : "text-[#00d294] border-[#00d294]/20 bg-[#00d294]/10 text-[10px]"
                           }
-                          style={{ fontFamily: "'DM Mono', monospace" }}
+                          style={{ fontFamily: "'Geist Mono', monospace" }}
                         >
                           {item.type === "down" ? "Down" : "Recovered"}
                         </Badge>
@@ -239,7 +239,7 @@ export default async function IncidentsPage({
                         ) : (
                           <span
                             className="text-neutral-600 text-xs"
-                            style={{ fontFamily: "'DM Mono', monospace" }}
+                            style={{ fontFamily: "'Geist Mono', monospace" }}
                           >
                             {item.type === "down" ? "Timeout" : "—"}
                           </span>
@@ -247,13 +247,13 @@ export default async function IncidentsPage({
                       </TableCell>
                       <TableCell
                         className="text-neutral-400 text-xs"
-                        style={{ fontFamily: "'DM Mono', monospace" }}
+                        style={{ fontFamily: "'Geist Mono', monospace" }}
                       >
                         {item.response_time_ms ? `${item.response_time_ms}ms` : "—"}
                       </TableCell>
                       <TableCell
                         className="text-neutral-400 text-xs"
-                        style={{ fontFamily: "'DM Mono', monospace" }}
+                        style={{ fontFamily: "'Geist Mono', monospace" }}
                       >
                         {item.type === "recovered" && item.downtime_minutes
                           ? `${item.downtime_minutes} min`
@@ -261,7 +261,7 @@ export default async function IncidentsPage({
                       </TableCell>
                       <TableCell
                         className="text-neutral-500 text-xs"
-                        style={{ fontFamily: "'DM Mono', monospace" }}
+                        style={{ fontFamily: "'Geist Mono', monospace" }}
                       >
                         {new Date(item.ts).toLocaleString()}
                       </TableCell>
@@ -278,27 +278,27 @@ export default async function IncidentsPage({
                       <TableCell>
                         <Badge
                           variant="outline"
-                          className="text-yellow-400 border-yellow-400/20 bg-yellow-400/10 text-[10px]"
-                          style={{ fontFamily: "'DM Mono', monospace" }}
+                          className="text-[#f99c00] border-[#f99c00]/20 bg-[#f99c00]/10 text-[10px]"
+                          style={{ fontFamily: "'Geist Mono', monospace" }}
                         >
                           Degraded
                         </Badge>
                       </TableCell>
                       <TableCell>
-                        <span className="text-neutral-600 text-xs" style={{ fontFamily: "'DM Mono', monospace" }}>
+                        <span className="text-neutral-600 text-xs" style={{ fontFamily: "'Geist Mono', monospace" }}>
                           —
                         </span>
                       </TableCell>
                       <TableCell
-                        className="text-yellow-400 text-xs"
-                        style={{ fontFamily: "'DM Mono', monospace" }}
+                        className="text-[#f99c00] text-xs"
+                        style={{ fontFamily: "'Geist Mono', monospace" }}
                       >
                         {item.current_avg_ms}ms avg ({Math.round(item.current_avg_ms / item.baseline_ms)}x)
                       </TableCell>
-                      <TableCell className="text-neutral-600 text-xs" style={{ fontFamily: "'DM Mono', monospace" }}>—</TableCell>
+                      <TableCell className="text-neutral-600 text-xs" style={{ fontFamily: "'Geist Mono', monospace" }}>—</TableCell>
                       <TableCell
                         className="text-neutral-500 text-xs"
-                        style={{ fontFamily: "'DM Mono', monospace" }}
+                        style={{ fontFamily: "'Geist Mono', monospace" }}
                       >
                         {new Date(item.ts).toLocaleString()}
                       </TableCell>
@@ -316,25 +316,25 @@ export default async function IncidentsPage({
                         variant="outline"
                         className={
                           item.type === "ssl_expiry"
-                            ? "text-yellow-400 border-yellow-400/20 bg-yellow-400/10 text-[10px]"
+                            ? "text-[#f99c00] border-[#f99c00]/20 bg-[#f99c00]/10 text-[10px]"
                             : "text-blue-400 border-blue-400/20 bg-blue-400/10 text-[10px]"
                         }
-                        style={{ fontFamily: "'DM Mono', monospace" }}
+                        style={{ fontFamily: "'Geist Mono', monospace" }}
                       >
                         {item.type === "ssl_expiry" ? "SSL Expiry" : "Schema"}
                       </Badge>
                     </TableCell>
-                    <TableCell className="text-neutral-600 text-xs" style={{ fontFamily: "'DM Mono', monospace" }}>—</TableCell>
-                    <TableCell className="text-neutral-600 text-xs" style={{ fontFamily: "'DM Mono', monospace" }}>—</TableCell>
+                    <TableCell className="text-neutral-600 text-xs" style={{ fontFamily: "'Geist Mono', monospace" }}>—</TableCell>
+                    <TableCell className="text-neutral-600 text-xs" style={{ fontFamily: "'Geist Mono', monospace" }}>—</TableCell>
                     <TableCell
                       className="text-neutral-400 text-xs max-w-[180px] truncate"
-                      style={{ fontFamily: "'DM Mono', monospace" }}
+                      style={{ fontFamily: "'Geist Mono', monospace" }}
                     >
                       {item.detail}
                     </TableCell>
                     <TableCell
                       className="text-neutral-500 text-xs"
-                      style={{ fontFamily: "'DM Mono', monospace" }}
+                      style={{ fontFamily: "'Geist Mono', monospace" }}
                     >
                       {new Date(item.ts).toLocaleString()}
                     </TableCell>

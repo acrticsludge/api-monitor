@@ -17,8 +17,8 @@ const SECTIONS = [
 function InlineCode({ children }: { children: React.ReactNode }) {
   return (
     <code
-      className="bg-white/[0.06] border border-white/[0.08] rounded px-1.5 py-0.5 text-[#00ff87] text-xs"
-      style={{ fontFamily: "'DM Mono', monospace" }}
+      className="bg-white/[0.06] border border-white/[0.08] rounded px-1.5 py-0.5 text-[#00d294] text-xs"
+      style={{ fontFamily: "'Geist Mono', monospace" }}
     >
       {children}
     </code>
@@ -27,10 +27,10 @@ function InlineCode({ children }: { children: React.ReactNode }) {
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <div className="border-l-2 border-[#00ff87]/40 pl-4 mb-6">
+    <div className="border-l-2 border-[#00d294]/40 pl-4 mb-6">
       <p
-        className="text-[10px] tracking-[0.18em] uppercase text-[#00ff87] font-medium"
-        style={{ fontFamily: "'DM Mono', monospace" }}
+        className="text-[10px] tracking-[0.18em] uppercase text-[#00d294] font-medium"
+        style={{ fontFamily: "'Geist Mono', monospace" }}
       >
         {children}
       </p>
@@ -42,7 +42,7 @@ function SectionHeading({ children }: { children: React.ReactNode }) {
   return (
     <h2
       className="text-2xl font-bold text-white mb-4"
-      style={{ fontFamily: "'Syne', sans-serif" }}
+      style={{ fontFamily: "'Geist', sans-serif" }}
     >
       {children}
     </h2>
@@ -53,7 +53,7 @@ function SubHeading({ children }: { children: React.ReactNode }) {
   return (
     <h3
       className="text-base font-bold text-white mt-8 mb-3"
-      style={{ fontFamily: "'Syne', sans-serif" }}
+      style={{ fontFamily: "'Geist', sans-serif" }}
     >
       {children}
     </h3>
@@ -64,7 +64,7 @@ function Body({ children }: { children: React.ReactNode }) {
   return (
     <p
       className="text-sm text-neutral-300 leading-relaxed"
-      style={{ fontFamily: "'DM Mono', monospace" }}
+      style={{ fontFamily: "'Geist Mono', monospace" }}
     >
       {children}
     </p>
@@ -86,13 +86,13 @@ function ComingSoonCard({
     <div className="border border-dashed border-white/[0.1] rounded-xl p-4">
       <p
         className="text-white font-semibold text-sm"
-        style={{ fontFamily: "'Syne', sans-serif" }}
+        style={{ fontFamily: "'Geist', sans-serif" }}
       >
         {title}
       </p>
       <p
         className="text-neutral-500 text-xs mt-1 leading-relaxed"
-        style={{ fontFamily: "'DM Mono', monospace" }}
+        style={{ fontFamily: "'Geist Mono', monospace" }}
       >
         {description}
       </p>
@@ -152,10 +152,10 @@ export default function DocsPage() {
   return (
     <div
       className="min-h-screen bg-[#080808] text-white"
-      style={{ fontFamily: "'Syne', sans-serif" }}
+      style={{ fontFamily: "'Geist', sans-serif" }}
     >
       <link
-        href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;500;600;700;800&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500;600;700&display=swap"
         rel="stylesheet"
       />
 
@@ -177,7 +177,7 @@ export default function DocsPage() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <div className="flex items-center gap-5">
             <Link href="/" className="flex items-center gap-2.5">
-              <div className="w-7 h-7 rounded-lg bg-[#00ff87] flex items-center justify-center shadow-[0_0_16px_rgba(0,255,135,0.35)]">
+              <div className="w-7 h-7 rounded-lg bg-[#00d294] flex items-center justify-center shadow-[0_0_16px_rgba(0,255,135,0.35)]">
                 <svg
                   className="w-3.5 h-3.5 text-black"
                   fill="none"
@@ -198,13 +198,13 @@ export default function DocsPage() {
             </Link>
             <span
               className="text-neutral-600 text-xs hidden sm:block"
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               /
             </span>
             <span
               className="text-neutral-400 text-xs hidden sm:block tracking-[0.08em] uppercase"
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               Docs
             </span>
@@ -213,16 +213,16 @@ export default function DocsPage() {
             {loggedIn ? (
               <Link
                 href="/dashboard"
-                className="inline-flex items-center gap-1.5 bg-[#00ff87] hover:bg-[#00f080] text-black text-xs font-bold tracking-[0.06em] uppercase rounded-xl px-3.5 py-2 transition-all shadow-[0_0_16px_rgba(0,255,135,0.2)] hover:shadow-[0_0_24px_rgba(0,255,135,0.35)]"
-                style={{ fontFamily: "'Syne', sans-serif" }}
+                className="inline-flex items-center gap-1.5 bg-[#00d294] hover:bg-[#00bb7f] text-black text-xs font-bold tracking-[0.06em] uppercase rounded-xl px-3.5 py-2 transition-all shadow-[0_0_16px_rgba(0,255,135,0.2)] hover:shadow-[0_0_24px_rgba(0,255,135,0.35)]"
+                style={{ fontFamily: "'Geist', sans-serif" }}
               >
                 Dashboard
               </Link>
             ) : (
               <Link
                 href="/signup"
-                className="inline-flex items-center gap-1.5 bg-[#00ff87] hover:bg-[#00f080] text-black text-xs font-bold tracking-[0.06em] uppercase rounded-xl px-3.5 py-2 transition-all shadow-[0_0_16px_rgba(0,255,135,0.2)] hover:shadow-[0_0_24px_rgba(0,255,135,0.35)]"
-                style={{ fontFamily: "'Syne', sans-serif" }}
+                className="inline-flex items-center gap-1.5 bg-[#00d294] hover:bg-[#00bb7f] text-black text-xs font-bold tracking-[0.06em] uppercase rounded-xl px-3.5 py-2 transition-all shadow-[0_0_16px_rgba(0,255,135,0.2)] hover:shadow-[0_0_24px_rgba(0,255,135,0.35)]"
+                style={{ fontFamily: "'Geist', sans-serif" }}
               >
                 Get started free
               </Link>
@@ -240,24 +240,24 @@ export default function DocsPage() {
           transition: "all 0.7s",
         }}
       >
-        <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-[#00ff87]/20 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-[#00d294]/20 to-transparent" />
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <p
-            className="text-[10px] tracking-[0.2em] uppercase text-[#00ff87] font-medium mb-3"
-            style={{ fontFamily: "'DM Mono', monospace" }}
+            className="text-[10px] tracking-[0.2em] uppercase text-[#00d294] font-medium mb-3"
+            style={{ fontFamily: "'Geist Mono', monospace" }}
           >
             Documentation
           </p>
           <h1
             className="text-3xl sm:text-4xl font-bold text-white mb-3"
-            style={{ fontFamily: "'Syne', sans-serif" }}
+            style={{ fontFamily: "'Geist', sans-serif" }}
           >
             Everything you need to get
             <br className="hidden sm:block" /> the most out of Pulse
           </h1>
           <p
             className="text-sm text-neutral-400 max-w-lg leading-relaxed"
-            style={{ fontFamily: "'DM Mono', monospace" }}
+            style={{ fontFamily: "'Geist Mono', monospace" }}
           >
             Guides, references, and explanations for monitoring your APIs with
             Pulse.
@@ -280,10 +280,10 @@ export default function DocsPage() {
               onClick={() => scrollTo(s.id)}
               className={`shrink-0 text-[10px] tracking-[0.1em] uppercase px-3 py-1.5 rounded-full border transition-all ${
                 activeSection === s.id
-                  ? "border-[#00ff87]/40 text-[#00ff87] bg-[#00ff87]/[0.08]"
+                  ? "border-[#00d294]/40 text-[#00d294] bg-[#00d294]/[0.08]"
                   : "border-white/[0.08] text-neutral-500 hover:text-white hover:border-white/[0.16]"
               }`}
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               {s.label}
             </button>
@@ -305,7 +305,7 @@ export default function DocsPage() {
           <nav className="sticky top-28 space-y-1">
             <p
               className="text-[9px] tracking-[0.2em] uppercase text-neutral-600 mb-3 px-3"
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               On this page
             </p>
@@ -315,10 +315,10 @@ export default function DocsPage() {
                 onClick={() => scrollTo(s.id)}
                 className={`w-full text-left px-3 py-1.5 rounded-lg text-xs tracking-[0.05em] uppercase transition-all ${
                   activeSection === s.id
-                    ? "text-[#00ff87] bg-[#00ff87]/[0.06]"
+                    ? "text-[#00d294] bg-[#00d294]/[0.06]"
                     : "text-neutral-500 hover:text-neutral-200 hover:bg-white/[0.03]"
                 }`}
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               >
                 {s.label}
               </button>
@@ -347,7 +347,7 @@ export default function DocsPage() {
             <SubHeading>How it works</SubHeading>
             <ol
               className="space-y-3 mt-2"
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               {[
                 "Sign up for free — no credit card required",
@@ -359,7 +359,7 @@ export default function DocsPage() {
                   key={i}
                   className="flex gap-3 text-sm text-neutral-300 leading-relaxed"
                 >
-                  <span className="text-[#00ff87] shrink-0 text-xs mt-0.5">
+                  <span className="text-[#00d294] shrink-0 text-xs mt-0.5">
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   <span>{step}</span>
@@ -401,17 +401,17 @@ export default function DocsPage() {
                   key={title}
                   className="flex gap-3 items-start bg-white/[0.02] border border-white/[0.06] rounded-xl px-4 py-3"
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#00ff87] mt-1.5 shrink-0" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#00d294] mt-1.5 shrink-0" />
                   <div>
                     <p
                       className="text-xs font-semibold text-white"
-                      style={{ fontFamily: "'Syne', sans-serif" }}
+                      style={{ fontFamily: "'Geist', sans-serif" }}
                     >
                       {title}
                     </p>
                     <p
                       className="text-[11px] text-neutral-500 mt-0.5"
-                      style={{ fontFamily: "'DM Mono', monospace" }}
+                      style={{ fontFamily: "'Geist Mono', monospace" }}
                     >
                       {desc}
                     </p>
@@ -440,7 +440,7 @@ export default function DocsPage() {
             </Body>
             <div
               className="mt-4 space-y-2.5"
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               {[
                 ["Name", "A human-readable label, e.g. Production API"],
@@ -460,7 +460,7 @@ export default function DocsPage() {
                 ],
               ].map(([field, desc]) => (
                 <div key={field} className="flex gap-3 text-xs leading-relaxed">
-                  <span className="text-[#00ff87] shrink-0 w-36">{field}</span>
+                  <span className="text-[#00d294] shrink-0 w-36">{field}</span>
                   <span className="text-neutral-400">{desc}</span>
                 </div>
               ))}
@@ -532,7 +532,7 @@ export default function DocsPage() {
             </Body>
             <ul
               className="mt-3 space-y-2"
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               {[
                 "View the 7-day uptime bar with daily breakdown and hover tooltips",
@@ -547,7 +547,7 @@ export default function DocsPage() {
                   key={item}
                   className="flex gap-3 text-sm text-neutral-300 leading-relaxed"
                 >
-                  <span className="text-[#00ff87] shrink-0">→</span>
+                  <span className="text-[#00d294] shrink-0">→</span>
                   <span>{item}</span>
                 </li>
               ))}
@@ -562,18 +562,18 @@ export default function DocsPage() {
             <SectionHeading>Incident Reports</SectionHeading>
 
             {/* Beta callout */}
-            <div className="flex items-start gap-3 bg-[#00ff87]/[0.04] border border-[#00ff87]/20 rounded-xl px-4 py-3 mb-5">
-              <span className="text-[#00ff87] text-sm shrink-0 mt-0.5">⚡</span>
+            <div className="flex items-start gap-3 bg-[#00d294]/[0.04] border border-[#00d294]/20 rounded-xl px-4 py-3 mb-5">
+              <span className="text-[#00d294] text-sm shrink-0 mt-0.5">⚡</span>
               <div>
                 <p
-                  className="text-xs font-semibold text-[#00ff87]"
-                  style={{ fontFamily: "'DM Mono', monospace" }}
+                  className="text-xs font-semibold text-[#00d294]"
+                  style={{ fontFamily: "'Geist Mono', monospace" }}
                 >
                   Pro feature — free during beta
                 </p>
                 <p
                   className="text-[11px] text-neutral-500 mt-0.5"
-                  style={{ fontFamily: "'DM Mono', monospace" }}
+                  style={{ fontFamily: "'Geist Mono', monospace" }}
                 >
                   Incident reports and post mortem generation are planned as a Pro tier feature. While Pulse is in beta, they are available to all users at no cost.
                 </p>
@@ -601,17 +601,17 @@ export default function DocsPage() {
                   key={title}
                   className="flex gap-3 items-start bg-white/[0.02] border border-white/[0.06] rounded-xl px-4 py-3"
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#00ff87] mt-1.5 shrink-0" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#00d294] mt-1.5 shrink-0" />
                   <div>
                     <p
                       className="text-xs font-semibold text-white"
-                      style={{ fontFamily: "'Syne', sans-serif" }}
+                      style={{ fontFamily: "'Geist', sans-serif" }}
                     >
                       {title}
                     </p>
                     <p
                       className="text-[11px] text-neutral-500 mt-0.5"
-                      style={{ fontFamily: "'DM Mono', monospace" }}
+                      style={{ fontFamily: "'Geist Mono', monospace" }}
                     >
                       {desc}
                     </p>
@@ -627,7 +627,7 @@ export default function DocsPage() {
             </Body>
             <div
               className="mt-4 space-y-2"
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               {[
                 ["5xx errors", "Server-side failures — overload, crashes, or upstream dependency issues"],
@@ -637,7 +637,7 @@ export default function DocsPage() {
                 ["429", "Rate limiting — the pinging IP is being throttled"],
               ].map(([code, desc]) => (
                 <div key={code} className="flex gap-3 text-xs leading-relaxed">
-                  <span className="text-[#00ff87] shrink-0 w-28">{code}</span>
+                  <span className="text-[#00d294] shrink-0 w-28">{code}</span>
                   <span className="text-neutral-400">{desc}</span>
                 </div>
               ))}
@@ -670,7 +670,7 @@ export default function DocsPage() {
             <SubHeading>Notes</SubHeading>
             <ul
               className="mt-2 space-y-2"
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               {[
                 "Incident reports are only generated for resolved incidents — an ongoing outage shows the start time and \"Ongoing\" for the end time",
@@ -681,7 +681,7 @@ export default function DocsPage() {
                   key={item}
                   className="flex gap-3 text-sm text-neutral-300 leading-relaxed"
                 >
-                  <span className="text-[#00ff87] shrink-0">·</span>
+                  <span className="text-[#00d294] shrink-0">·</span>
                   <span>{item}</span>
                 </li>
               ))}
@@ -702,7 +702,7 @@ export default function DocsPage() {
             <SubHeading>Enabling push notifications</SubHeading>
             <ol
               className="mt-3 space-y-3"
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               {[
                 <>
@@ -716,7 +716,7 @@ export default function DocsPage() {
                   key={i}
                   className="flex gap-3 text-sm text-neutral-300 leading-relaxed"
                 >
-                  <span className="text-[#00ff87] shrink-0 text-xs mt-0.5">
+                  <span className="text-[#00d294] shrink-0 text-xs mt-0.5">
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   <span>{step}</span>
@@ -740,19 +740,19 @@ export default function DocsPage() {
                 >
                   <span
                     className="text-xs text-neutral-400"
-                    style={{ fontFamily: "'DM Mono', monospace" }}
+                    style={{ fontFamily: "'Geist Mono', monospace" }}
                   >
                     {browser}
                   </span>
                   <span
                     className={`text-xs font-medium ${
                       supported === true
-                        ? "text-[#00ff87]"
+                        ? "text-[#00d294]"
                         : supported === false
-                          ? "text-red-400"
-                          : "text-yellow-400"
+                          ? "text-[#fb2c36]"
+                          : "text-[#f99c00]"
                     }`}
-                    style={{ fontFamily: "'DM Mono', monospace" }}
+                    style={{ fontFamily: "'Geist Mono', monospace" }}
                   >
                     {status}
                   </span>
@@ -795,7 +795,7 @@ export default function DocsPage() {
             </Body>
             <ol
               className="mt-3 space-y-3"
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               {[
                 "Open your Discord server",
@@ -807,7 +807,7 @@ export default function DocsPage() {
                   key={i}
                   className="flex gap-3 text-sm text-neutral-300 leading-relaxed"
                 >
-                  <span className="text-[#00ff87] shrink-0 text-xs mt-0.5">
+                  <span className="text-[#00d294] shrink-0 text-xs mt-0.5">
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   <span>{step}</span>
@@ -816,11 +816,11 @@ export default function DocsPage() {
             </ol>
             <p
               className="text-sm text-neutral-400 mt-4 leading-relaxed"
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
-              You&apos;ll get a <span className="text-red-400">red embed</span>{" "}
+              You&apos;ll get a <span className="text-[#fb2c36]">red embed</span>{" "}
               when a monitor goes down and a{" "}
-              <span className="text-[#00ff87]">green embed</span> when it
+              <span className="text-[#00d294]">green embed</span> when it
               recovers.
             </p>
 
@@ -831,7 +831,7 @@ export default function DocsPage() {
             </Body>
             <ol
               className="mt-3 space-y-3"
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               {[
                 "Go to api.slack.com/apps → Create an app → Incoming Webhooks",
@@ -843,7 +843,7 @@ export default function DocsPage() {
                   key={i}
                   className="flex gap-3 text-sm text-neutral-300 leading-relaxed"
                 >
-                  <span className="text-[#00ff87] shrink-0 text-xs mt-0.5">
+                  <span className="text-[#00d294] shrink-0 text-xs mt-0.5">
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   <span>{step}</span>
@@ -857,7 +857,7 @@ export default function DocsPage() {
               sends a JSON body:
             </Body>
             <div className="mt-4 bg-[#0a0a0a] border border-white/[0.08] rounded-xl p-4 text-xs text-neutral-300 overflow-x-auto">
-              <pre style={{ fontFamily: "'DM Mono', monospace" }}>{`{
+              <pre style={{ fontFamily: "'Geist Mono', monospace" }}>{`{
   "monitor_id": "uuid",
   "monitor_name": "My API",
   "monitor_url": "https://api.example.com",
@@ -872,7 +872,7 @@ export default function DocsPage() {
             <SubHeading>Notes</SubHeading>
             <ul
               className="mt-2 space-y-2"
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               {[
                 "One webhook URL per monitor",
@@ -883,7 +883,7 @@ export default function DocsPage() {
                   key={item}
                   className="flex gap-3 text-sm text-neutral-300 leading-relaxed"
                 >
-                  <span className="text-[#00ff87] shrink-0">·</span>
+                  <span className="text-[#00d294] shrink-0">·</span>
                   <span>{item}</span>
                 </li>
               ))}
@@ -909,13 +909,13 @@ export default function DocsPage() {
               like:
             </Body>
             <div className="mt-4 bg-[#0a0a0a] border border-white/[0.08] rounded-xl p-4 text-xs text-neutral-300 overflow-x-auto">
-              <pre style={{ fontFamily: "'DM Mono', monospace" }}>
+              <pre style={{ fontFamily: "'Geist Mono', monospace" }}>
                 {`${origin || ""}/status/[your-user-id]`}
               </pre>
             </div>
             <p
               className="text-sm text-neutral-400 mt-3 leading-relaxed"
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               Click the copy button next to the URL to copy it to your
               clipboard.
@@ -924,7 +924,7 @@ export default function DocsPage() {
             <SubHeading>What the status page shows</SubHeading>
             <ul
               className="mt-2 space-y-2"
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               {[
                 "Overall system status banner — All systems operational, Degraded, or Outage",
@@ -936,7 +936,7 @@ export default function DocsPage() {
                   key={item}
                   className="flex gap-3 text-sm text-neutral-300 leading-relaxed"
                 >
-                  <span className="text-[#00ff87] shrink-0">→</span>
+                  <span className="text-[#00d294] shrink-0">→</span>
                   <span>{item}</span>
                 </li>
               ))}
@@ -945,7 +945,7 @@ export default function DocsPage() {
             <SubHeading>Notes</SubHeading>
             <ul
               className="mt-2 space-y-2"
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               {[
                 "Paused monitors do not appear on the status page",
@@ -956,7 +956,7 @@ export default function DocsPage() {
                   key={item}
                   className="flex gap-3 text-sm text-neutral-300 leading-relaxed"
                 >
-                  <span className="text-[#00ff87] shrink-0">·</span>
+                  <span className="text-[#00d294] shrink-0">·</span>
                   <span>{item}</span>
                 </li>
               ))}
@@ -971,7 +971,7 @@ export default function DocsPage() {
             <SectionHeading>What&apos;s Coming in V2</SectionHeading>
             <p
               className="text-sm text-neutral-500 leading-relaxed mb-8"
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               These features are planned for upcoming releases. The free tier
               stays free.
@@ -1014,12 +1014,12 @@ export default function DocsPage() {
 
             <div
               className="mt-8 text-sm text-neutral-500 leading-relaxed"
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               Have a feature request? We&apos;d love to hear it.{" "}
               <a
                 href="mailto:anubhavrai100@gmail.com"
-                className="text-[#00ff87] hover:text-[#00f080] transition-colors underline underline-offset-4 decoration-[#00ff87]/30"
+                className="text-[#00d294] hover:text-[#00bb7f] transition-colors underline underline-offset-4 decoration-[#00d294]/30"
               >
                 Send us a message
               </a>
@@ -1036,7 +1036,7 @@ export default function DocsPage() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <span
             className="text-[11px] text-neutral-600 tracking-[0.1em] uppercase"
-            style={{ fontFamily: "'DM Mono', monospace" }}
+            style={{ fontFamily: "'Geist Mono', monospace" }}
           >
             Pulse · Free API monitoring
           </span>
@@ -1044,21 +1044,21 @@ export default function DocsPage() {
             <Link
               href="/pricing"
               className="text-[11px] text-neutral-500 hover:text-white transition-colors"
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               Pricing
             </Link>
             <Link
               href="/privacy"
               className="text-[11px] text-neutral-500 hover:text-white transition-colors"
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               Privacy
             </Link>
             <Link
               href="/terms"
               className="text-[11px] text-neutral-500 hover:text-white transition-colors"
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               Terms
             </Link>

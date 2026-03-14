@@ -14,9 +14,9 @@ import { Badge } from "@/components/ui/badge";
 
 function responseTimeColor(ms: number | null): string {
   if (ms === null) return "text-neutral-600";
-  if (ms < 300) return "text-[#00ff87]";
-  if (ms < 1000) return "text-yellow-400";
-  return "text-red-400";
+  if (ms < 300) return "text-[#00d294]";
+  if (ms < 1000) return "text-[#f99c00]";
+  return "text-[#fb2c36]";
 }
 
 export default async function MonitorOverviewPage({
@@ -87,13 +87,13 @@ export default async function MonitorOverviewPage({
     : "—";
 
   return (
-    <div style={{ fontFamily: "'Syne', sans-serif" }}>
+    <div style={{ fontFamily: "'Geist', sans-serif" }}>
       {/* Page header */}
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
         <div>
           <p
-            className="text-[11px] tracking-[0.14em] uppercase text-[#00ff87] mb-1.5 font-medium"
-            style={{ fontFamily: "'DM Mono', monospace" }}
+            className="text-[11px] tracking-[0.14em] uppercase text-[#00d294] mb-1.5 font-medium"
+            style={{ fontFamily: "'Geist Mono', monospace" }}
           >
             &gt; overview
           </p>
@@ -102,7 +102,7 @@ export default async function MonitorOverviewPage({
           </h2>
           <p
             className="text-xs text-neutral-500 mt-1 break-all"
-            style={{ fontFamily: "'DM Mono', monospace" }}
+            style={{ fontFamily: "'Geist Mono', monospace" }}
           >
             {monitor.url}
           </p>
@@ -111,7 +111,7 @@ export default async function MonitorOverviewPage({
           {!monitor.is_active && (
             <span
               className="inline-flex items-center gap-1.5 text-[11px] font-medium text-neutral-500 border border-border rounded-md px-2.5 py-1.5"
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               <span className="w-1.5 h-1.5 rounded-full bg-neutral-600" />
               PAUSED
@@ -170,10 +170,10 @@ export default async function MonitorOverviewPage({
 
       {/* Health Score card */}
       <div className="relative bg-card border border-border rounded-2xl px-4 py-4 mb-5 overflow-hidden">
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00ff87]/40 to-transparent" />
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00d294]/40 to-transparent" />
         <p
           className="text-[10px] tracking-[0.15em] uppercase text-neutral-500 mb-2"
-          style={{ fontFamily: "'DM Mono', monospace" }}
+          style={{ fontFamily: "'Geist Mono', monospace" }}
         >
           Health Score
         </p>
@@ -187,31 +187,31 @@ export default async function MonitorOverviewPage({
 
       {/* Uptime bar */}
       <div className="relative bg-card border border-border rounded-2xl px-5 py-4 mb-5 overflow-hidden">
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00ff87]/40 to-transparent" />
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00d294]/40 to-transparent" />
         <div className="flex items-center gap-4">
           <div className="flex flex-col gap-0.5">
             <p
               className="text-[10px] tracking-[0.12em] uppercase text-neutral-500 whitespace-nowrap"
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               Uptime
             </p>
             <p
               className="text-[10px] text-neutral-600"
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               Last {pingList.length} checks
             </p>
           </div>
           <div className="flex-1 h-1.5 bg-muted rounded-full overflow-hidden">
             <div
-              className="h-full bg-[#00ff87] rounded-full shadow-[0_0_8px_rgba(0,255,135,0.5)] transition-all duration-700"
+              className="h-full bg-[#00d294] rounded-full shadow-[0_0_8px_rgba(0,255,135,0.5)] transition-all duration-700"
               style={{ width: `${uptimePct}%` }}
             />
           </div>
           <p
-            className="text-sm font-bold text-[#00ff87] tabular-nums"
-            style={{ fontFamily: "'DM Mono', monospace" }}
+            className="text-sm font-bold text-[#00d294] tabular-nums"
+            style={{ fontFamily: "'Geist Mono', monospace" }}
           >
             {uptimePct}%
           </p>
@@ -223,10 +223,10 @@ export default async function MonitorOverviewPage({
 
       {/* Details grid */}
       <div className="relative bg-card border border-border rounded-2xl px-5 py-4 mt-5 overflow-hidden">
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00ff87]/40 to-transparent" />
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00d294]/40 to-transparent" />
         <p
           className="text-[10px] tracking-[0.12em] uppercase text-neutral-500 mb-4"
-          style={{ fontFamily: "'DM Mono', monospace" }}
+          style={{ fontFamily: "'Geist Mono', monospace" }}
         >
           Configuration
         </p>
@@ -242,7 +242,7 @@ export default async function MonitorOverviewPage({
                 ? monitor.webhook_url.replace(/^https?:\/\//, "").slice(0, 28) +
                   (monitor.webhook_url.length > 35 ? "…" : "")
                 : "Not configured",
-              valueClass: monitor.webhook_url ? "text-[#00ff87]" : "text-neutral-600",
+              valueClass: monitor.webhook_url ? "text-[#00d294]" : "text-neutral-600",
             },
             ...(isPro && monitor.auth_type && monitor.auth_type !== "none"
               ? [
@@ -261,13 +261,13 @@ export default async function MonitorOverviewPage({
             <div key={label}>
               <p
                 className="text-[10px] tracking-[0.1em] uppercase text-neutral-500 mb-1.5"
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               >
                 {label}
               </p>
               <p
                 className={`text-sm font-medium ${valueClass ?? "text-foreground"}`}
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               >
                 {value}
               </p>
@@ -295,32 +295,32 @@ function StatCard({
   const valueColor =
     responseMs != null
       ? responseMs < 300
-        ? "text-[#00ff87]"
+        ? "text-[#00d294]"
         : responseMs < 1000
-        ? "text-yellow-400"
-        : "text-red-400"
+        ? "text-[#f99c00]"
+        : "text-[#fb2c36]"
       : color === "green"
-      ? "text-[#00ff87]"
+      ? "text-[#00d294]"
       : color === "red"
-      ? "text-red-400"
+      ? "text-[#fb2c36]"
       : "text-foreground";
 
   return (
     <div className="relative bg-card border border-border rounded-2xl px-4 py-4 hover:border-input transition-all duration-200 overflow-hidden">
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00ff87]/40 to-transparent" />
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00d294]/40 to-transparent" />
       <p
         className="text-[10px] tracking-[0.12em] uppercase text-neutral-500 mb-2"
-        style={{ fontFamily: "'DM Mono', monospace" }}
+        style={{ fontFamily: "'Geist Mono', monospace" }}
       >
         {label}
       </p>
-      <p className={`text-2xl font-extrabold tabular-nums ${valueColor}`} style={{ fontFamily: "'Syne', sans-serif" }}>
+      <p className={`text-2xl font-extrabold tabular-nums ${valueColor}`} style={{ fontFamily: "'Geist', sans-serif" }}>
         {value}
       </p>
       {sub && (
         <p
           className="text-[10px] text-neutral-600 mt-1"
-          style={{ fontFamily: "'DM Mono', monospace" }}
+          style={{ fontFamily: "'Geist Mono', monospace" }}
         >
           {sub}
         </p>

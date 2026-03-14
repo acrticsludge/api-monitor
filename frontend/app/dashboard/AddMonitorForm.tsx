@@ -49,15 +49,15 @@ export default function AddMonitorForm({
       {atLimit ? (
         <span
           className="inline-flex items-center gap-1.5 text-[10px] font-medium text-neutral-400 dark:text-neutral-500 border border-black/[0.06] dark:border-white/[0.06] rounded-lg px-3 py-2"
-          style={{ fontFamily: "'DM Mono', monospace" }}
+          style={{ fontFamily: "'Geist Mono', monospace" }}
         >
           {FREE_TIER_LIMIT}/{FREE_TIER_LIMIT} used ·{" "}
-          <span className="text-[#00cc6a] dark:text-[#00ff87]">Upgrade</span>
+          <span className="text-[#00cc6a] dark:text-[#00d294]">Upgrade</span>
         </span>
       ) : (
         <button
           onClick={() => setOpen(true)}
-          className="inline-flex items-center gap-1.5 bg-[#00cc6a] dark:bg-[#00ff87] hover:bg-[#00b85f] dark:hover:bg-[#00f080] text-black text-xs font-bold tracking-[0.06em] uppercase px-3.5 py-2 rounded-lg transition-all duration-150 shadow-[0_0_16px_rgba(0,204,106,0.25)] dark:shadow-[0_0_16px_rgba(0,255,135,0.25)] hover:shadow-[0_0_24px_rgba(0,204,106,0.4)] dark:hover:shadow-[0_0_24px_rgba(0,255,135,0.4)]"
+          className="inline-flex items-center gap-1.5 bg-[#00cc6a] dark:bg-[#00d294] hover:bg-[#00b85f] dark:hover:bg-[#00bb7f] text-black text-xs font-bold tracking-[0.06em] uppercase px-3.5 py-2 rounded-lg transition-all duration-150 shadow-[0_0_16px_rgba(0,204,106,0.25)] dark:shadow-[0_0_16px_rgba(0,255,135,0.25)] hover:shadow-[0_0_24px_rgba(0,204,106,0.4)] dark:hover:shadow-[0_0_24px_rgba(0,255,135,0.4)]"
         >
           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
@@ -74,26 +74,26 @@ export default function AddMonitorForm({
           />
 
           <div className="relative w-full max-w-sm max-h-[90vh] overflow-y-auto bg-white dark:bg-[#111111] border border-black/[0.08] dark:border-white/[0.08] rounded-2xl shadow-[0_8px_40px_rgba(0,0,0,0.15)] dark:shadow-[0_0_80px_rgba(0,0,0,0.8)]">
-            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00cc6a]/40 dark:via-[#00ff87]/40 to-transparent" />
+            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00cc6a]/40 dark:via-[#00d294]/40 to-transparent" />
 
             <div className="px-5 pt-5 pb-4 border-b border-black/[0.06] dark:border-white/[0.06]">
               <div className="flex items-center justify-between">
                 <div>
                   <p
-                    className="text-[10px] tracking-[0.18em] uppercase text-[#00cc6a] dark:text-[#00ff87] font-medium"
-                    style={{ fontFamily: "'DM Mono', monospace" }}
+                    className="text-[10px] tracking-[0.18em] uppercase text-[#00cc6a] dark:text-[#00d294] font-medium"
+                    style={{ fontFamily: "'Geist Mono', monospace" }}
                   >
                     New Endpoint
                   </p>
                   <h3
                     className="text-base font-bold text-[#080808] dark:text-white mt-0.5"
-                    style={{ fontFamily: "'Syne', sans-serif" }}
+                    style={{ fontFamily: "'Geist', sans-serif" }}
                   >
                     Add Monitor
                   </h3>
                   <p
                     className="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5"
-                    style={{ fontFamily: "'DM Mono', monospace" }}
+                    style={{ fontFamily: "'Geist Mono', monospace" }}
                   >
                     {slotsText}
                   </p>
@@ -114,8 +114,8 @@ export default function AddMonitorForm({
 
               {error && (
                 <p
-                  className="text-red-500 dark:text-red-300 text-xs bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2.5 leading-relaxed"
-                  style={{ fontFamily: "'DM Mono', monospace" }}
+                  className="text-[#fb2c36] dark:text-[#fb2c36] text-xs bg-[#fb2c36]/10 border border-[#fb2c36]/20 rounded-lg px-3 py-2.5 leading-relaxed"
+                  style={{ fontFamily: "'Geist Mono', monospace" }}
                 >
                   {error}
                 </p>
@@ -126,8 +126,8 @@ export default function AddMonitorForm({
                   name="name"
                   required
                   placeholder="Production API"
-                  className="w-full bg-[#f0f0f0] dark:bg-[#0a0a0a] border border-black/[0.08] dark:border-white/[0.1] rounded-xl px-3.5 py-2.5 text-[#080808] dark:text-white text-sm placeholder-neutral-400 dark:placeholder-neutral-600 focus:outline-none focus:border-[#00cc6a]/50 dark:focus:border-[#00ff87]/50 focus:ring-2 focus:ring-[#00cc6a]/10 dark:focus:ring-[#00ff87]/10 transition-all duration-200"
-                  style={{ fontFamily: "'DM Mono', monospace" }}
+                  className="w-full bg-[#f0f0f0] dark:bg-[#0a0a0a] border border-black/[0.08] dark:border-white/[0.1] rounded-xl px-3.5 py-2.5 text-[#080808] dark:text-white text-sm placeholder-neutral-400 dark:placeholder-neutral-600 focus:outline-none focus:border-[#00cc6a]/50 dark:focus:border-[#00d294]/50 focus:ring-2 focus:ring-[#00cc6a]/10 dark:focus:ring-[#00d294]/10 transition-all duration-200"
+                  style={{ fontFamily: "'Geist Mono', monospace" }}
                 />
               </Field>
 
@@ -139,8 +139,8 @@ export default function AddMonitorForm({
                   placeholder="https://api.example.com/health"
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
-                  className="w-full bg-[#f0f0f0] dark:bg-[#0a0a0a] border border-black/[0.08] dark:border-white/[0.1] rounded-xl px-3.5 py-2.5 text-[#080808] dark:text-white text-sm placeholder-neutral-400 dark:placeholder-neutral-600 focus:outline-none focus:border-[#00cc6a]/50 dark:focus:border-[#00ff87]/50 focus:ring-2 focus:ring-[#00cc6a]/10 dark:focus:ring-[#00ff87]/10 transition-all duration-200"
-                  style={{ fontFamily: "'DM Mono', monospace" }}
+                  className="w-full bg-[#f0f0f0] dark:bg-[#0a0a0a] border border-black/[0.08] dark:border-white/[0.1] rounded-xl px-3.5 py-2.5 text-[#080808] dark:text-white text-sm placeholder-neutral-400 dark:placeholder-neutral-600 focus:outline-none focus:border-[#00cc6a]/50 dark:focus:border-[#00d294]/50 focus:ring-2 focus:ring-[#00cc6a]/10 dark:focus:ring-[#00d294]/10 transition-all duration-200"
+                  style={{ fontFamily: "'Geist Mono', monospace" }}
                 />
               </Field>
 
@@ -150,8 +150,8 @@ export default function AddMonitorForm({
                     name="method"
                     value={method}
                     onChange={(e) => setMethod(e.target.value)}
-                    className="w-full bg-[#f0f0f0] dark:bg-[#0a0a0a] border border-black/[0.08] dark:border-white/[0.1] rounded-xl px-3.5 py-2.5 text-[#080808] dark:text-white text-sm focus:outline-none focus:border-[#00cc6a]/50 dark:focus:border-[#00ff87]/50 focus:ring-2 focus:ring-[#00cc6a]/10 dark:focus:ring-[#00ff87]/10 transition-all duration-200"
-                    style={{ fontFamily: "'DM Mono', monospace" }}
+                    className="w-full bg-[#f0f0f0] dark:bg-[#0a0a0a] border border-black/[0.08] dark:border-white/[0.1] rounded-xl px-3.5 py-2.5 text-[#080808] dark:text-white text-sm focus:outline-none focus:border-[#00cc6a]/50 dark:focus:border-[#00d294]/50 focus:ring-2 focus:ring-[#00cc6a]/10 dark:focus:ring-[#00d294]/10 transition-all duration-200"
+                    style={{ fontFamily: "'Geist Mono', monospace" }}
                   >
                     <option value="GET">GET</option>
                     <option value="POST">POST</option>
@@ -169,8 +169,8 @@ export default function AddMonitorForm({
                     defaultValue={200}
                     min={100}
                     max={599}
-                    className="w-full bg-[#f0f0f0] dark:bg-[#0a0a0a] border border-black/[0.08] dark:border-white/[0.1] rounded-xl px-3.5 py-2.5 text-[#080808] dark:text-white text-sm focus:outline-none focus:border-[#00cc6a]/50 dark:focus:border-[#00ff87]/50 focus:ring-2 focus:ring-[#00cc6a]/10 dark:focus:ring-[#00ff87]/10 transition-all duration-200"
-                    style={{ fontFamily: "'DM Mono', monospace" }}
+                    className="w-full bg-[#f0f0f0] dark:bg-[#0a0a0a] border border-black/[0.08] dark:border-white/[0.1] rounded-xl px-3.5 py-2.5 text-[#080808] dark:text-white text-sm focus:outline-none focus:border-[#00cc6a]/50 dark:focus:border-[#00d294]/50 focus:ring-2 focus:ring-[#00cc6a]/10 dark:focus:ring-[#00d294]/10 transition-all duration-200"
+                    style={{ fontFamily: "'Geist Mono', monospace" }}
                   />
                 </Field>
               </div>
@@ -180,8 +180,8 @@ export default function AddMonitorForm({
                   <select
                     name="check_interval_minutes"
                     defaultValue="5"
-                    className="w-full bg-[#f0f0f0] dark:bg-[#0a0a0a] border border-black/[0.08] dark:border-white/[0.1] rounded-xl px-3.5 py-2.5 text-[#080808] dark:text-white text-sm focus:outline-none focus:border-[#00cc6a]/50 dark:focus:border-[#00ff87]/50 focus:ring-2 focus:ring-[#00cc6a]/10 dark:focus:ring-[#00ff87]/10 transition-all duration-200"
-                    style={{ fontFamily: "'DM Mono', monospace" }}
+                    className="w-full bg-[#f0f0f0] dark:bg-[#0a0a0a] border border-black/[0.08] dark:border-white/[0.1] rounded-xl px-3.5 py-2.5 text-[#080808] dark:text-white text-sm focus:outline-none focus:border-[#00cc6a]/50 dark:focus:border-[#00d294]/50 focus:ring-2 focus:ring-[#00cc6a]/10 dark:focus:ring-[#00d294]/10 transition-all duration-200"
+                    style={{ fontFamily: "'Geist Mono', monospace" }}
                   >
                     <option value="1">Every 1 minute</option>
                     <option value="2">Every 2 minutes</option>
@@ -197,7 +197,7 @@ export default function AddMonitorForm({
                     readOnly
                     disabled
                     className="w-full bg-[#f0f0f0] dark:bg-[#0a0a0a] border border-black/[0.08] dark:border-white/[0.1] rounded-xl px-3.5 py-2.5 text-[#080808] dark:text-white text-sm opacity-50 cursor-not-allowed"
-                    style={{ fontFamily: "'DM Mono', monospace" }}
+                    style={{ fontFamily: "'Geist Mono', monospace" }}
                   />
                 )}
               </Field>
@@ -207,8 +207,8 @@ export default function AddMonitorForm({
                   name="webhook_url"
                   type="url"
                   placeholder="https://your-app.com/webhook"
-                  className="w-full bg-[#f0f0f0] dark:bg-[#0a0a0a] border border-black/[0.08] dark:border-white/[0.1] rounded-xl px-3.5 py-2.5 text-[#080808] dark:text-white text-sm placeholder-neutral-400 dark:placeholder-neutral-600 focus:outline-none focus:border-[#00cc6a]/50 dark:focus:border-[#00ff87]/50 focus:ring-2 focus:ring-[#00cc6a]/10 dark:focus:ring-[#00ff87]/10 transition-all duration-200"
-                  style={{ fontFamily: "'DM Mono', monospace" }}
+                  className="w-full bg-[#f0f0f0] dark:bg-[#0a0a0a] border border-black/[0.08] dark:border-white/[0.1] rounded-xl px-3.5 py-2.5 text-[#080808] dark:text-white text-sm placeholder-neutral-400 dark:placeholder-neutral-600 focus:outline-none focus:border-[#00cc6a]/50 dark:focus:border-[#00d294]/50 focus:ring-2 focus:ring-[#00cc6a]/10 dark:focus:ring-[#00d294]/10 transition-all duration-200"
+                  style={{ fontFamily: "'Geist Mono', monospace" }}
                 />
               </Field>
 
@@ -219,8 +219,8 @@ export default function AddMonitorForm({
                     <div className="flex items-center gap-2">
                       <div className="flex-1 h-px bg-black/[0.06] dark:bg-white/[0.06]" />
                       <span
-                        className="text-[10px] text-[#00cc6a] dark:text-[#00ff87] tracking-[0.14em] uppercase font-medium"
-                        style={{ fontFamily: "'DM Mono', monospace" }}
+                        className="text-[10px] text-[#00cc6a] dark:text-[#00d294] tracking-[0.14em] uppercase font-medium"
+                        style={{ fontFamily: "'Geist Mono', monospace" }}
                       >
                         Pro features
                       </span>
@@ -233,10 +233,10 @@ export default function AddMonitorForm({
                       name="custom_headers"
                       placeholder='{"Authorization": "Bearer token", "X-Custom": "value"}'
                       rows={3}
-                      className="w-full bg-[#f0f0f0] dark:bg-[#0a0a0a] border border-black/[0.08] dark:border-white/[0.1] rounded-xl px-3.5 py-2.5 text-[#080808] dark:text-white text-sm placeholder-neutral-400 dark:placeholder-neutral-600 focus:outline-none focus:border-[#00cc6a]/50 dark:focus:border-[#00ff87]/50 focus:ring-2 focus:ring-[#00cc6a]/10 dark:focus:ring-[#00ff87]/10 transition-all duration-200 resize-none"
-                      style={{ fontFamily: "'DM Mono', monospace" }}
+                      className="w-full bg-[#f0f0f0] dark:bg-[#0a0a0a] border border-black/[0.08] dark:border-white/[0.1] rounded-xl px-3.5 py-2.5 text-[#080808] dark:text-white text-sm placeholder-neutral-400 dark:placeholder-neutral-600 focus:outline-none focus:border-[#00cc6a]/50 dark:focus:border-[#00d294]/50 focus:ring-2 focus:ring-[#00cc6a]/10 dark:focus:ring-[#00d294]/10 transition-all duration-200 resize-none"
+                      style={{ fontFamily: "'Geist Mono', monospace" }}
                     />
-                    <p className="text-[10px] text-neutral-500 mt-1" style={{ fontFamily: "'DM Mono', monospace" }}>
+                    <p className="text-[10px] text-neutral-500 mt-1" style={{ fontFamily: "'Geist Mono', monospace" }}>
                       Enter as JSON object
                     </p>
                   </Field>
@@ -247,10 +247,10 @@ export default function AddMonitorForm({
                         name="custom_body"
                         placeholder='{"username": "user", "password": "pass"}'
                         rows={3}
-                        className="w-full bg-[#f0f0f0] dark:bg-[#0a0a0a] border border-black/[0.08] dark:border-white/[0.1] rounded-xl px-3.5 py-2.5 text-[#080808] dark:text-white text-sm placeholder-neutral-400 dark:placeholder-neutral-600 focus:outline-none focus:border-[#00cc6a]/50 dark:focus:border-[#00ff87]/50 focus:ring-2 focus:ring-[#00cc6a]/10 dark:focus:ring-[#00ff87]/10 transition-all duration-200 resize-none"
-                        style={{ fontFamily: "'DM Mono', monospace" }}
+                        className="w-full bg-[#f0f0f0] dark:bg-[#0a0a0a] border border-black/[0.08] dark:border-white/[0.1] rounded-xl px-3.5 py-2.5 text-[#080808] dark:text-white text-sm placeholder-neutral-400 dark:placeholder-neutral-600 focus:outline-none focus:border-[#00cc6a]/50 dark:focus:border-[#00d294]/50 focus:ring-2 focus:ring-[#00cc6a]/10 dark:focus:ring-[#00d294]/10 transition-all duration-200 resize-none"
+                        style={{ fontFamily: "'Geist Mono', monospace" }}
                       />
-                      <p className="text-[10px] text-neutral-500 mt-1" style={{ fontFamily: "'DM Mono', monospace" }}>
+                      <p className="text-[10px] text-neutral-500 mt-1" style={{ fontFamily: "'Geist Mono', monospace" }}>
                         Sent as raw body — add Content-Type header above if needed
                       </p>
                     </Field>
@@ -260,8 +260,8 @@ export default function AddMonitorForm({
                     <select
                       name="auth_type"
                       defaultValue="none"
-                      className="w-full bg-[#f0f0f0] dark:bg-[#0a0a0a] border border-black/[0.08] dark:border-white/[0.1] rounded-xl px-3.5 py-2.5 text-[#080808] dark:text-white text-sm focus:outline-none focus:border-[#00cc6a]/50 dark:focus:border-[#00ff87]/50 focus:ring-2 focus:ring-[#00cc6a]/10 dark:focus:ring-[#00ff87]/10 transition-all duration-200 mb-2"
-                      style={{ fontFamily: "'DM Mono', monospace" }}
+                      className="w-full bg-[#f0f0f0] dark:bg-[#0a0a0a] border border-black/[0.08] dark:border-white/[0.1] rounded-xl px-3.5 py-2.5 text-[#080808] dark:text-white text-sm focus:outline-none focus:border-[#00cc6a]/50 dark:focus:border-[#00d294]/50 focus:ring-2 focus:ring-[#00cc6a]/10 dark:focus:ring-[#00d294]/10 transition-all duration-200 mb-2"
+                      style={{ fontFamily: "'Geist Mono', monospace" }}
                     >
                       <option value="none">None</option>
                       <option value="bearer">Bearer Token</option>
@@ -272,11 +272,11 @@ export default function AddMonitorForm({
                       name="auth_value"
                       type="password"
                       placeholder="Token or credentials"
-                      className="w-full bg-[#f0f0f0] dark:bg-[#0a0a0a] border border-black/[0.08] dark:border-white/[0.1] rounded-xl px-3.5 py-2.5 text-[#080808] dark:text-white text-sm placeholder-neutral-400 dark:placeholder-neutral-600 focus:outline-none focus:border-[#00cc6a]/50 dark:focus:border-[#00ff87]/50 focus:ring-2 focus:ring-[#00cc6a]/10 dark:focus:ring-[#00ff87]/10 transition-all duration-200"
-                      style={{ fontFamily: "'DM Mono', monospace" }}
+                      className="w-full bg-[#f0f0f0] dark:bg-[#0a0a0a] border border-black/[0.08] dark:border-white/[0.1] rounded-xl px-3.5 py-2.5 text-[#080808] dark:text-white text-sm placeholder-neutral-400 dark:placeholder-neutral-600 focus:outline-none focus:border-[#00cc6a]/50 dark:focus:border-[#00d294]/50 focus:ring-2 focus:ring-[#00cc6a]/10 dark:focus:ring-[#00d294]/10 transition-all duration-200"
+                      style={{ fontFamily: "'Geist Mono', monospace" }}
                       autoComplete="off"
                     />
-                    <p className="flex items-center gap-1 text-[10px] text-[#00cc6a] dark:text-[#00ff87] mt-1" style={{ fontFamily: "'DM Mono', monospace" }}>
+                    <p className="flex items-center gap-1 text-[10px] text-[#00cc6a] dark:text-[#00d294] mt-1" style={{ fontFamily: "'Geist Mono', monospace" }}>
                       <svg className="w-3 h-3 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                       </svg>
@@ -289,15 +289,15 @@ export default function AddMonitorForm({
                       <input
                         name="validation_path"
                         placeholder="data.status (dot-notation path)"
-                        className="w-full bg-[#f0f0f0] dark:bg-[#0a0a0a] border border-black/[0.08] dark:border-white/[0.1] rounded-xl px-3.5 py-2.5 text-[#080808] dark:text-white text-sm placeholder-neutral-400 dark:placeholder-neutral-600 focus:outline-none focus:border-[#00cc6a]/50 dark:focus:border-[#00ff87]/50 focus:ring-2 focus:ring-[#00cc6a]/10 dark:focus:ring-[#00ff87]/10 transition-all duration-200"
-                        style={{ fontFamily: "'DM Mono', monospace" }}
+                        className="w-full bg-[#f0f0f0] dark:bg-[#0a0a0a] border border-black/[0.08] dark:border-white/[0.1] rounded-xl px-3.5 py-2.5 text-[#080808] dark:text-white text-sm placeholder-neutral-400 dark:placeholder-neutral-600 focus:outline-none focus:border-[#00cc6a]/50 dark:focus:border-[#00d294]/50 focus:ring-2 focus:ring-[#00cc6a]/10 dark:focus:ring-[#00d294]/10 transition-all duration-200"
+                        style={{ fontFamily: "'Geist Mono', monospace" }}
                       />
                       <div className="grid grid-cols-2 gap-2">
                         <select
                           name="validation_operator"
                           defaultValue="equals"
-                          className="w-full bg-[#f0f0f0] dark:bg-[#0a0a0a] border border-black/[0.08] dark:border-white/[0.1] rounded-xl px-3 py-2.5 text-[#080808] dark:text-white text-sm focus:outline-none focus:border-[#00cc6a]/50 dark:focus:border-[#00ff87]/50 focus:ring-2 focus:ring-[#00cc6a]/10 dark:focus:ring-[#00ff87]/10 transition-all duration-200"
-                          style={{ fontFamily: "'DM Mono', monospace" }}
+                          className="w-full bg-[#f0f0f0] dark:bg-[#0a0a0a] border border-black/[0.08] dark:border-white/[0.1] rounded-xl px-3 py-2.5 text-[#080808] dark:text-white text-sm focus:outline-none focus:border-[#00cc6a]/50 dark:focus:border-[#00d294]/50 focus:ring-2 focus:ring-[#00cc6a]/10 dark:focus:ring-[#00d294]/10 transition-all duration-200"
+                          style={{ fontFamily: "'Geist Mono', monospace" }}
                         >
                           <option value="equals">Equals</option>
                           <option value="contains">Contains</option>
@@ -306,11 +306,11 @@ export default function AddMonitorForm({
                         <input
                           name="validation_expected"
                           placeholder="ok"
-                          className="w-full bg-[#f0f0f0] dark:bg-[#0a0a0a] border border-black/[0.08] dark:border-white/[0.1] rounded-xl px-3 py-2.5 text-[#080808] dark:text-white text-sm placeholder-neutral-400 dark:placeholder-neutral-600 focus:outline-none focus:border-[#00cc6a]/50 dark:focus:border-[#00ff87]/50 focus:ring-2 focus:ring-[#00cc6a]/10 dark:focus:ring-[#00ff87]/10 transition-all duration-200"
-                          style={{ fontFamily: "'DM Mono', monospace" }}
+                          className="w-full bg-[#f0f0f0] dark:bg-[#0a0a0a] border border-black/[0.08] dark:border-white/[0.1] rounded-xl px-3 py-2.5 text-[#080808] dark:text-white text-sm placeholder-neutral-400 dark:placeholder-neutral-600 focus:outline-none focus:border-[#00cc6a]/50 dark:focus:border-[#00d294]/50 focus:ring-2 focus:ring-[#00cc6a]/10 dark:focus:ring-[#00d294]/10 transition-all duration-200"
+                          style={{ fontFamily: "'Geist Mono', monospace" }}
                         />
                       </div>
-                      <p className="text-[10px] text-neutral-500" style={{ fontFamily: "'DM Mono', monospace" }}>
+                      <p className="text-[10px] text-neutral-500" style={{ fontFamily: "'Geist Mono', monospace" }}>
                         Alert if JSON field fails this check (leave path empty to skip)
                       </p>
                     </div>
@@ -321,11 +321,11 @@ export default function AddMonitorForm({
                       <input
                         type="checkbox"
                         name="check_ssl"
-                        className="w-4 h-4 rounded accent-[#00cc6a] dark:accent-[#00ff87]"
+                        className="w-4 h-4 rounded accent-[#00cc6a] dark:accent-[#00d294]"
                       />
                       <span
                         className="text-xs text-neutral-600 dark:text-neutral-400"
-                        style={{ fontFamily: "'DM Mono', monospace" }}
+                        style={{ fontFamily: "'Geist Mono', monospace" }}
                       >
                         Monitor SSL certificate expiry
                       </span>
@@ -339,15 +339,15 @@ export default function AddMonitorForm({
                   type="button"
                   onClick={() => setOpen(false)}
                   className="flex-1 text-xs font-semibold tracking-[0.06em] uppercase text-neutral-500 dark:text-neutral-400 hover:text-[#080808] dark:hover:text-white border border-black/[0.08] dark:border-white/[0.08] hover:border-black/[0.16] dark:hover:border-white/[0.16] rounded-xl py-2.5 transition-all duration-150"
-                  style={{ fontFamily: "'Syne', sans-serif" }}
+                  style={{ fontFamily: "'Geist', sans-serif" }}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={loading}
-                  className="relative flex-1 bg-[#00cc6a] dark:bg-[#00ff87] hover:bg-[#00b85f] dark:hover:bg-[#00f080] disabled:opacity-40 text-black text-xs font-bold tracking-[0.06em] uppercase rounded-xl py-2.5 transition-all duration-150 shadow-[0_0_16px_rgba(0,204,106,0.2)] dark:shadow-[0_0_16px_rgba(0,255,135,0.2)] hover:shadow-[0_0_24px_rgba(0,204,106,0.35)] dark:hover:shadow-[0_0_24px_rgba(0,255,135,0.35)] overflow-hidden group"
-                  style={{ fontFamily: "'Syne', sans-serif" }}
+                  className="relative flex-1 bg-[#00cc6a] dark:bg-[#00d294] hover:bg-[#00b85f] dark:hover:bg-[#00bb7f] disabled:opacity-40 text-black text-xs font-bold tracking-[0.06em] uppercase rounded-xl py-2.5 transition-all duration-150 shadow-[0_0_16px_rgba(0,204,106,0.2)] dark:shadow-[0_0_16px_rgba(0,255,135,0.2)] hover:shadow-[0_0_24px_rgba(0,204,106,0.35)] dark:hover:shadow-[0_0_24px_rgba(0,255,135,0.35)] overflow-hidden group"
+                  style={{ fontFamily: "'Geist', sans-serif" }}
                 >
                   <span className="relative z-10">
                     {loading ? (
@@ -384,7 +384,7 @@ function Field({
     <div className="space-y-1.5">
       <label
         className="block text-xs font-semibold tracking-[0.08em] uppercase text-neutral-500 dark:text-neutral-300"
-        style={{ fontFamily: "'DM Mono', monospace" }}
+        style={{ fontFamily: "'Geist Mono', monospace" }}
       >
         {label}
       </label>

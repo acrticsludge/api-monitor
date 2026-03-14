@@ -41,7 +41,7 @@ export default function OGImage() {
             width: "72px",
             height: "72px",
             borderRadius: "18px",
-            background: "#00ff87",
+            background: "#00d294",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -103,7 +103,7 @@ export default function OGImage() {
                   padding: "8px 18px",
                   border: "1px solid rgba(0,255,135,0.25)",
                   borderRadius: "999px",
-                  color: "#00ff87",
+                  color: "#00d294",
                   fontSize: "15px",
                   letterSpacing: "0.04em",
                 }}

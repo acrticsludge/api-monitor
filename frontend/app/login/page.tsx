@@ -51,10 +51,10 @@ export default function LoginPage() {
   return (
     <div
       className="min-h-screen bg-[#f8f8f8] dark:bg-[#080808] flex items-center justify-center px-4"
-      style={{ fontFamily: "'Syne', sans-serif" }}
+      style={{ fontFamily: "'Geist', sans-serif" }}
     >
       <link
-        href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;500;600;700;800&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500;600;700&display=swap"
         rel="stylesheet"
       />
       <style>{`
@@ -91,7 +91,7 @@ export default function LoginPage() {
       >
         {/* Logo + terminal label */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-[#00cc6a] dark:bg-[#00ff87] mb-4 shadow-[0_0_28px_rgba(0,204,106,0.35)] dark:shadow-[0_0_28px_rgba(0,255,135,0.45)]">
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-[#00cc6a] dark:bg-[#00d294] mb-4 shadow-[0_0_28px_rgba(0,204,106,0.35)] dark:shadow-[0_0_28px_rgba(0,255,135,0.45)]">
             <svg className="w-6 h-6 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
@@ -100,8 +100,8 @@ export default function LoginPage() {
             Pulse
           </h1>
           <p
-            className="text-[11px] tracking-[0.14em] uppercase text-[#00cc6a] dark:text-[#00ff87] mt-2 font-medium"
-            style={{ fontFamily: "'DM Mono', monospace" }}
+            className="text-[11px] tracking-[0.14em] uppercase text-[#00cc6a] dark:text-[#00d294] mt-2 font-medium"
+            style={{ fontFamily: "'Geist Mono', monospace" }}
           >
             &gt; authentication required
             <span className="cursor-blink ml-0.5">_</span>
@@ -109,19 +109,19 @@ export default function LoginPage() {
         </div>
 
         <div className="relative bg-white dark:bg-[#0f0f0f] border border-black/[0.08] dark:border-white/[0.08] rounded-2xl overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.08)] dark:shadow-[0_0_60px_rgba(0,0,0,0.5)]">
-          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00cc6a]/40 dark:via-[#00ff87]/40 to-transparent" />
+          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00cc6a]/40 dark:via-[#00d294]/40 to-transparent" />
 
           <div className="px-6 pt-6 pb-3 border-b border-black/[0.05] dark:border-white/[0.05]">
             <p
               className="text-[10px] tracking-[0.18em] uppercase text-neutral-400 dark:text-neutral-600 font-medium"
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               Welcome back
             </p>
             <h2 className="text-xl font-bold text-[#080808] dark:text-white mt-1">Sign in</h2>
             <p
               className="text-neutral-500 dark:text-neutral-400 text-xs mt-1"
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               Monitor your APIs from one place
             </p>
@@ -148,7 +148,7 @@ export default function LoginPage() {
               )}
               <span
                 className="text-xs font-semibold text-neutral-700 dark:text-neutral-300 group-hover:text-[#080808] dark:group-hover:text-white transition-colors"
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               >
                 {googleLoading ? "Redirecting..." : "Continue with Google"}
               </span>
@@ -158,7 +158,7 @@ export default function LoginPage() {
               <div className="flex-1 h-px bg-black/[0.06] dark:bg-white/[0.06]" />
               <span
                 className="text-[10px] text-neutral-400 dark:text-neutral-600 tracking-widest uppercase"
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               >
                 or
               </span>
@@ -169,8 +169,8 @@ export default function LoginPage() {
           <form onSubmit={handleSubmit} className="px-6 pb-5 space-y-4">
             {error && (
               <div
-                className="text-red-600 dark:text-red-300 text-xs bg-red-500/10 border border-red-500/20 rounded-lg px-3.5 py-3 leading-relaxed"
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                className="text-red-600 dark:text-[#fb2c36] text-xs bg-[#fb2c36]/10 border border-[#fb2c36]/20 rounded-lg px-3.5 py-3 leading-relaxed"
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               >
                 {error}
               </div>
@@ -179,7 +179,7 @@ export default function LoginPage() {
             <div className="space-y-2">
               <label
                 className="block text-xs font-semibold tracking-[0.08em] uppercase text-neutral-500 dark:text-neutral-300"
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               >
                 Email
               </label>
@@ -190,15 +190,15 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
-                className="w-full bg-[#f0f0f0] dark:bg-[#0a0a0a] border border-black/[0.1] dark:border-white/[0.1] rounded-xl px-4 py-3 text-[#080808] dark:text-white text-sm placeholder-neutral-400 dark:placeholder-neutral-600 focus:outline-none focus:border-[#00cc6a]/50 dark:focus:border-[#00ff87]/50 focus:ring-2 focus:ring-[#00cc6a]/10 dark:focus:ring-[#00ff87]/10 transition-all duration-200"
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                className="w-full bg-[#f0f0f0] dark:bg-[#0a0a0a] border border-black/[0.1] dark:border-white/[0.1] rounded-xl px-4 py-3 text-[#080808] dark:text-white text-sm placeholder-neutral-400 dark:placeholder-neutral-600 focus:outline-none focus:border-[#00cc6a]/50 dark:focus:border-[#00d294]/50 focus:ring-2 focus:ring-[#00cc6a]/10 dark:focus:ring-[#00d294]/10 transition-all duration-200"
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               />
             </div>
 
             <div className="space-y-2">
               <label
                 className="block text-xs font-semibold tracking-[0.08em] uppercase text-neutral-500 dark:text-neutral-300"
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               >
                 Password
               </label>
@@ -209,15 +209,15 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full bg-[#f0f0f0] dark:bg-[#0a0a0a] border border-black/[0.1] dark:border-white/[0.1] rounded-xl px-4 py-3 text-[#080808] dark:text-white text-sm placeholder-neutral-400 dark:placeholder-neutral-600 focus:outline-none focus:border-[#00cc6a]/50 dark:focus:border-[#00ff87]/50 focus:ring-2 focus:ring-[#00cc6a]/10 dark:focus:ring-[#00ff87]/10 transition-all duration-200"
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                className="w-full bg-[#f0f0f0] dark:bg-[#0a0a0a] border border-black/[0.1] dark:border-white/[0.1] rounded-xl px-4 py-3 text-[#080808] dark:text-white text-sm placeholder-neutral-400 dark:placeholder-neutral-600 focus:outline-none focus:border-[#00cc6a]/50 dark:focus:border-[#00d294]/50 focus:ring-2 focus:ring-[#00cc6a]/10 dark:focus:ring-[#00d294]/10 transition-all duration-200"
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               />
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="relative w-full bg-[#00cc6a] dark:bg-[#00ff87] hover:bg-[#00b560] dark:hover:bg-[#00f080] disabled:opacity-40 disabled:cursor-not-allowed text-black text-xs font-bold tracking-[0.1em] uppercase rounded-xl py-3.5 transition-all duration-200 shadow-[0_0_24px_rgba(0,204,106,0.2)] dark:shadow-[0_0_24px_rgba(0,255,135,0.25)] hover:shadow-[0_0_32px_rgba(0,204,106,0.35)] dark:hover:shadow-[0_0_32px_rgba(0,255,135,0.45)] mt-2 overflow-hidden group"
+              className="relative w-full bg-[#00cc6a] dark:bg-[#00d294] hover:bg-[#00b560] dark:hover:bg-[#00bb7f] disabled:opacity-40 disabled:cursor-not-allowed text-black text-xs font-bold tracking-[0.1em] uppercase rounded-xl py-3.5 transition-all duration-200 shadow-[0_0_24px_rgba(0,204,106,0.2)] dark:shadow-[0_0_24px_rgba(0,255,135,0.25)] hover:shadow-[0_0_32px_rgba(0,204,106,0.35)] dark:hover:shadow-[0_0_32px_rgba(0,255,135,0.45)] mt-2 overflow-hidden group"
             >
               <span className="relative z-10">
                 {loading ? (
@@ -237,9 +237,9 @@ export default function LoginPage() {
           </form>
 
           <div className="px-6 pb-6 text-center">
-            <p className="text-xs text-neutral-500" style={{ fontFamily: "'DM Mono', monospace" }}>
+            <p className="text-xs text-neutral-500" style={{ fontFamily: "'Geist Mono', monospace" }}>
               No account?{" "}
-              <Link href="/signup" className="text-[#00cc6a] dark:text-[#00ff87] hover:text-[#00b560] dark:hover:text-white font-medium transition-colors duration-150">
+              <Link href="/signup" className="text-[#00cc6a] dark:text-[#00d294] hover:text-[#00b560] dark:hover:text-white font-medium transition-colors duration-150">
                 Sign up
               </Link>
             </p>
@@ -248,7 +248,7 @@ export default function LoginPage() {
 
         <p
           className="text-center text-[10px] text-neutral-400 dark:text-neutral-700 mt-5 tracking-[0.1em] uppercase"
-          style={{ fontFamily: "'DM Mono', monospace" }}
+          style={{ fontFamily: "'Geist Mono', monospace" }}
         >
           Pulse · API Monitor
         </p>

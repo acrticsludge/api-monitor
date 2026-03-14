@@ -42,7 +42,7 @@ export default function ProjectHeader({ project }: Props) {
     <div className="flex items-center gap-2 mb-6">
       <p
         className="text-[10px] tracking-[0.15em] uppercase text-neutral-500 font-medium mr-2"
-        style={{ fontFamily: "'DM Mono', monospace" }}
+        style={{ fontFamily: "'Geist Mono', monospace" }}
       >
         Project
       </p>
@@ -55,14 +55,14 @@ export default function ProjectHeader({ project }: Props) {
           onBlur={handleSave}
           onKeyDown={handleKeyDown}
           disabled={pending}
-          className="bg-transparent border-b border-[#00ff87]/60 text-[#080808] dark:text-white text-xl font-bold outline-none pb-0.5 min-w-0"
-          style={{ fontFamily: "'Syne', sans-serif" }}
+          className="bg-transparent border-b border-[#00d294]/60 text-[#080808] dark:text-white text-xl font-bold outline-none pb-0.5 min-w-0"
+          style={{ fontFamily: "'Geist', sans-serif" }}
         />
       ) : (
         <button onClick={startEdit} className="group flex items-center gap-2">
           <h1
             className="text-xl font-bold text-[#080808] dark:text-white group-hover:text-neutral-600 dark:group-hover:text-neutral-200 transition-colors"
-            style={{ fontFamily: "'Syne', sans-serif" }}
+            style={{ fontFamily: "'Geist', sans-serif" }}
           >
             {name}
           </h1>

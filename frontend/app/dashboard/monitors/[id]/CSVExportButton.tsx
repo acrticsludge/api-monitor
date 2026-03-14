@@ -38,7 +38,7 @@ export default function CSVExportButton({
       onClick={handleExport}
       disabled={loading}
       className="inline-flex items-center gap-1.5 text-[11px] font-medium text-neutral-500 dark:text-neutral-400 hover:text-[#080808] dark:hover:text-white border border-black/[0.08] dark:border-white/[0.08] hover:border-black/[0.16] dark:hover:border-white/[0.16] rounded-lg px-3 py-1.5 transition-all duration-150 disabled:opacity-40"
-      style={{ fontFamily: "'DM Mono', monospace" }}
+      style={{ fontFamily: "'Geist Mono', monospace" }}
     >
       {loading ? (
         <>

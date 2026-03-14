@@ -43,9 +43,9 @@ export default async function MonitorLayout({
   const isPro = profile?.is_pro ?? false;
 
   return (
-    <div className="min-h-screen bg-background" style={{ fontFamily: "'Syne', sans-serif" }}>
+    <div className="min-h-screen bg-background" style={{ fontFamily: "'Geist', sans-serif" }}>
       <link
-        href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;500;600;700;800&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500;600;700&display=swap"
         rel="stylesheet"
       />
 
@@ -69,19 +69,19 @@ export default async function MonitorLayout({
             <div className="w-px h-4 bg-border flex-shrink-0" />
             <span
               className={`w-2 h-2 rounded-full flex-shrink-0 ${
-                latestPing?.status === "up" ? "bg-[#00ff87]" : "bg-red-400"
+                latestPing?.status === "up" ? "bg-[#00d294]" : "bg-[#fb2c36]"
               }`}
             />
             <div className="min-w-0">
               <h1
                 className="text-foreground font-bold text-sm truncate"
-                style={{ fontFamily: "'Syne', sans-serif" }}
+                style={{ fontFamily: "'Geist', sans-serif" }}
               >
                 {monitor.name}
               </h1>
               <p
                 className="text-neutral-600 text-[11px] truncate max-w-xs hidden sm:block"
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               >
                 {monitor.url}
               </p>
@@ -91,8 +91,8 @@ export default async function MonitorLayout({
           <div className="flex items-center gap-2.5 flex-shrink-0">
             {isPro && (
               <span
-                className="text-[10px] bg-[#00ff87]/10 text-[#00ff87] border border-[#00ff87]/20 rounded-lg px-2 py-1 font-medium"
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                className="text-[10px] bg-[#00d294]/10 text-[#00d294] border border-[#00d294]/20 rounded-lg px-2 py-1 font-medium"
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               >
                 PRO
               </span>
@@ -100,12 +100,12 @@ export default async function MonitorLayout({
             <span
               className={`text-[11px] px-2.5 py-1 rounded-lg border font-medium ${
                 latestPing?.status === "up"
-                  ? "text-[#00ff87] bg-[#00ff87]/10 border-[#00ff87]/20"
+                  ? "text-[#00d294] bg-[#00d294]/10 border-[#00d294]/20"
                   : latestPing
-                  ? "text-red-400 bg-red-400/10 border-red-400/20"
+                  ? "text-[#fb2c36] bg-[#fb2c36]/10 border-[#fb2c36]/20"
                   : "text-neutral-500 bg-muted/30 border-border"
               }`}
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               {latestPing?.status === "up"
                 ? "Operational"

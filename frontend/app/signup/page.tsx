@@ -97,7 +97,7 @@ export default function SignupPage() {
   const bgAndKeyframes = (
     <>
       <link
-        href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;500;600;700;800&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500;600;700&display=swap"
         rel="stylesheet"
       />
       <style>{`
@@ -131,15 +131,15 @@ export default function SignupPage() {
     return (
       <div
         className="min-h-screen bg-[#f8f8f8] dark:bg-[#080808] flex items-center justify-center px-4"
-        style={{ fontFamily: "'Syne', sans-serif" }}
+        style={{ fontFamily: "'Geist', sans-serif" }}
       >
         {bgAndKeyframes}
         <div
           className="relative w-full max-w-sm text-center fade-up"
           style={{ animationDelay: "0s" }}
         >
-          <div className="relative inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[#00cc6a] dark:bg-[#00ff87] mb-6 shadow-[0_0_40px_rgba(0,204,106,0.4)] dark:shadow-[0_0_40px_rgba(0,255,135,0.5)]">
-            <div className="absolute inset-0 rounded-2xl bg-[#00cc6a] dark:bg-[#00ff87] animate-ping opacity-20" />
+          <div className="relative inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[#00cc6a] dark:bg-[#00d294] mb-6 shadow-[0_0_40px_rgba(0,204,106,0.4)] dark:shadow-[0_0_40px_rgba(0,255,135,0.5)]">
+            <div className="absolute inset-0 rounded-2xl bg-[#00cc6a] dark:bg-[#00d294] animate-ping opacity-20" />
             <svg
               className="w-8 h-8 text-black relative z-10"
               fill="none"
@@ -151,8 +151,8 @@ export default function SignupPage() {
             </svg>
           </div>
           <p
-            className="text-[11px] tracking-[0.14em] uppercase text-[#00cc6a] dark:text-[#00ff87] mb-3 font-medium"
-            style={{ fontFamily: "'DM Mono', monospace" }}
+            className="text-[11px] tracking-[0.14em] uppercase text-[#00cc6a] dark:text-[#00d294] mb-3 font-medium"
+            style={{ fontFamily: "'Geist Mono', monospace" }}
           >
             &gt; account created
             <span className="cursor-blink ml-0.5">_</span>
@@ -162,21 +162,21 @@ export default function SignupPage() {
           </h2>
           <p
             className="text-neutral-500 dark:text-neutral-400 text-sm mt-3 leading-relaxed"
-            style={{ fontFamily: "'DM Mono', monospace" }}
+            style={{ fontFamily: "'Geist Mono', monospace" }}
           >
             We sent a link to{" "}
-            <span className="text-[#00cc6a] dark:text-[#00ff87] font-medium">{email}</span>
+            <span className="text-[#00cc6a] dark:text-[#00d294] font-medium">{email}</span>
           </p>
           <p
             className="text-neutral-400 dark:text-neutral-600 text-xs mt-1"
-            style={{ fontFamily: "'DM Mono', monospace" }}
+            style={{ fontFamily: "'Geist Mono', monospace" }}
           >
             Click it to activate your account
           </p>
           <Link
             href="/login"
             className="inline-flex items-center gap-2 mt-8 text-xs tracking-[0.08em] uppercase text-neutral-500 dark:text-neutral-400 hover:text-[#080808] dark:hover:text-white border border-black/[0.08] dark:border-white/[0.08] hover:border-black/[0.16] dark:hover:border-white/20 rounded-xl px-5 py-3 transition-all duration-200 hover:bg-black/[0.03] dark:hover:bg-white/[0.03]"
-            style={{ fontFamily: "'DM Mono', monospace" }}
+            style={{ fontFamily: "'Geist Mono', monospace" }}
           >
             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -191,7 +191,7 @@ export default function SignupPage() {
   return (
     <div
       className="min-h-screen bg-[#f8f8f8] dark:bg-[#080808] flex items-center justify-center px-4"
-      style={{ fontFamily: "'Syne', sans-serif" }}
+      style={{ fontFamily: "'Geist', sans-serif" }}
     >
       {bgAndKeyframes}
 
@@ -206,15 +206,15 @@ export default function SignupPage() {
         >
           {/* Header */}
           <div className="text-center mb-10">
-            <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-[#00cc6a] dark:bg-[#00ff87] mb-4 shadow-[0_0_28px_rgba(0,204,106,0.35)] dark:shadow-[0_0_28px_rgba(0,255,135,0.45)]">
+            <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-[#00cc6a] dark:bg-[#00d294] mb-4 shadow-[0_0_28px_rgba(0,204,106,0.35)] dark:shadow-[0_0_28px_rgba(0,255,135,0.45)]">
               <svg className="w-6 h-6 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
-            <h1 className="text-3xl font-extrabold tracking-tight text-[#080808] dark:text-white" style={{ fontFamily: "'Syne', sans-serif" }}>
+            <h1 className="text-3xl font-extrabold tracking-tight text-[#080808] dark:text-white" style={{ fontFamily: "'Geist', sans-serif" }}>
               Pulse
             </h1>
-            <p className="text-xs tracking-[0.14em] uppercase text-neutral-500 mt-1.5" style={{ fontFamily: "'DM Mono', monospace" }}>
+            <p className="text-xs tracking-[0.14em] uppercase text-neutral-500 mt-1.5" style={{ fontFamily: "'Geist Mono', monospace" }}>
               Here&apos;s what you get — free, forever
             </p>
           </div>
@@ -226,7 +226,7 @@ export default function SignupPage() {
                 key={feature.title}
                 className={`relative flex items-start gap-3 rounded-xl p-4 overflow-hidden ${
                   feature.highlight
-                    ? "bg-[#00ff87]/[0.04] border border-[#00cc6a]/30 dark:border-[#00ff87]/30"
+                    ? "bg-[#00d294]/[0.04] border border-[#00cc6a]/30 dark:border-[#00d294]/30"
                     : "bg-white dark:bg-[#0f0f0f] border border-black/[0.06] dark:border-white/[0.06]"
                 }`}
                 style={{
@@ -236,25 +236,25 @@ export default function SignupPage() {
                 }}
               >
                 {feature.highlight && (
-                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00cc6a]/60 dark:via-[#00ff87]/60 to-transparent" />
+                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00cc6a]/60 dark:via-[#00d294]/60 to-transparent" />
                 )}
                 <span className="text-lg flex-shrink-0">{feature.icon}</span>
                 <div>
                   <p
-                    className={`text-sm font-semibold ${feature.highlight ? "text-[#00cc6a] dark:text-[#00ff87]" : "text-[#080808] dark:text-white"}`}
-                    style={{ fontFamily: "'Syne', sans-serif" }}
+                    className={`text-sm font-semibold ${feature.highlight ? "text-[#00cc6a] dark:text-[#00d294]" : "text-[#080808] dark:text-white"}`}
+                    style={{ fontFamily: "'Geist', sans-serif" }}
                   >
                     {feature.title}
                     {feature.highlight && (
                       <span
-                        className="text-[9px] bg-[#00cc6a]/10 dark:bg-[#00ff87]/10 text-[#00cc6a] dark:text-[#00ff87] border border-[#00cc6a]/20 dark:border-[#00ff87]/20 rounded-full px-1.5 py-0.5 font-medium ml-2 align-middle tracking-wider uppercase"
-                        style={{ fontFamily: "'DM Mono', monospace" }}
+                        className="text-[9px] bg-[#00cc6a]/10 dark:bg-[#00d294]/10 text-[#00cc6a] dark:text-[#00d294] border border-[#00cc6a]/20 dark:border-[#00d294]/20 rounded-full px-1.5 py-0.5 font-medium ml-2 align-middle tracking-wider uppercase"
+                        style={{ fontFamily: "'Geist Mono', monospace" }}
                       >
                         Pro · Free in beta
                       </span>
                     )}
                   </p>
-                  <p className="text-neutral-500 text-xs mt-0.5 leading-relaxed" style={{ fontFamily: "'DM Mono', monospace" }}>
+                  <p className="text-neutral-500 text-xs mt-0.5 leading-relaxed" style={{ fontFamily: "'Geist Mono', monospace" }}>
                     {feature.desc}
                   </p>
                 </div>
@@ -273,13 +273,13 @@ export default function SignupPage() {
           >
             <button
               onClick={handleLetsGo}
-              className="relative bg-[#00cc6a] dark:bg-[#00ff87] hover:bg-[#00b560] dark:hover:bg-[#00f080] text-black text-xs font-bold tracking-[0.1em] uppercase rounded-xl px-10 py-3.5 transition-all duration-200 shadow-[0_0_24px_rgba(0,204,106,0.2)] dark:shadow-[0_0_24px_rgba(0,255,135,0.25)] hover:shadow-[0_0_32px_rgba(0,204,106,0.35)] dark:hover:shadow-[0_0_32px_rgba(0,255,135,0.45)] overflow-hidden group"
-              style={{ fontFamily: "'Syne', sans-serif" }}
+              className="relative bg-[#00cc6a] dark:bg-[#00d294] hover:bg-[#00b560] dark:hover:bg-[#00bb7f] text-black text-xs font-bold tracking-[0.1em] uppercase rounded-xl px-10 py-3.5 transition-all duration-200 shadow-[0_0_24px_rgba(0,204,106,0.2)] dark:shadow-[0_0_24px_rgba(0,255,135,0.25)] hover:shadow-[0_0_32px_rgba(0,204,106,0.35)] dark:hover:shadow-[0_0_32px_rgba(0,255,135,0.45)] overflow-hidden group"
+              style={{ fontFamily: "'Geist', sans-serif" }}
             >
               <span className="relative z-10">Let&apos;s go →</span>
               <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity duration-200" />
             </button>
-            <p className="text-neutral-400 dark:text-neutral-700 text-[10px] mt-3 tracking-wider uppercase" style={{ fontFamily: "'DM Mono', monospace" }}>
+            <p className="text-neutral-400 dark:text-neutral-700 text-[10px] mt-3 tracking-wider uppercase" style={{ fontFamily: "'Geist Mono', monospace" }}>
               No credit card required
             </p>
           </div>
@@ -291,7 +291,7 @@ export default function SignupPage() {
         >
           {/* Logo + terminal label */}
           <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-[#00cc6a] dark:bg-[#00ff87] mb-4 shadow-[0_0_28px_rgba(0,204,106,0.35)] dark:shadow-[0_0_28px_rgba(0,255,135,0.45)]">
+            <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-[#00cc6a] dark:bg-[#00d294] mb-4 shadow-[0_0_28px_rgba(0,204,106,0.35)] dark:shadow-[0_0_28px_rgba(0,255,135,0.45)]">
               <svg className="w-6 h-6 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
@@ -300,8 +300,8 @@ export default function SignupPage() {
               Pulse
             </h1>
             <p
-              className="text-[11px] tracking-[0.14em] uppercase text-[#00cc6a] dark:text-[#00ff87] mt-2 font-medium"
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              className="text-[11px] tracking-[0.14em] uppercase text-[#00cc6a] dark:text-[#00d294] mt-2 font-medium"
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               &gt; new account
               <span className="cursor-blink ml-0.5">_</span>
@@ -309,19 +309,19 @@ export default function SignupPage() {
           </div>
 
           <div className="relative bg-white dark:bg-[#0f0f0f] border border-black/[0.08] dark:border-white/[0.08] rounded-2xl overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.08)] dark:shadow-[0_0_60px_rgba(0,0,0,0.5)]">
-            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00cc6a]/40 dark:via-[#00ff87]/40 to-transparent" />
+            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00cc6a]/40 dark:via-[#00d294]/40 to-transparent" />
 
             <div className="px-6 pt-6 pb-3 border-b border-black/[0.05] dark:border-white/[0.05]">
               <p
                 className="text-[10px] tracking-[0.18em] uppercase text-neutral-400 dark:text-neutral-600 font-medium"
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               >
                 Get started
               </p>
               <h2 className="text-xl font-bold text-[#080808] dark:text-white mt-1">Create account</h2>
               <p
                 className="text-neutral-500 dark:text-neutral-400 text-xs mt-1"
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               >
                 Start monitoring your APIs in minutes
               </p>
@@ -348,7 +348,7 @@ export default function SignupPage() {
                 )}
                 <span
                   className="text-xs font-semibold text-neutral-700 dark:text-neutral-300 group-hover:text-[#080808] dark:group-hover:text-white transition-colors"
-                  style={{ fontFamily: "'DM Mono', monospace" }}
+                  style={{ fontFamily: "'Geist Mono', monospace" }}
                 >
                   {googleLoading ? "Redirecting..." : "Continue with Google"}
                 </span>
@@ -358,7 +358,7 @@ export default function SignupPage() {
                 <div className="flex-1 h-px bg-black/[0.06] dark:bg-white/[0.06]" />
                 <span
                   className="text-[10px] text-neutral-400 dark:text-neutral-600 tracking-widest uppercase"
-                  style={{ fontFamily: "'DM Mono', monospace" }}
+                  style={{ fontFamily: "'Geist Mono', monospace" }}
                 >
                   or
                 </span>
@@ -369,8 +369,8 @@ export default function SignupPage() {
             <form onSubmit={handleSubmit} className="px-6 pb-5 space-y-4">
               {error && (
                 <div
-                  className="text-red-600 dark:text-red-300 text-xs bg-red-500/10 border border-red-500/20 rounded-lg px-3.5 py-3 leading-relaxed"
-                  style={{ fontFamily: "'DM Mono', monospace" }}
+                  className="text-red-600 dark:text-[#fb2c36] text-xs bg-[#fb2c36]/10 border border-[#fb2c36]/20 rounded-lg px-3.5 py-3 leading-relaxed"
+                  style={{ fontFamily: "'Geist Mono', monospace" }}
                 >
                   {error}
                 </div>
@@ -379,7 +379,7 @@ export default function SignupPage() {
               <div className="space-y-2">
                 <label
                   className="block text-xs font-semibold tracking-[0.08em] uppercase text-neutral-500 dark:text-neutral-300"
-                  style={{ fontFamily: "'DM Mono', monospace" }}
+                  style={{ fontFamily: "'Geist Mono', monospace" }}
                 >
                   Email
                 </label>
@@ -390,15 +390,15 @@ export default function SignupPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@example.com"
-                  className="w-full bg-[#f0f0f0] dark:bg-[#0a0a0a] border border-black/[0.1] dark:border-white/[0.1] rounded-xl px-4 py-3 text-[#080808] dark:text-white text-sm placeholder-neutral-400 dark:placeholder-neutral-600 focus:outline-none focus:border-[#00cc6a]/50 dark:focus:border-[#00ff87]/50 focus:ring-2 focus:ring-[#00cc6a]/10 dark:focus:ring-[#00ff87]/10 transition-all duration-200"
-                  style={{ fontFamily: "'DM Mono', monospace" }}
+                  className="w-full bg-[#f0f0f0] dark:bg-[#0a0a0a] border border-black/[0.1] dark:border-white/[0.1] rounded-xl px-4 py-3 text-[#080808] dark:text-white text-sm placeholder-neutral-400 dark:placeholder-neutral-600 focus:outline-none focus:border-[#00cc6a]/50 dark:focus:border-[#00d294]/50 focus:ring-2 focus:ring-[#00cc6a]/10 dark:focus:ring-[#00d294]/10 transition-all duration-200"
+                  style={{ fontFamily: "'Geist Mono', monospace" }}
                 />
               </div>
 
               <div className="space-y-2">
                 <label
                   className="block text-xs font-semibold tracking-[0.08em] uppercase text-neutral-500 dark:text-neutral-300"
-                  style={{ fontFamily: "'DM Mono', monospace" }}
+                  style={{ fontFamily: "'Geist Mono', monospace" }}
                 >
                   Password
                 </label>
@@ -410,12 +410,12 @@ export default function SignupPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Min. 6 characters"
-                  className="w-full bg-[#f0f0f0] dark:bg-[#0a0a0a] border border-black/[0.1] dark:border-white/[0.1] rounded-xl px-4 py-3 text-[#080808] dark:text-white text-sm placeholder-neutral-400 dark:placeholder-neutral-600 focus:outline-none focus:border-[#00cc6a]/50 dark:focus:border-[#00ff87]/50 focus:ring-2 focus:ring-[#00cc6a]/10 dark:focus:ring-[#00ff87]/10 transition-all duration-200"
-                  style={{ fontFamily: "'DM Mono', monospace" }}
+                  className="w-full bg-[#f0f0f0] dark:bg-[#0a0a0a] border border-black/[0.1] dark:border-white/[0.1] rounded-xl px-4 py-3 text-[#080808] dark:text-white text-sm placeholder-neutral-400 dark:placeholder-neutral-600 focus:outline-none focus:border-[#00cc6a]/50 dark:focus:border-[#00d294]/50 focus:ring-2 focus:ring-[#00cc6a]/10 dark:focus:ring-[#00d294]/10 transition-all duration-200"
+                  style={{ fontFamily: "'Geist Mono', monospace" }}
                 />
                 <p
                   className="text-[11px] text-neutral-400 dark:text-neutral-500 pt-0.5"
-                  style={{ fontFamily: "'DM Mono', monospace" }}
+                  style={{ fontFamily: "'Geist Mono', monospace" }}
                 >
                   Must be at least 6 characters
                 </p>
@@ -424,7 +424,7 @@ export default function SignupPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="relative w-full bg-[#00cc6a] dark:bg-[#00ff87] hover:bg-[#00b560] dark:hover:bg-[#00f080] disabled:opacity-40 disabled:cursor-not-allowed text-black text-xs font-bold tracking-[0.1em] uppercase rounded-xl py-3.5 transition-all duration-200 shadow-[0_0_24px_rgba(0,204,106,0.2)] dark:shadow-[0_0_24px_rgba(0,255,135,0.25)] hover:shadow-[0_0_32px_rgba(0,204,106,0.35)] dark:hover:shadow-[0_0_32px_rgba(0,255,135,0.45)] mt-2 overflow-hidden group"
+                className="relative w-full bg-[#00cc6a] dark:bg-[#00d294] hover:bg-[#00b560] dark:hover:bg-[#00bb7f] disabled:opacity-40 disabled:cursor-not-allowed text-black text-xs font-bold tracking-[0.1em] uppercase rounded-xl py-3.5 transition-all duration-200 shadow-[0_0_24px_rgba(0,204,106,0.2)] dark:shadow-[0_0_24px_rgba(0,255,135,0.25)] hover:shadow-[0_0_32px_rgba(0,204,106,0.35)] dark:hover:shadow-[0_0_32px_rgba(0,255,135,0.45)] mt-2 overflow-hidden group"
               >
                 <span className="relative z-10">
                   {loading ? (
@@ -444,9 +444,9 @@ export default function SignupPage() {
             </form>
 
             <div className="px-6 pb-6 text-center">
-              <p className="text-xs text-neutral-500" style={{ fontFamily: "'DM Mono', monospace" }}>
+              <p className="text-xs text-neutral-500" style={{ fontFamily: "'Geist Mono', monospace" }}>
                 Already have an account?{" "}
-                <Link href="/login" className="text-[#00cc6a] dark:text-[#00ff87] hover:text-[#00b560] dark:hover:text-white font-medium transition-colors duration-150">
+                <Link href="/login" className="text-[#00cc6a] dark:text-[#00d294] hover:text-[#00b560] dark:hover:text-white font-medium transition-colors duration-150">
                   Sign in
                 </Link>
               </p>
@@ -455,7 +455,7 @@ export default function SignupPage() {
 
           <p
             className="text-center text-[10px] text-neutral-400 dark:text-neutral-700 mt-5 tracking-[0.1em] uppercase"
-            style={{ fontFamily: "'DM Mono', monospace" }}
+            style={{ fontFamily: "'Geist Mono', monospace" }}
           >
             Pulse · API Monitor
           </p>

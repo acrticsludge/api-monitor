@@ -19,15 +19,15 @@ function CopyReportButton({ report }: { report: IncidentReport }) {
     >
       {copied ? (
         <span
-          className="text-[#00cc6a] dark:text-[#00ff87] text-xs font-medium"
-          style={{ fontFamily: "'DM Mono', monospace" }}
+          className="text-[#00cc6a] dark:text-[#00d294] text-xs font-medium"
+          style={{ fontFamily: "'Geist Mono', monospace" }}
         >
           ✓ Copied to clipboard
         </span>
       ) : (
         <span
           className="text-neutral-500 dark:text-neutral-400 text-xs font-medium"
-          style={{ fontFamily: "'DM Mono', monospace" }}
+          style={{ fontFamily: "'Geist Mono', monospace" }}
         >
           Copy incident report
         </span>
@@ -51,7 +51,7 @@ export default function IncidentReportCard({
 
   return (
     <div className="relative bg-white dark:bg-[#0f0f0f] border border-black/[0.06] dark:border-white/[0.06] rounded-2xl overflow-hidden">
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00cc6a]/40 dark:via-[#00ff87]/40 to-transparent" />
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00cc6a]/40 dark:via-[#00d294]/40 to-transparent" />
 
       {/* Collapsed header — always visible */}
       <button
@@ -63,13 +63,13 @@ export default function IncidentReportCard({
           <div>
             <p
               className="text-[#080808] dark:text-white text-sm font-semibold"
-              style={{ fontFamily: "'Syne', sans-serif" }}
+              style={{ fontFamily: "'Geist', sans-serif" }}
             >
               Incident Report
             </p>
             <p
               className="text-neutral-500 dark:text-neutral-300 text-xs mt-0.5"
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               {formatDate(report.startTime)}
               {report.durationMinutes ? ` · ${report.durationMinutes} min downtime` : ""}
@@ -80,10 +80,10 @@ export default function IncidentReportCard({
           <span
             className={`text-[10px] px-2 py-0.5 rounded-lg border font-medium ${
               report.errorStatusCode && report.errorStatusCode >= 500
-                ? "text-red-500 dark:text-red-400 bg-red-400/10 border-red-400/20"
-                : "text-yellow-500 dark:text-yellow-400 bg-yellow-400/10 border-yellow-400/20"
+                ? "text-[#fb2c36] dark:text-[#fb2c36] bg-[#fb2c36]/10 border-[#fb2c36]/20"
+                : "text-[#f99c00] dark:text-[#f99c00] bg-[#f99c00]/10 border-[#f99c00]/20"
             }`}
-            style={{ fontFamily: "'DM Mono', monospace" }}
+            style={{ fontFamily: "'Geist Mono', monospace" }}
           >
             {report.errorStatusCode ? `HTTP ${report.errorStatusCode}` : "Timeout"}
           </span>
@@ -107,13 +107,13 @@ export default function IncidentReportCard({
             <div>
               <p
                 className="text-[10px] text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-1"
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               >
                 Started
               </p>
               <p
                 className="text-[#080808] dark:text-white text-xs font-medium"
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               >
                 {formatDate(report.startTime)}
               </p>
@@ -121,13 +121,13 @@ export default function IncidentReportCard({
             <div>
               <p
                 className="text-[10px] text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-1"
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               >
                 Resolved
               </p>
               <p
                 className="text-[#080808] dark:text-white text-xs font-medium"
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               >
                 {report.endTime ? formatDate(report.endTime) : "Ongoing"}
               </p>
@@ -135,13 +135,13 @@ export default function IncidentReportCard({
             <div>
               <p
                 className="text-[10px] text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-1"
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               >
                 Duration
               </p>
               <p
-                className="text-red-500 dark:text-red-400 text-xs font-medium"
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                className="text-[#fb2c36] dark:text-[#fb2c36] text-xs font-medium"
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               >
                 {report.durationMinutes ? `${report.durationMinutes} min` : "Unknown"}
               </p>
@@ -150,16 +150,16 @@ export default function IncidentReportCard({
 
           {/* Anomaly warning */}
           {report.anomalyDetectedBefore && (
-            <div className="bg-yellow-400/[0.04] border border-yellow-400/20 rounded-xl px-3.5 py-2.5 mb-4">
+            <div className="bg-[#f99c00]/[0.04] border border-[#f99c00]/20 rounded-xl px-3.5 py-2.5 mb-4">
               <p
-                className="text-yellow-500 dark:text-yellow-400 text-xs font-medium mb-1"
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                className="text-[#f99c00] dark:text-[#f99c00] text-xs font-medium mb-1"
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               >
                 ⚠️ Early warning detected
               </p>
               <p
                 className="text-neutral-500 dark:text-neutral-400 text-[11px]"
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               >
                 {report.anomalyLeadTimeMinutes !== null
                   ? `Degradation flagged ${report.anomalyLeadTimeMinutes} min before outage`
@@ -176,14 +176,14 @@ export default function IncidentReportCard({
             <div className="bg-black/[0.03] dark:bg-black/20 rounded-xl px-3.5 py-3 mb-4">
               <p
                 className="text-[10px] text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-2"
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               >
                 Root Cause Analysis
               </p>
               <div className="flex items-start justify-between gap-3 mb-2">
                 <p
                   className="text-[#080808] dark:text-white text-xs font-medium"
-                  style={{ fontFamily: "'DM Mono', monospace" }}
+                  style={{ fontFamily: "'Geist Mono', monospace" }}
                 >
                   {report.rootCause}
                 </p>
@@ -191,12 +191,12 @@ export default function IncidentReportCard({
                   <span
                     className={`shrink-0 text-[10px] px-2 py-0.5 rounded-full border font-medium ${
                       report.confidence >= 70
-                        ? "text-[#00cc6a] dark:text-[#00ff87] bg-[#00cc6a]/10 border-[#00cc6a]/20"
+                        ? "text-[#00cc6a] dark:text-[#00d294] bg-[#00cc6a]/10 border-[#00cc6a]/20"
                         : report.confidence >= 40
-                          ? "text-yellow-500 dark:text-yellow-400 bg-yellow-400/10 border-yellow-400/20"
+                          ? "text-[#f99c00] dark:text-[#f99c00] bg-[#f99c00]/10 border-[#f99c00]/20"
                           : "text-neutral-400 bg-white/[0.04] border-white/10"
                     }`}
-                    style={{ fontFamily: "'DM Mono', monospace" }}
+                    style={{ fontFamily: "'Geist Mono', monospace" }}
                   >
                     {report.confidence}% confidence
                   </span>
@@ -205,7 +205,7 @@ export default function IncidentReportCard({
               {report.suggestion && (
                 <p
                   className="text-neutral-500 dark:text-neutral-400 text-[11px]"
-                  style={{ fontFamily: "'DM Mono', monospace" }}
+                  style={{ fontFamily: "'Geist Mono', monospace" }}
                 >
                   → {report.suggestion}
                 </p>
@@ -218,13 +218,13 @@ export default function IncidentReportCard({
             <div className="bg-black/[0.03] dark:bg-black/20 rounded-xl p-3">
               <p
                 className="text-[10px] text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-1"
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               >
                 Baseline
               </p>
               <p
-                className="text-[#00cc6a] dark:text-[#00ff87] text-sm font-medium"
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                className="text-[#00cc6a] dark:text-[#00d294] text-sm font-medium"
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               >
                 {report.baselineResponseMs ? `${report.baselineResponseMs}ms` : "N/A"}
               </p>
@@ -232,13 +232,13 @@ export default function IncidentReportCard({
             <div className="bg-black/[0.03] dark:bg-black/20 rounded-xl p-3">
               <p
                 className="text-[10px] text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-1"
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               >
                 At Failure
               </p>
               <p
-                className="text-red-500 dark:text-red-400 text-sm font-medium"
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                className="text-[#fb2c36] dark:text-[#fb2c36] text-sm font-medium"
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               >
                 {report.responseAtFailure ? `${report.responseAtFailure}ms` : "N/A"}
               </p>
@@ -246,13 +246,13 @@ export default function IncidentReportCard({
             <div className="bg-black/[0.03] dark:bg-black/20 rounded-xl p-3">
               <p
                 className="text-[10px] text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-1"
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               >
                 At Recovery
               </p>
               <p
-                className="text-[#00cc6a] dark:text-[#00ff87] text-sm font-medium"
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                className="text-[#00cc6a] dark:text-[#00d294] text-sm font-medium"
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               >
                 {report.responseAtRecovery ? `${report.responseAtRecovery}ms` : "N/A"}
               </p>
@@ -264,7 +264,7 @@ export default function IncidentReportCard({
             <div className="bg-black/[0.03] dark:bg-black/20 rounded-xl p-3 mb-4">
               <p
                 className="text-[10px] text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-2"
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               >
                 Pre-Incident Trend
               </p>
@@ -279,12 +279,12 @@ export default function IncidentReportCard({
                     <div key={i} className="flex flex-col items-center gap-1 flex-1 min-w-0">
                       <span
                         className="text-[9px] text-neutral-500 dark:text-neutral-400 truncate w-full text-center"
-                        style={{ fontFamily: "'DM Mono', monospace" }}
+                        style={{ fontFamily: "'Geist Mono', monospace" }}
                       >
                         {ms ? ms + "ms" : "—"}
                       </span>
                       <div
-                        className={`w-full rounded-sm ${isDown ? "bg-red-400/60" : isLast ? "bg-yellow-400/60" : "bg-[#00cc6a]/40 dark:bg-[#00ff87]/40"}`}
+                        className={`w-full rounded-sm ${isDown ? "bg-[#fb2c36]/60" : isLast ? "bg-[#f99c00]/60" : "bg-[#00cc6a]/40 dark:bg-[#00d294]/40"}`}
                         style={{ height: height + "px" }}
                       />
                     </div>
@@ -293,7 +293,7 @@ export default function IncidentReportCard({
               </div>
               <p
                 className="text-[9px] text-neutral-400 dark:text-neutral-500 mt-2"
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               >
                 Last {report.preIncidentTrend.length} pings before incident
               </p>
@@ -305,19 +305,19 @@ export default function IncidentReportCard({
             <div className="bg-black/[0.03] dark:bg-black/20 rounded-xl p-3 mb-4">
               <p
                 className="text-[10px] text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-1"
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               >
                 Error Rate (30 min before incident)
               </p>
               <p
                 className={`text-sm font-medium ${
                   report.errorRateBeforeIncident > 50
-                    ? "text-red-500 dark:text-red-400"
+                    ? "text-[#fb2c36] dark:text-[#fb2c36]"
                     : report.errorRateBeforeIncident > 20
-                      ? "text-yellow-500 dark:text-yellow-400"
-                      : "text-[#00cc6a] dark:text-[#00ff87]"
+                      ? "text-[#f99c00] dark:text-[#f99c00]"
+                      : "text-[#00cc6a] dark:text-[#00d294]"
                 }`}
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               >
                 {report.errorRateBeforeIncident}%
               </p>
@@ -328,21 +328,21 @@ export default function IncidentReportCard({
           <div className="bg-black/[0.03] dark:bg-black/20 rounded-xl p-3 mb-4">
             <p
               className="text-[10px] text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-2"
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               Impact
             </p>
             <div className="flex items-center gap-4 flex-wrap">
               <p
                 className="text-[#080808] dark:text-white text-xs font-medium"
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               >
                 {report.failedChecks} failed checks
               </p>
               {report.estimatedRequestsAffected && (
                 <p
                   className="text-neutral-500 dark:text-neutral-400 text-xs"
-                  style={{ fontFamily: "'DM Mono', monospace" }}
+                  style={{ fontFamily: "'Geist Mono', monospace" }}
                 >
                   ~{report.estimatedRequestsAffected.toLocaleString()} requests affected (est.)
                 </p>
@@ -355,13 +355,13 @@ export default function IncidentReportCard({
             <div className="bg-black/[0.03] dark:bg-black/20 rounded-xl p-3">
               <p
                 className="text-[10px] text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-1"
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               >
                 Incidents (30d)
               </p>
               <p
                 className="text-[#080808] dark:text-white text-sm font-medium"
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               >
                 {report.incidentFrequency30d}
               </p>
@@ -369,13 +369,13 @@ export default function IncidentReportCard({
             <div className="bg-black/[0.03] dark:bg-black/20 rounded-xl p-3">
               <p
                 className="text-[10px] text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-1"
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               >
                 Avg Recovery
               </p>
               <p
                 className="text-[#080808] dark:text-white text-sm font-medium"
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               >
                 {report.averageHistoricalDowntimeMinutes
                   ? report.averageHistoricalDowntimeMinutes + " min"
@@ -387,7 +387,7 @@ export default function IncidentReportCard({
           {report.timeSinceLastIncidentMinutes !== null && (
             <p
               className="text-[10px] text-neutral-400 dark:text-neutral-400 mb-4"
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               Previous incident:{" "}
               {Math.floor(report.timeSinceLastIncidentMinutes / 60 / 24) > 0

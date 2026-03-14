@@ -33,20 +33,20 @@ export default async function SettingsPage({
     <div>
       <div className="mb-6">
         <p
-          className="text-[11px] tracking-[0.14em] uppercase text-[#00ff87] mb-1.5 font-medium"
-          style={{ fontFamily: "'DM Mono', monospace" }}
+          className="text-[11px] tracking-[0.14em] uppercase text-[#00d294] mb-1.5 font-medium"
+          style={{ fontFamily: "'Geist Mono', monospace" }}
         >
           &gt; settings
         </p>
         <h2
           className="text-2xl font-extrabold tracking-tight text-white"
-          style={{ fontFamily: "'Syne', sans-serif" }}
+          style={{ fontFamily: "'Geist', sans-serif" }}
         >
           Monitor Settings
         </h2>
         <p
           className="text-neutral-500 text-xs mt-1"
-          style={{ fontFamily: "'DM Mono', monospace" }}
+          style={{ fontFamily: "'Geist Mono', monospace" }}
         >
           Update configuration and manage this monitor
         </p>

@@ -92,7 +92,7 @@ export default function MonitorSidebar({ monitorId, isPro }: Props) {
       {/* Mobile horizontal tab strip */}
       <div
         className="md:hidden flex gap-1 overflow-x-auto pb-2 px-4 pt-3 border-b border-border"
-        style={{ fontFamily: "'DM Mono', monospace" }}
+        style={{ fontFamily: "'Geist Mono', monospace" }}
       >
         {navItems.map((item) => {
           const locked = item.proOnly && !isPro;
@@ -116,7 +116,7 @@ export default function MonitorSidebar({ monitorId, isPro }: Props) {
               href={item.href}
               className={`flex-shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-lg text-[11px] whitespace-nowrap transition-colors ${
                 active
-                  ? "bg-[#00ff87]/10 text-[#00ff87]"
+                  ? "bg-[#00d294]/10 text-[#00d294]"
                   : "text-neutral-500 hover:text-foreground"
               }`}
             >
@@ -142,7 +142,7 @@ export default function MonitorSidebar({ monitorId, isPro }: Props) {
                       <span className="text-neutral-500">{item.icon}</span>
                       <span
                         className="text-neutral-500 text-xs font-medium flex-1"
-                        style={{ fontFamily: "'DM Mono', monospace" }}
+                        style={{ fontFamily: "'Geist Mono', monospace" }}
                       >
                         {item.label}
                       </span>
@@ -162,14 +162,14 @@ export default function MonitorSidebar({ monitorId, isPro }: Props) {
                 href={item.href}
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-150 group ${
                   active
-                    ? "bg-[#00ff87]/10 text-[#00ff87]"
+                    ? "bg-[#00d294]/10 text-[#00d294]"
                     : "text-neutral-500 hover:text-foreground hover:bg-accent"
                 }`}
               >
                 <span
                   className={
                     active
-                      ? "text-[#00ff87]"
+                      ? "text-[#00d294]"
                       : "text-neutral-500 group-hover:text-foreground"
                   }
                 >
@@ -177,12 +177,12 @@ export default function MonitorSidebar({ monitorId, isPro }: Props) {
                 </span>
                 <span
                   className="text-xs font-medium"
-                  style={{ fontFamily: "'DM Mono', monospace" }}
+                  style={{ fontFamily: "'Geist Mono', monospace" }}
                 >
                   {item.label}
                 </span>
                 {active && (
-                  <div className="ml-auto w-1 h-1 rounded-full bg-[#00ff87]" />
+                  <div className="ml-auto w-1 h-1 rounded-full bg-[#00d294]" />
                 )}
               </Link>
             );
@@ -191,18 +191,18 @@ export default function MonitorSidebar({ monitorId, isPro }: Props) {
 
         {!isPro && (
           <div className="mt-6 mx-1">
-            <div className="relative bg-card border border-[#00ff87]/10 rounded-xl p-3 overflow-hidden">
-              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00ff87]/20 to-transparent" />
+            <div className="relative bg-card border border-[#00d294]/10 rounded-xl p-3 overflow-hidden">
+              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00d294]/20 to-transparent" />
               <p
                 className="text-[10px] text-neutral-400 mb-2 leading-relaxed"
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               >
                 Unlock Root Cause Analysis, Reports, SSL monitoring and more
               </p>
               <Link
                 href="/pricing"
-                className="text-[10px] text-[#00ff87] font-medium hover:underline"
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                className="text-[10px] text-[#00d294] font-medium hover:underline"
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               >
                 Upgrade to Pro →
               </Link>

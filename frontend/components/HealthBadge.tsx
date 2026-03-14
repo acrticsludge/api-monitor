@@ -10,9 +10,9 @@ interface HealthBadgeProps {
 }
 
 function scoreColor(label: HealthLabel): string {
-  if (label === "Healthy") return "text-[#00ff87]";
-  if (label === "Degraded") return "text-yellow-400";
-  if (label === "Critical") return "text-red-400";
+  if (label === "Healthy") return "text-[#00d294]";
+  if (label === "Degraded") return "text-[#f99c00]";
+  if (label === "Critical") return "text-[#fb2c36]";
   return "text-neutral-500";
 }
 
@@ -25,7 +25,7 @@ function HealthTooltip({ reasons }: { reasons: string[] }) {
             <li
               key={i}
               className="flex items-start gap-1.5"
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               <span className="text-neutral-400 dark:text-neutral-600 shrink-0 mt-px">·</span>
               <span className="text-[11px] text-neutral-700 dark:text-neutral-300 leading-snug">
@@ -53,13 +53,13 @@ export default function HealthBadge({
       <div className="relative group/badge inline-block cursor-default">
         <p
           className={`text-3xl font-extrabold tabular-nums ${color}`}
-          style={{ fontFamily: "'DM Mono', monospace" }}
+          style={{ fontFamily: "'Geist Mono', monospace" }}
         >
           {isNoData ? "—" : `${score}/100`}
         </p>
         <p
           className={`text-xs font-semibold mt-1 ${color}`}
-          style={{ fontFamily: "'DM Mono', monospace" }}
+          style={{ fontFamily: "'Geist Mono', monospace" }}
         >
           {label}
         </p>
@@ -72,13 +72,13 @@ export default function HealthBadge({
     <div className="relative group/badge inline-flex items-center gap-1.5 cursor-default">
       <span
         className={`text-xs font-semibold tabular-nums ${color}`}
-        style={{ fontFamily: "'DM Mono', monospace" }}
+        style={{ fontFamily: "'Geist Mono', monospace" }}
       >
         {isNoData ? "—" : `${score}/100`}
       </span>
       <span
         className={`text-[10px] uppercase tracking-[0.08em] font-medium ${color}`}
-        style={{ fontFamily: "'DM Mono', monospace" }}
+        style={{ fontFamily: "'Geist Mono', monospace" }}
       >
         {label}
       </span>

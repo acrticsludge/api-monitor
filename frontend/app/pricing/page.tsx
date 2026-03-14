@@ -19,10 +19,10 @@ export default function PricingPage() {
   return (
     <div
       className="min-h-screen bg-[#080808] text-white"
-      style={{ fontFamily: "'Syne', sans-serif" }}
+      style={{ fontFamily: "'Geist', sans-serif" }}
     >
       <link
-        href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;500;600;700;800&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500;600;700&display=swap"
         rel="stylesheet"
       />
 
@@ -43,7 +43,7 @@ export default function PricingPage() {
       <header className="sticky top-0 z-50 border-b border-white/[0.06] bg-[#080808]/80 backdrop-blur-xl">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-lg bg-[#00ff87] flex items-center justify-center shadow-[0_0_16px_rgba(0,255,135,0.35)]">
+            <div className="w-7 h-7 rounded-lg bg-[#00d294] flex items-center justify-center shadow-[0_0_16px_rgba(0,255,135,0.35)]">
               <svg
                 className="w-3.5 h-3.5 text-black"
                 fill="none"
@@ -66,14 +66,14 @@ export default function PricingPage() {
             <Link
               href="/docs"
               className="hidden sm:block text-[11px] font-semibold tracking-[0.08em] uppercase text-neutral-400 hover:text-white transition-colors duration-150"
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               Docs
             </Link>
             <Link
               href={loggedIn ? "/dashboard" : "/login"}
               className="text-[11px] font-semibold tracking-[0.08em] uppercase text-neutral-400 border border-white/[0.08] rounded-md px-3 py-1.5 hover:text-white hover:border-white/20 transition-all duration-150"
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               {loggedIn ? "Dashboard" : "Sign in"}
             </Link>
@@ -88,8 +88,8 @@ export default function PricingPage() {
         {/* Page header */}
         <div className="text-center mb-14">
           <p
-            className="text-[11px] tracking-[0.2em] uppercase text-[#00ff87] font-medium mb-4"
-            style={{ fontFamily: "'DM Mono', monospace" }}
+            className="text-[11px] tracking-[0.2em] uppercase text-[#00d294] font-medium mb-4"
+            style={{ fontFamily: "'Geist Mono', monospace" }}
           >
             Pricing
           </p>
@@ -98,7 +98,7 @@ export default function PricingPage() {
           </h1>
           <p
             className="text-sm text-neutral-400 max-w-md mx-auto"
-            style={{ fontFamily: "'DM Mono', monospace" }}
+            style={{ fontFamily: "'Geist Mono', monospace" }}
           >
             Start free. Upgrade when you need more.
           </p>
@@ -108,10 +108,10 @@ export default function PricingPage() {
         <div className="grid sm:grid-cols-2 gap-6 mb-12">
           {/* Free plan */}
           <div className="relative bg-[#0f0f0f] border border-white/[0.06] rounded-2xl p-8">
-            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00ff87]/30 to-transparent rounded-t-2xl" />
+            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00d294]/30 to-transparent rounded-t-2xl" />
             <p
               className="text-[11px] tracking-[0.18em] uppercase text-neutral-500 mb-3"
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               Free
             </p>
@@ -119,20 +119,20 @@ export default function PricingPage() {
               <span className="text-4xl font-extrabold text-white">$0</span>
               <span
                 className="text-neutral-500 mb-1"
-                style={{ fontFamily: "'DM Mono', monospace", fontSize: "13px" }}
+                style={{ fontFamily: "'Geist Mono', monospace", fontSize: "13px" }}
               >
                 / month
               </span>
             </div>
             <p
               className="text-xs text-neutral-600 mb-8"
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               No credit card required
             </p>
             <Link
               href="/signup"
-              className="block text-center bg-[#00ff87] hover:bg-[#00f080] text-black text-xs font-bold tracking-[0.08em] uppercase px-6 py-3.5 rounded-xl transition-all duration-150 shadow-[0_0_20px_rgba(0,255,135,0.2)] hover:shadow-[0_0_28px_rgba(0,255,135,0.35)] mb-8"
+              className="block text-center bg-[#00d294] hover:bg-[#00bb7f] text-black text-xs font-bold tracking-[0.08em] uppercase px-6 py-3.5 rounded-xl transition-all duration-150 shadow-[0_0_20px_rgba(0,255,135,0.2)] hover:shadow-[0_0_28px_rgba(0,255,135,0.35)] mb-8"
             >
               Get started free
             </Link>
@@ -154,11 +154,11 @@ export default function PricingPage() {
                   key={label}
                   className="flex items-start gap-3 text-sm text-neutral-300"
                   style={{
-                    fontFamily: "'DM Mono', monospace",
+                    fontFamily: "'Geist Mono', monospace",
                     fontSize: "12px",
                   }}
                 >
-                  <span className="text-[#00ff87] shrink-0 mt-0.5">✓</span>
+                  <span className="text-[#00d294] shrink-0 mt-0.5">✓</span>
                   {label}
                 </li>
               ))}
@@ -166,18 +166,18 @@ export default function PricingPage() {
           </div>
 
           {/* Pro plan */}
-          <div className="relative bg-[#0f0f0f] border border-[#00ff87]/30 rounded-2xl p-8">
-            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00ff87]/60 to-transparent rounded-t-2xl" />
+          <div className="relative bg-[#0f0f0f] border border-[#00d294]/30 rounded-2xl p-8">
+            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00d294]/60 to-transparent rounded-t-2xl" />
             <div className="flex items-start justify-between mb-3">
               <p
-                className="text-[11px] tracking-[0.18em] uppercase text-[#00ff87]"
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                className="text-[11px] tracking-[0.18em] uppercase text-[#00d294]"
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               >
                 Pro
               </p>
               <span
-                className="text-[10px] bg-[#00ff87]/10 text-[#00ff87] border border-[#00ff87]/20 px-2 py-0.5 rounded-full tracking-wider uppercase"
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                className="text-[10px] bg-[#00d294]/10 text-[#00d294] border border-[#00d294]/20 px-2 py-0.5 rounded-full tracking-wider uppercase"
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               >
                 Recommended for side projects
               </span>
@@ -186,27 +186,27 @@ export default function PricingPage() {
               <span className="text-4xl font-extrabold text-white">$9</span>
               <span
                 className="text-neutral-500 mb-1"
-                style={{ fontFamily: "'DM Mono', monospace", fontSize: "13px" }}
+                style={{ fontFamily: "'Geist Mono', monospace", fontSize: "13px" }}
               >
                 / month
               </span>
             </div>
             <p
               className="text-xs text-neutral-600 mb-8"
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               &nbsp;
             </p>
             <button
               disabled
               className="block w-full text-center bg-white/[0.04] border border-white/[0.08] text-neutral-500 text-xs font-bold tracking-[0.08em] uppercase px-6 py-3.5 rounded-xl cursor-not-allowed mb-8"
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               Coming Soon
             </button>
             <p
               className="text-[11px] text-neutral-600 mb-4"
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               Everything in Free, plus:
             </p>
@@ -229,11 +229,11 @@ export default function PricingPage() {
                   key={label}
                   className="flex items-start gap-3 text-sm text-neutral-300"
                   style={{
-                    fontFamily: "'DM Mono', monospace",
+                    fontFamily: "'Geist Mono', monospace",
                     fontSize: "12px",
                   }}
                 >
-                  <span className="text-[#00ff87] shrink-0 mt-0.5">⚡</span>
+                  <span className="text-[#00d294] shrink-0 mt-0.5">⚡</span>
                   <span className="flex items-center gap-2 flex-wrap">
                     {label}
                     {soon && (
@@ -251,7 +251,7 @@ export default function PricingPage() {
         {/* Note below cards */}
         <p
           className="text-center text-xs text-neutral-600 mb-20"
-          style={{ fontFamily: "'DM Mono', monospace" }}
+          style={{ fontFamily: "'Geist Mono', monospace" }}
         >
           Pro tier launching soon. Free tier stays free forever.
         </p>
@@ -261,7 +261,7 @@ export default function PricingPage() {
           <div className="flex-1 h-px bg-white/[0.04]" />
           <span
             className="text-[10px] tracking-[0.15em] uppercase text-neutral-600 whitespace-nowrap"
-            style={{ fontFamily: "'DM Mono', monospace" }}
+            style={{ fontFamily: "'Geist Mono', monospace" }}
           >
             FAQ
           </span>
@@ -287,16 +287,16 @@ export default function PricingPage() {
               key={q}
               className="relative bg-[#0f0f0f] border border-white/[0.06] rounded-2xl p-5"
             >
-              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00ff87]/30 to-transparent rounded-t-2xl" />
+              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00d294]/30 to-transparent rounded-t-2xl" />
               <p
                 className="text-white font-semibold text-sm mb-2"
-                style={{ fontFamily: "'Syne', sans-serif" }}
+                style={{ fontFamily: "'Geist', sans-serif" }}
               >
                 {q}
               </p>
               <p
                 className="text-neutral-400 text-xs leading-relaxed"
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               >
                 {a}
               </p>
@@ -308,7 +308,7 @@ export default function PricingPage() {
         <div className="border-t border-white/[0.06] pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <span
             className="text-[11px] text-neutral-600 tracking-[0.1em] uppercase"
-            style={{ fontFamily: "'DM Mono', monospace" }}
+            style={{ fontFamily: "'Geist Mono', monospace" }}
           >
             Pulse · Free API monitoring
           </span>
@@ -316,21 +316,21 @@ export default function PricingPage() {
             <Link
               href="/docs"
               className="text-[11px] text-neutral-500 hover:text-white transition-colors"
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               Docs
             </Link>
             <Link
               href="/privacy"
               className="text-[11px] text-neutral-500 hover:text-white transition-colors"
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               Privacy
             </Link>
             <Link
               href="/terms"
               className="text-[11px] text-neutral-500 hover:text-white transition-colors"
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               Terms
             </Link>

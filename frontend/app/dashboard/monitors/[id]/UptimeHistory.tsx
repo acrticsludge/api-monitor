@@ -107,26 +107,26 @@ export default function UptimeHistory({ pings }: { pings: Ping[] }) {
 
   return (
     <div className="relative bg-white dark:bg-[#0f0f0f] border border-black/[0.06] dark:border-white/[0.06] rounded-2xl p-5 overflow-visible">
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00cc6a]/40 dark:via-[#00ff87]/40 to-transparent rounded-t-2xl" />
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00cc6a]/40 dark:via-[#00d294]/40 to-transparent rounded-t-2xl" />
 
       <div className="flex items-center justify-between mb-4">
         <div>
           <p
             className="text-[10px] tracking-[0.15em] uppercase text-neutral-400 dark:text-neutral-500 font-medium"
-            style={{ fontFamily: "'DM Mono', monospace" }}
+            style={{ fontFamily: "'Geist Mono', monospace" }}
           >
             7-day history
           </p>
           <p
             className="text-xl font-bold text-[#080808] dark:text-white mt-0.5"
-            style={{ fontFamily: "'Syne', sans-serif" }}
+            style={{ fontFamily: "'Geist', sans-serif" }}
           >
             {hasData ? `${overallUptimePercent}%` : "—"} uptime
           </p>
         </div>
         <span
           className="text-[10px] text-neutral-400 dark:text-neutral-600 tracking-wider uppercase"
-          style={{ fontFamily: "'DM Mono', monospace" }}
+          style={{ fontFamily: "'Geist Mono', monospace" }}
         >
           Last 7 days
         </span>
@@ -135,7 +135,7 @@ export default function UptimeHistory({ pings }: { pings: Ping[] }) {
       {!hasData ? (
         <p
           className="text-xs text-neutral-400 dark:text-neutral-500 py-8 text-center"
-          style={{ fontFamily: "'DM Mono', monospace" }}
+          style={{ fontFamily: "'Geist Mono', monospace" }}
         >
           Not enough data yet — check back tomorrow
         </p>
@@ -167,14 +167,14 @@ export default function UptimeHistory({ pings }: { pings: Ping[] }) {
                 >
                   <p
                     className="text-[11px] font-semibold text-[#080808] dark:text-white mb-1.5 leading-tight"
-                    style={{ fontFamily: "'Syne', sans-serif" }}
+                    style={{ fontFamily: "'Geist', sans-serif" }}
                   >
                     {day.fullLabel}
                   </p>
                   {day.totalChecks === 0 ? (
                     <p
                       className="text-[10px] text-neutral-400 dark:text-neutral-500"
-                      style={{ fontFamily: "'DM Mono', monospace" }}
+                      style={{ fontFamily: "'Geist Mono', monospace" }}
                     >
                       No data
                     </p>
@@ -182,23 +182,23 @@ export default function UptimeHistory({ pings }: { pings: Ping[] }) {
                     <>
                       <p
                         className="text-[10px] text-neutral-500 dark:text-neutral-400"
-                        style={{ fontFamily: "'DM Mono', monospace" }}
+                        style={{ fontFamily: "'Geist Mono', monospace" }}
                       >
-                        <span className="text-[#00cc6a] dark:text-[#00ff87]">
+                        <span className="text-[#00cc6a] dark:text-[#00d294]">
                           {day.uptimePercent}%
                         </span>{" "}
                         uptime
                       </p>
                       <p
                         className="text-[10px] text-neutral-400 dark:text-neutral-500 mt-0.5"
-                        style={{ fontFamily: "'DM Mono', monospace" }}
+                        style={{ fontFamily: "'Geist Mono', monospace" }}
                       >
                         {day.totalChecks} checks
                       </p>
                       {day.downtimeMinutes > 0 && (
                         <p
-                          className="text-[10px] text-red-500 dark:text-red-400 mt-0.5"
-                          style={{ fontFamily: "'DM Mono', monospace" }}
+                          className="text-[10px] text-[#fb2c36] dark:text-[#fb2c36] mt-0.5"
+                          style={{ fontFamily: "'Geist Mono', monospace" }}
                         >
                           {day.downtimeMinutes}m downtime
                         </p>
@@ -214,9 +214,9 @@ export default function UptimeHistory({ pings }: { pings: Ping[] }) {
                       key={j}
                       className={`flex-1 ${
                         seg === "up"
-                          ? "bg-[#00cc6a] dark:bg-[#00ff87]"
+                          ? "bg-[#00cc6a] dark:bg-[#00d294]"
                           : seg === "down"
-                            ? "bg-red-500"
+                            ? "bg-[#fb2c36]"
                             : "bg-black/[0.06] dark:bg-neutral-800"
                       }`}
                     />
@@ -226,7 +226,7 @@ export default function UptimeHistory({ pings }: { pings: Ping[] }) {
                 {/* Day label */}
                 <p
                   className="text-[9px] sm:text-[10px] text-center text-neutral-400 dark:text-neutral-600 mt-1.5 truncate"
-                  style={{ fontFamily: "'DM Mono', monospace" }}
+                  style={{ fontFamily: "'Geist Mono', monospace" }}
                 >
                   {day.label}
                 </p>

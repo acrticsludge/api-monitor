@@ -240,20 +240,20 @@ export default async function ReportsPage({
     <div>
       <div className="mb-6">
         <p
-          className="text-[11px] tracking-[0.14em] uppercase text-[#00ff87] mb-1.5 font-medium"
-          style={{ fontFamily: "'DM Mono', monospace" }}
+          className="text-[11px] tracking-[0.14em] uppercase text-[#00d294] mb-1.5 font-medium"
+          style={{ fontFamily: "'Geist Mono', monospace" }}
         >
           &gt; post-mortem reports
         </p>
         <h2
           className="text-2xl font-extrabold tracking-tight text-foreground"
-          style={{ fontFamily: "'Syne', sans-serif" }}
+          style={{ fontFamily: "'Geist', sans-serif" }}
         >
           Incident Reports
         </h2>
         <p
           className="text-neutral-500 text-xs mt-1"
-          style={{ fontFamily: "'DM Mono', monospace" }}
+          style={{ fontFamily: "'Geist Mono', monospace" }}
         >
           Automatically generated after each incident resolves
         </p>
@@ -261,16 +261,16 @@ export default async function ReportsPage({
 
       {incidentReports.length === 0 ? (
         <div className="relative bg-card border border-border rounded-2xl p-10 text-center overflow-hidden">
-          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00ff87]/40 to-transparent" />
+          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00d294]/40 to-transparent" />
           <p
             className="text-neutral-500 text-xs"
-            style={{ fontFamily: "'DM Mono', monospace" }}
+            style={{ fontFamily: "'Geist Mono', monospace" }}
           >
             No completed incidents yet
           </p>
           <p
             className="text-neutral-600 text-[11px] mt-1"
-            style={{ fontFamily: "'DM Mono', monospace" }}
+            style={{ fontFamily: "'Geist Mono', monospace" }}
           >
             Reports are generated automatically after a monitor recovers from downtime
           </p>
@@ -294,22 +294,22 @@ function ProPageGate({ feature }: { feature: string }) {
   return (
     <div className="flex flex-col items-center justify-center py-20">
       <div className="relative bg-card border border-border rounded-2xl p-10 text-center max-w-sm w-full overflow-hidden">
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00ff87]/40 to-transparent" />
-        <div className="w-12 h-12 rounded-xl bg-[#00ff87]/[0.06] border border-[#00ff87]/10 flex items-center justify-center mx-auto mb-4">
-          <svg className="w-6 h-6 text-[#00ff87]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00d294]/40 to-transparent" />
+        <div className="w-12 h-12 rounded-xl bg-[#00d294]/[0.06] border border-[#00d294]/10 flex items-center justify-center mx-auto mb-4">
+          <svg className="w-6 h-6 text-[#00d294]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
           </svg>
         </div>
-        <p className="text-foreground text-sm font-semibold mb-1" style={{ fontFamily: "'Syne', sans-serif" }}>
+        <p className="text-foreground text-sm font-semibold mb-1" style={{ fontFamily: "'Geist', sans-serif" }}>
           {feature}
         </p>
-        <p className="text-neutral-500 text-xs mb-4" style={{ fontFamily: "'DM Mono', monospace" }}>
+        <p className="text-neutral-500 text-xs mb-4" style={{ fontFamily: "'Geist Mono', monospace" }}>
           Available on Pro tier
         </p>
         <Link
           href="/pricing"
-          className="inline-block text-[11px] bg-[#00ff87] text-black font-bold px-4 py-2 rounded-lg hover:bg-[#00f080] transition-colors"
-          style={{ fontFamily: "'DM Mono', monospace" }}
+          className="inline-block text-[11px] bg-[#00d294] text-black font-bold px-4 py-2 rounded-lg hover:bg-[#00bb7f] transition-colors"
+          style={{ fontFamily: "'Geist Mono', monospace" }}
         >
           Upgrade to Pro →
         </Link>

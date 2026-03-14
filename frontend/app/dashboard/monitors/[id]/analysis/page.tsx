@@ -12,22 +12,22 @@ function ProPageGate({ feature }: { feature: string }) {
   return (
     <div className="flex flex-col items-center justify-center py-20">
       <div className="relative bg-card border border-border rounded-2xl p-10 text-center max-w-sm w-full overflow-hidden">
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00ff87]/40 to-transparent" />
-        <div className="w-12 h-12 rounded-xl bg-[#00ff87]/[0.06] border border-[#00ff87]/10 flex items-center justify-center mx-auto mb-4">
-          <svg className="w-6 h-6 text-[#00ff87]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00d294]/40 to-transparent" />
+        <div className="w-12 h-12 rounded-xl bg-[#00d294]/[0.06] border border-[#00d294]/10 flex items-center justify-center mx-auto mb-4">
+          <svg className="w-6 h-6 text-[#00d294]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
           </svg>
         </div>
-        <p className="text-foreground text-sm font-semibold mb-1" style={{ fontFamily: "'Syne', sans-serif" }}>
+        <p className="text-foreground text-sm font-semibold mb-1" style={{ fontFamily: "'Geist', sans-serif" }}>
           {feature}
         </p>
-        <p className="text-neutral-500 text-xs mb-4" style={{ fontFamily: "'DM Mono', monospace" }}>
+        <p className="text-neutral-500 text-xs mb-4" style={{ fontFamily: "'Geist Mono', monospace" }}>
           Available on Pro tier
         </p>
         <Link
           href="/pricing"
-          className="inline-block text-[11px] bg-[#00ff87] text-black font-bold px-4 py-2 rounded-lg hover:bg-[#00f080] transition-colors"
-          style={{ fontFamily: "'DM Mono', monospace" }}
+          className="inline-block text-[11px] bg-[#00d294] text-black font-bold px-4 py-2 rounded-lg hover:bg-[#00bb7f] transition-colors"
+          style={{ fontFamily: "'Geist Mono', monospace" }}
         >
           Upgrade to Pro →
         </Link>
@@ -108,31 +108,31 @@ export default async function AnalysisPage({
     <div>
       <div className="mb-6">
         <p
-          className="text-[11px] tracking-[0.14em] uppercase text-[#00ff87] mb-1.5 font-medium"
-          style={{ fontFamily: "'DM Mono', monospace" }}
+          className="text-[11px] tracking-[0.14em] uppercase text-[#00d294] mb-1.5 font-medium"
+          style={{ fontFamily: "'Geist Mono', monospace" }}
         >
           &gt; root cause analysis
         </p>
         <h2
           className="text-2xl font-extrabold tracking-tight text-foreground"
-          style={{ fontFamily: "'Syne', sans-serif" }}
+          style={{ fontFamily: "'Geist', sans-serif" }}
         >
           Root Cause Analysis
         </h2>
         <p
           className="text-neutral-500 text-xs mt-1"
-          style={{ fontFamily: "'DM Mono', monospace" }}
+          style={{ fontFamily: "'Geist Mono', monospace" }}
         >
           Per-stage timing breakdown for recent incidents
         </p>
       </div>
 
       {analyses.length === 0 ? (
-        <Alert className="bg-[#00ff87]/[0.04] border-[#00ff87]/20">
-          <CheckCircle className="h-4 w-4 text-[#00ff87]" />
+        <Alert className="bg-[#00d294]/[0.04] border-[#00d294]/20">
+          <CheckCircle className="h-4 w-4 text-[#00d294]" />
           <AlertDescription
-            className="text-[#00ff87]"
-            style={{ fontFamily: "'DM Mono', monospace", fontSize: "12px" }}
+            className="text-[#00d294]"
+            style={{ fontFamily: "'Geist Mono', monospace", fontSize: "12px" }}
           >
             {isCurrentlyDown
               ? "Collecting ping data for analysis..."
@@ -147,28 +147,28 @@ export default async function AnalysisPage({
             return (
               <div
                 key={ping.checked_at}
-                className="relative bg-yellow-400/[0.04] border border-yellow-400/20 rounded-2xl p-5 overflow-hidden"
+                className="relative bg-[#f99c00]/[0.04] border border-[#f99c00]/20 rounded-2xl p-5 overflow-hidden"
               >
-                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-yellow-400/40 to-transparent" />
+                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#f99c00]/40 to-transparent" />
                 <div className="flex items-start justify-between gap-4 mb-4">
                   <div className="min-w-0">
                     <p
-                      className="text-[10px] tracking-[0.15em] uppercase text-yellow-400/70 font-medium mb-1"
-                      style={{ fontFamily: "'DM Mono', monospace" }}
+                      className="text-[10px] tracking-[0.15em] uppercase text-[#f99c00]/70 font-medium mb-1"
+                      style={{ fontFamily: "'Geist Mono', monospace" }}
                     >
                       {i === 0 ? "Latest incident" : `Incident ${i + 1}`} ·{" "}
                       {new Date(ping.checked_at).toLocaleString()}
                     </p>
                     <p
                       className="text-base font-bold text-foreground leading-tight"
-                      style={{ fontFamily: "'Syne', sans-serif" }}
+                      style={{ fontFamily: "'Geist', sans-serif" }}
                     >
                       {rc.likelyCause}
                     </p>
                   </div>
                   <span
-                    className="text-xs text-yellow-400 bg-yellow-400/10 border border-yellow-400/20 rounded-lg px-2.5 py-1 font-medium shrink-0"
-                    style={{ fontFamily: "'DM Mono', monospace" }}
+                    className="text-xs text-[#f99c00] bg-[#f99c00]/10 border border-[#f99c00]/20 rounded-lg px-2.5 py-1 font-medium shrink-0"
+                    style={{ fontFamily: "'Geist Mono', monospace" }}
                   >
                     {rc.confidence}% confidence
                   </span>
@@ -179,35 +179,35 @@ export default async function AnalysisPage({
                     <div key={signal.stage} className="bg-black/20 rounded-xl p-3">
                       <p
                         className="text-[10px] text-neutral-500 uppercase tracking-wider mb-1"
-                        style={{ fontFamily: "'DM Mono', monospace" }}
+                        style={{ fontFamily: "'Geist Mono', monospace" }}
                       >
                         {signal.stage}
                       </p>
                       <p
                         className={`text-sm font-medium ${
                           signal.status === "critical"
-                            ? "text-red-400"
+                            ? "text-[#fb2c36]"
                             : signal.status === "elevated"
-                            ? "text-yellow-400"
+                            ? "text-[#f99c00]"
                             : signal.status === "normal"
-                            ? "text-[#00ff87]"
+                            ? "text-[#00d294]"
                             : "text-neutral-500"
                         }`}
-                        style={{ fontFamily: "'DM Mono', monospace" }}
+                        style={{ fontFamily: "'Geist Mono', monospace" }}
                       >
                         {signal.value}
                       </p>
                       <p
                         className={`text-[10px] mt-0.5 ${
                           signal.status === "critical"
-                            ? "text-red-400/60"
+                            ? "text-[#fb2c36]/60"
                             : signal.status === "elevated"
-                            ? "text-yellow-400/60"
+                            ? "text-[#f99c00]/60"
                             : signal.status === "normal"
-                            ? "text-[#00ff87]/60"
+                            ? "text-[#00d294]/60"
                             : "text-neutral-600"
                         }`}
-                        style={{ fontFamily: "'DM Mono', monospace" }}
+                        style={{ fontFamily: "'Geist Mono', monospace" }}
                       >
                         {signal.status}
                       </p>
@@ -216,10 +216,10 @@ export default async function AnalysisPage({
                 </div>
 
                 <div className="flex items-start gap-2.5 bg-black/20 rounded-xl p-3">
-                  <span className="text-yellow-400 mt-0.5 flex-shrink-0">💡</span>
+                  <span className="text-[#f99c00] mt-0.5 flex-shrink-0">💡</span>
                   <p
                     className="text-neutral-400 text-xs leading-relaxed"
-                    style={{ fontFamily: "'DM Mono', monospace" }}
+                    style={{ fontFamily: "'Geist Mono', monospace" }}
                   >
                     {rc.suggestion}
                   </p>

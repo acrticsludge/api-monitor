@@ -19,10 +19,10 @@ export default function TermsPage() {
   return (
     <div
       className="min-h-screen bg-[#080808] text-white"
-      style={{ fontFamily: "'Syne', sans-serif" }}
+      style={{ fontFamily: "'Geist', sans-serif" }}
     >
       <link
-        href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;500;600;700;800&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500;600;700&display=swap"
         rel="stylesheet"
       />
 
@@ -43,7 +43,7 @@ export default function TermsPage() {
       <header className="sticky top-0 z-50 border-b border-white/[0.06] bg-[#080808]/80 backdrop-blur-xl">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-lg bg-[#00ff87] flex items-center justify-center shadow-[0_0_16px_rgba(0,255,135,0.35)]">
+            <div className="w-7 h-7 rounded-lg bg-[#00d294] flex items-center justify-center shadow-[0_0_16px_rgba(0,255,135,0.35)]">
               <svg
                 className="w-3.5 h-3.5 text-black"
                 fill="none"
@@ -64,14 +64,14 @@ export default function TermsPage() {
             <Link
               href="/pricing"
               className="hidden sm:block text-[11px] font-semibold tracking-[0.08em] uppercase text-neutral-400 hover:text-white transition-colors duration-150"
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               Pricing
             </Link>
             <Link
               href={loggedIn ? "/dashboard" : "/login"}
               className="text-[11px] font-semibold tracking-[0.08em] uppercase text-neutral-400 border border-white/[0.08] rounded-md px-3 py-1.5 hover:text-white hover:border-white/20 transition-all duration-150"
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               {loggedIn ? "Dashboard" : "Sign in"}
             </Link>
@@ -84,22 +84,22 @@ export default function TermsPage() {
         style={{ opacity: mounted ? 1 : 0, transition: "opacity 0.4s ease" }}
       >
         <p
-          className="text-[11px] tracking-[0.2em] uppercase text-[#00ff87] font-medium mb-4"
-          style={{ fontFamily: "'DM Mono', monospace" }}
+          className="text-[11px] tracking-[0.2em] uppercase text-[#00d294] font-medium mb-4"
+          style={{ fontFamily: "'Geist Mono', monospace" }}
         >
           Legal
         </p>
         <h1 className="text-4xl font-extrabold tracking-tight mb-3">Terms of Service</h1>
         <p
           className="text-xs text-neutral-500 mb-12"
-          style={{ fontFamily: "'DM Mono', monospace" }}
+          style={{ fontFamily: "'Geist Mono', monospace" }}
         >
           Last updated: March 2026
         </p>
 
         <p
           className="text-sm text-neutral-300 leading-relaxed mb-12"
-          style={{ fontFamily: "'DM Mono', monospace" }}
+          style={{ fontFamily: "'Geist Mono', monospace" }}
         >
           By using Pulse (&quot;the Service&quot;), you agree to these terms. The Service is
           operated independently under the name Pulse.
@@ -182,8 +182,8 @@ export default function TermsPage() {
           <div key={section.n} className="mb-10">
             <div className="flex items-baseline gap-3 mb-4">
               <span
-                className="text-[#00ff87] text-xs tabular-nums"
-                style={{ fontFamily: "'DM Mono', monospace" }}
+                className="text-[#00d294] text-xs tabular-nums"
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               >
                 {section.n}
               </span>
@@ -194,7 +194,7 @@ export default function TermsPage() {
                 <li
                   key={item}
                   className="flex items-start gap-3 text-neutral-300 text-sm leading-relaxed"
-                  style={{ fontFamily: "'DM Mono', monospace" }}
+                  style={{ fontFamily: "'Geist Mono', monospace" }}
                 >
                   <span className="text-neutral-600 shrink-0 mt-0.5">—</span>
                   {item}
@@ -207,8 +207,8 @@ export default function TermsPage() {
         <div className="mb-10">
           <div className="flex items-baseline gap-3 mb-4">
             <span
-              className="text-[#00ff87] text-xs tabular-nums"
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              className="text-[#00d294] text-xs tabular-nums"
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               09
             </span>
@@ -216,7 +216,7 @@ export default function TermsPage() {
           </div>
           <p
             className="text-neutral-300 text-sm leading-relaxed"
-            style={{ fontFamily: "'DM Mono', monospace" }}
+            style={{ fontFamily: "'Geist Mono', monospace" }}
           >
             These terms are governed by the laws of India. Any disputes shall be
             subject to the jurisdiction of courts in India.
@@ -226,8 +226,8 @@ export default function TermsPage() {
         <div className="mb-16">
           <div className="flex items-baseline gap-3 mb-4">
             <span
-              className="text-[#00ff87] text-xs tabular-nums"
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              className="text-[#00d294] text-xs tabular-nums"
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               10
             </span>
@@ -235,10 +235,10 @@ export default function TermsPage() {
           </div>
           <p
             className="text-neutral-300 text-sm leading-relaxed"
-            style={{ fontFamily: "'DM Mono', monospace" }}
+            style={{ fontFamily: "'Geist Mono', monospace" }}
           >
             For questions about these terms:{" "}
-            <span className="text-[#00ff87]">anubhavrai100@gmail.com</span>
+            <span className="text-[#00d294]">anubhavrai100@gmail.com</span>
           </p>
         </div>
 
@@ -246,7 +246,7 @@ export default function TermsPage() {
         <div className="border-t border-white/[0.06] pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <span
             className="text-[11px] text-neutral-600 tracking-[0.1em] uppercase"
-            style={{ fontFamily: "'DM Mono', monospace" }}
+            style={{ fontFamily: "'Geist Mono', monospace" }}
           >
             Pulse · Free API monitoring
           </span>
@@ -254,21 +254,21 @@ export default function TermsPage() {
             <Link
               href="/pricing"
               className="text-[11px] text-neutral-500 hover:text-white transition-colors"
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               Pricing
             </Link>
             <Link
               href="/privacy"
               className="text-[11px] text-neutral-500 hover:text-white transition-colors"
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               Privacy
             </Link>
             <Link
               href="/docs"
               className="text-[11px] text-neutral-500 hover:text-white transition-colors"
-              style={{ fontFamily: "'DM Mono', monospace" }}
+              style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               Docs
             </Link>
