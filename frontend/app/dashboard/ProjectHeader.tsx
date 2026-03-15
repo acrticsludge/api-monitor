@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useTransition } from "react";
+import { useState, useRef, useTransition, useEffect } from "react";
 import { updateProjectName } from "./actions";
 
 interface Props {
@@ -12,6 +12,10 @@ export default function ProjectHeader({ project }: Props) {
   const [name, setName] = useState(project.name);
   const [pending, startTransition] = useTransition();
   const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setName(project.name);
+  }, [project.id, project.name]);
 
   function startEdit() {
     setEditing(true);

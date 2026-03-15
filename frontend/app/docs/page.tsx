@@ -561,23 +561,15 @@ export default function DocsPage() {
             <SectionLabel>03 · Incident Reports</SectionLabel>
             <SectionHeading>Incident Reports</SectionHeading>
 
-            {/* Beta callout */}
+            {/* Pro callout */}
             <div className="flex items-start gap-3 bg-[#00d294]/[0.04] border border-[#00d294]/20 rounded-xl px-4 py-3 mb-5">
               <span className="text-[#00d294] text-sm shrink-0 mt-0.5">⚡</span>
-              <div>
-                <p
-                  className="text-xs font-semibold text-[#00d294]"
-                  style={{ fontFamily: "'Geist Mono', monospace" }}
-                >
-                  Pro feature — free during beta
-                </p>
-                <p
-                  className="text-[11px] text-neutral-500 mt-0.5"
-                  style={{ fontFamily: "'Geist Mono', monospace" }}
-                >
-                  Incident reports and post mortem generation are planned as a Pro tier feature. While Pulse is in beta, they are available to all users at no cost.
-                </p>
-              </div>
+              <p
+                className="text-xs font-semibold text-[#00d294]"
+                style={{ fontFamily: "'Geist Mono', monospace" }}
+              >
+                Pro feature
+              </p>
             </div>
 
             <Body>

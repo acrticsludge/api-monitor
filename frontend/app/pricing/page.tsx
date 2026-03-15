@@ -147,8 +147,6 @@ export default function PricingPage() {
                 { label: "Health scoring & anomaly detection" },
                 { label: "Public status page" },
                 { label: "Response time graphs" },
-                { label: "Incident reports & post-mortems" },
-                { label: "Root cause analysis" },
               ].map(({ label }) => (
                 <li
                   key={label}
@@ -221,6 +219,8 @@ export default function PricingPage() {
                 { label: "Response validation checks" },
                 { label: "API schema change detection" },
                 { label: "SSL certificate monitoring" },
+                { label: "Incident reports & post-mortems" },
+                { label: "Root cause analysis" },
                 { label: "CSV export" },
                 { label: "API Workflows", soon: true },
                 { label: "Custom status page domain", soon: true },

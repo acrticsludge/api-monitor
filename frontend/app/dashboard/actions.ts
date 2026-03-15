@@ -379,6 +379,7 @@ export async function editMonitor(monitorId: string, formData: FormData) {
   }
 
   const check_ssl = isPro ? formData.get("check_ssl") === "on" : false;
+  const notify_on_schema_change = formData.get("notify_on_schema_change") === "on";
 
   const updatePayload: Record<string, unknown> = {
     name,
@@ -387,6 +388,7 @@ export async function editMonitor(monitorId: string, formData: FormData) {
     expected_status_code,
     check_interval_minutes: interval,
     webhook_url,
+    notify_on_schema_change,
     ...(isPro && {
       custom_headers,
       auth_type,

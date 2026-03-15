@@ -523,7 +523,7 @@ export default function LandingClient({
                       className="text-[9px] bg-[#00cc6a]/10 dark:bg-[#00d294]/10 text-[#00cc6a] dark:text-[#00d294] border border-[#00cc6a]/20 dark:border-[#00d294]/20 px-1.5 py-0.5 rounded-full tracking-wider uppercase font-semibold"
                       style={{ fontFamily: "'Geist Mono', monospace" }}
                     >
-                      Pro · Free in beta
+                      Pro
                     </span>
                   )}
                 </div>

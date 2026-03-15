@@ -468,13 +468,15 @@ async function pingMonitor(monitor) {
             : "Response headers changed",
         });
 
-        await sendPushNotificationDirect(
-          monitor.user_id,
-          `🔄 ${monitor.name} — API structure changed`,
-          schemaChanged
-            ? "Response body structure has changed"
-            : "Response headers changed",
-        );
+        if (monitor.notify_on_schema_change !== false) {
+          await sendPushNotificationDirect(
+            monitor.user_id,
+            `🔄 ${monitor.name} — API structure changed`,
+            schemaChanged
+              ? "Response body structure has changed"
+              : "Response headers changed",
+          );
+        }
 
         console.log(`[SCHEMA CHANGE] ${monitor.name}`);
       }

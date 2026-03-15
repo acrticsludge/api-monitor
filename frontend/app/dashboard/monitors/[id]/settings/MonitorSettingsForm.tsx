@@ -41,6 +41,7 @@ type Monitor = {
   response_validation: { path: string; operator: string; expected: string } | null;
   check_ssl: boolean | null;
   custom_body: string | null;
+  notify_on_schema_change: boolean | null;
 };
 
 export default function MonitorSettingsForm({
@@ -210,6 +211,31 @@ export default function MonitorSettingsForm({
             style={{ fontFamily: "'Geist Mono', monospace" }}
             placeholder="https://hooks.example.com/alerts"
           />
+        </div>
+        <div className="flex items-start gap-3">
+          <input
+            type="checkbox"
+            name="notify_on_schema_change"
+            id="notify_on_schema_change"
+            defaultChecked={monitor.notify_on_schema_change ?? true}
+            value="on"
+            className="w-4 h-4 mt-0.5 rounded border-input bg-background accent-[#00d294]"
+          />
+          <div>
+            <label
+              htmlFor="notify_on_schema_change"
+              className="text-sm text-neutral-300 cursor-pointer"
+              style={{ fontFamily: "'Geist Mono', monospace" }}
+            >
+              Receive push notifications for schema changes
+            </label>
+            <p
+              className="text-[11px] text-neutral-600 mt-0.5"
+              style={{ fontFamily: "'Geist Mono', monospace" }}
+            >
+              Alerts when the API response structure or headers change
+            </p>
+          </div>
         </div>
       </SectionCard>
 
