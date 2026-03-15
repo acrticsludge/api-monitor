@@ -214,7 +214,7 @@ export default async function StatusPage({
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute inset-0 opacity-0 dark:opacity-100 bg-[radial-gradient(ellipse_80%_40%_at_50%_-10%,rgba(0,255,135,0.06),transparent)]" />
         <div
-          className="absolute inset-0 opacity-[0.018] dark:opacity-[0.025]"
+          className="absolute inset-0 opacity-0 dark:opacity-[0.025]"
           style={{
             backgroundImage:
               "linear-gradient(rgba(0,0,0,0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.8) 1px, transparent 1px)",
@@ -473,7 +473,6 @@ export default async function StatusPage({
                         </p>
                         <p
                           className={`text-sm font-bold tabular-nums ${uptimeColor(monitor.uptimePct)}`}
-                          style={{ fontFamily: "'Geist Mono', monospace" }}
                         >
                           {monitor.uptimePct}%
                         </p>

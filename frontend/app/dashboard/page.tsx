@@ -156,7 +156,7 @@ export default async function DashboardPage({
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute inset-0 opacity-0 dark:opacity-100 bg-[radial-gradient(ellipse_80%_40%_at_50%_-10%,rgba(0,255,135,0.06),transparent)]" />
         <div
-          className="absolute inset-0 opacity-[0.018] dark:opacity-[0.025]"
+          className="absolute inset-0 opacity-0 dark:opacity-[0.025]"
           style={{
             backgroundImage:
               "linear-gradient(rgba(0,0,0,0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.8) 1px, transparent 1px)",
@@ -320,7 +320,6 @@ export default async function DashboardPage({
           </div>
           <p
             className="text-sm font-bold text-[#00cc6a] dark:text-[#00d294] tabular-nums"
-            style={{ fontFamily: "'Geist Mono', monospace" }}
           >
             {uptimePct}%
           </p>
@@ -488,7 +487,6 @@ export default async function DashboardPage({
                           <td className="px-4 py-4">
                             <span
                               className={`text-xs font-medium ${responseTimeColor(ping?.response_time_ms ?? null)}`}
-                              style={{ fontFamily: "'Geist Mono', monospace" }}
                             >
                               {ping?.response_time_ms != null
                                 ? `${ping.response_time_ms}ms`
@@ -613,7 +611,6 @@ export default async function DashboardPage({
                           </p>
                           <p
                             className={`text-xs font-medium ${responseTimeColor(ping?.response_time_ms ?? null)}`}
-                            style={{ fontFamily: "'Geist Mono', monospace" }}
                           >
                             {ping?.response_time_ms != null
                               ? `${ping.response_time_ms}ms`
@@ -650,7 +647,6 @@ export default async function DashboardPage({
                           </p>
                           <p
                             className="text-xs text-neutral-500 dark:text-neutral-400"
-                            style={{ fontFamily: "'Geist Mono', monospace" }}
                           >
                             {monitor.check_interval_minutes ?? "—"}m
                           </p>
