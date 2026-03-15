@@ -1,5 +1,6 @@
 export const dynamic = "force-dynamic";
 
+import React from "react";
 import { redirect } from "next/navigation";
 import { createClient } from "../../../lib/supabase-server";
 import CheckNowButton from "./CheckNowButton";
@@ -11,6 +12,7 @@ import { calculateHealthScore } from "../../../lib/healthScore";
 import { getIsPro } from "../../../lib/isPro";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
+import LocalTime from "../../../../components/LocalTime";
 
 function responseTimeColor(ms: number | null): string {
   if (ms === null) return "text-neutral-600";
@@ -79,12 +81,7 @@ export default async function MonitorOverviewPage({
         )
       : null;
 
-  const lastCheckedStr = latestPing?.checked_at
-    ? new Date(latestPing.checked_at).toLocaleTimeString(undefined, {
-        hour: "2-digit",
-        minute: "2-digit",
-      })
-    : "—";
+  const lastCheckedStr = latestPing?.checked_at ?? null;
 
   return (
     <div style={{ fontFamily: "'Geist', sans-serif" }}>
@@ -158,8 +155,8 @@ export default async function MonitorOverviewPage({
         />
         <StatCard
           label="Last Checked"
-          value={lastCheckedStr}
-          sub={latestPing?.checked_at ? new Date(latestPing.checked_at).toLocaleDateString() : undefined}
+          value={lastCheckedStr ? <LocalTime iso={lastCheckedStr} format="time" /> : "—"}
+          sub={lastCheckedStr ? <LocalTime iso={lastCheckedStr} format="date" /> : undefined}
         />
         <StatCard
           label="Check Interval"
@@ -287,8 +284,8 @@ function StatCard({
   responseMs,
 }: {
   label: string;
-  value: string;
-  sub?: string;
+  value: React.ReactNode;
+  sub?: React.ReactNode;
   color?: "green" | "red";
   responseMs?: number | null;
 }) {
