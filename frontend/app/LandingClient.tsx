@@ -3,13 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import ThemeToggle from "../components/ThemeToggle";
-
-const mockMonitors = [
-  { name: "api.prod.com/health", status: "up", ms: 112, uptime: "100%" },
-  { name: "auth.service.io/ping", status: "up", ms: 89, uptime: "99.8%" },
-  { name: "payments.api/status", status: "down", ms: null, uptime: "97.2%" },
-  { name: "cdn.assets.io/healthz", status: "up", ms: 34, uptime: "100%" },
-];
+import FeatureCarousel from "../components/FeatureCarousel";
 
 export default function LandingClient({
   uniqueUsers,
@@ -231,128 +225,12 @@ export default function LandingClient({
               </div>
             </div>
 
-            {/* Right: Live monitor panel mockup */}
+            {/* Right: Feature preview carousel */}
             <div
-              className="relative fade-up"
+              className="relative fade-up w-full max-w-md mx-auto lg:mx-0"
               style={{ animationDelay: "0.2s" }}
             >
-              <div className="relative bg-white dark:bg-[#0d0d0d] border border-black/[0.08] dark:border-white/[0.08] rounded-2xl overflow-hidden shadow-[0_8px_48px_rgba(0,0,0,0.1)] dark:shadow-[0_8px_64px_rgba(0,0,0,0.6)]">
-                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00cc6a]/60 dark:via-[#00d294]/60 to-transparent" />
-
-                {/* Panel header */}
-                <div className="px-4 py-3 border-b border-black/[0.06] dark:border-white/[0.06] flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="relative flex w-1.5 h-1.5">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00cc6a] dark:bg-[#00d294] opacity-60" />
-                      <span className="relative inline-flex rounded-full w-1.5 h-1.5 bg-[#00cc6a] dark:bg-[#00d294]" />
-                    </span>
-                    <span
-                      className="text-[10px] font-bold tracking-[0.14em] uppercase text-[#00cc6a] dark:text-[#00d294]"
-                      style={{ fontFamily: "'Geist Mono', monospace" }}
-                    >
-                      LIVE
-                    </span>
-                  </div>
-                  <span
-                    className="text-[10px] text-neutral-400 dark:text-neutral-600"
-                    style={{ fontFamily: "'Geist Mono', monospace" }}
-                  >
-                    4 monitors · checking every 5m
-                  </span>
-                </div>
-
-                {/* Column headers */}
-                <div className="px-4 py-2 flex items-center gap-3 bg-black/[0.02] dark:bg-white/[0.02] border-b border-black/[0.04] dark:border-white/[0.03]">
-                  <span className="w-1.5 shrink-0" />
-                  <span
-                    className="text-[9px] tracking-[0.12em] uppercase text-neutral-400 dark:text-neutral-600 flex-1"
-                    style={{ fontFamily: "'Geist Mono', monospace" }}
-                  >
-                    Endpoint
-                  </span>
-                  <span
-                    className="text-[9px] tracking-[0.12em] uppercase text-neutral-400 dark:text-neutral-600 w-12 text-right"
-                    style={{ fontFamily: "'Geist Mono', monospace" }}
-                  >
-                    Latency
-                  </span>
-                  <span
-                    className="text-[9px] tracking-[0.12em] uppercase text-neutral-400 dark:text-neutral-600 w-10 text-right"
-                    style={{ fontFamily: "'Geist Mono', monospace" }}
-                  >
-                    Uptime
-                  </span>
-                </div>
-
-                {/* Monitor rows */}
-                <div className="divide-y divide-black/[0.04] dark:divide-white/[0.03]">
-                  {mockMonitors.map((m) => (
-                    <div
-                      key={m.name}
-                      className="px-4 py-3.5 flex items-center gap-3"
-                    >
-                      {m.status === "up" ? (
-                        <span className="relative flex w-1.5 h-1.5 shrink-0">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00cc6a] dark:bg-[#00d294] opacity-50" />
-                          <span className="relative inline-flex rounded-full w-1.5 h-1.5 bg-[#00cc6a] dark:bg-[#00d294]" />
-                        </span>
-                      ) : (
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#fb2c36] dark:bg-[#fb2c36] shrink-0" />
-                      )}
-                      <span
-                        className="text-xs text-neutral-600 dark:text-neutral-300 truncate flex-1"
-                        style={{ fontFamily: "'Geist Mono', monospace" }}
-                      >
-                        {m.name}
-                      </span>
-                      <span
-                        className={`text-[11px] font-medium tabular-nums w-12 text-right ${
-                          m.ms === null
-                            ? "text-[#fb2c36] dark:text-[#fb2c36]"
-                            : m.ms < 100
-                              ? "text-[#00cc6a] dark:text-[#00d294]"
-                              : m.ms < 300
-                                ? "text-[#00cc6a] dark:text-[#00d294]"
-                                : "text-[#f99c00] dark:text-[#f99c00]"
-                        }`}
-                        style={{ fontFamily: "'Geist Mono', monospace" }}
-                      >
-                        {m.ms !== null ? `${m.ms}ms` : "—"}
-                      </span>
-                      <span
-                        className="text-[11px] text-neutral-400 dark:text-neutral-500 tabular-nums w-10 text-right"
-                        style={{ fontFamily: "'Geist Mono', monospace" }}
-                      >
-                        {m.uptime}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Panel footer */}
-                <div className="px-4 py-3 border-t border-black/[0.06] dark:border-white/[0.06] bg-black/[0.02] dark:bg-white/[0.015]">
-                  <div className="flex items-center justify-between mb-2">
-                    <span
-                      className="text-[10px] tracking-[0.1em] uppercase text-neutral-400 dark:text-neutral-600"
-                      style={{ fontFamily: "'Geist Mono', monospace" }}
-                    >
-                      Next check in
-                    </span>
-                    <span
-                      className="text-[11px] font-semibold text-[#00cc6a] dark:text-[#00d294] tabular-nums"
-                      style={{ fontFamily: "'Geist Mono', monospace" }}
-                    >
-                      4:32
-                    </span>
-                  </div>
-                  <div className="h-1 bg-black/[0.06] dark:bg-white/[0.06] rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-[#00cc6a] dark:bg-[#00d294] rounded-full transition-all"
-                      style={{ width: "11%" }}
-                    />
-                  </div>
-                </div>
-              </div>
+              <FeatureCarousel />
             </div>
           </div>
         </section>
