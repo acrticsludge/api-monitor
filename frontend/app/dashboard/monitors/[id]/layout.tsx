@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { createClient } from "../../../lib/supabase-server";
 import MonitorSidebar from "./MonitorSidebar";
+import ThemeToggle from "../../../../components/ThemeToggle";
 
 export default async function MonitorLayout({
   children,
@@ -89,6 +90,7 @@ export default async function MonitorLayout({
           </div>
 
           <div className="flex items-center gap-2.5 flex-shrink-0">
+            <ThemeToggle />
             {isPro && (
               <span
                 className="text-[10px] bg-[#00d294]/10 text-[#00d294] border border-[#00d294]/20 rounded-lg px-2 py-1 font-medium"

@@ -187,7 +187,7 @@ export default function LandingClient({
                 {["Free forever", "No credit card", "60 second setup"].map((tag) => (
                   <span
                     key={tag}
-                    className="text-[11px] text-neutral-500 border border-white/[0.06] rounded-full px-3 py-1"
+                    className="text-[11px] text-neutral-500 border border-black/[0.1] dark:border-white/[0.06] rounded-full px-3 py-1"
                     style={{ fontFamily: "'Geist Mono', monospace" }}
                   >
                     {tag}
@@ -405,7 +405,7 @@ export default function LandingClient({
                 <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00cc6a]/25 dark:via-[#00d294]/25 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <div className="flex items-start justify-between mb-5">
                   <span
-                    className="text-[11px] font-bold text-neutral-300 dark:text-neutral-700 tabular-nums"
+                    className="text-[11px] font-bold text-neutral-400 dark:text-neutral-700 tabular-nums"
                     style={{ fontFamily: "'Geist Mono', monospace" }}
                   >
                     {f.num}
@@ -460,21 +460,21 @@ export default function LandingClient({
             </div>
 
             {/* UI mockup */}
-            <div className="relative bg-[#0a0a0a] border border-white/[0.08] rounded-2xl overflow-hidden shadow-2xl">
-              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00d294]/40 to-transparent" />
+            <div className="relative bg-white dark:bg-[#0a0a0a] border border-black/[0.08] dark:border-white/[0.08] rounded-2xl overflow-hidden shadow-[0_8px_40px_rgba(0,0,0,0.1)] dark:shadow-2xl">
+              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00cc6a]/40 dark:via-[#00d294]/40 to-transparent" />
 
               {/* Top bar */}
-              <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.06]">
+              <div className="flex items-center justify-between px-4 py-3 border-b border-black/[0.06] dark:border-white/[0.06]">
                 <div className="flex items-center gap-3">
                   <div className="flex gap-1.5">
-                    <div className="w-3 h-3 rounded-full bg-white/10" />
-                    <div className="w-3 h-3 rounded-full bg-white/10" />
-                    <div className="w-3 h-3 rounded-full bg-white/10" />
+                    <div className="w-3 h-3 rounded-full bg-black/10 dark:bg-white/10" />
+                    <div className="w-3 h-3 rounded-full bg-black/10 dark:bg-white/10" />
+                    <div className="w-3 h-3 rounded-full bg-black/10 dark:bg-white/10" />
                   </div>
                   <div className="flex items-center gap-2 ml-2">
-                    <span className="w-2 h-2 rounded-full bg-[#00d294]" />
+                    <span className="w-2 h-2 rounded-full bg-[#00cc6a] dark:bg-[#00d294]" />
                     <span
-                      className="text-white text-xs font-medium"
+                      className="text-[#080808] dark:text-white text-xs font-medium"
                       style={{ fontFamily: "'Geist Mono', monospace" }}
                     >
                       payments.api/status
@@ -482,7 +482,7 @@ export default function LandingClient({
                   </div>
                 </div>
                 <span
-                  className="text-[10px] text-[#00d294] bg-[#00d294]/10 border border-[#00d294]/20 rounded-lg px-2 py-0.5"
+                  className="text-[10px] text-[#00cc6a] dark:text-[#00d294] bg-[#00cc6a]/10 dark:bg-[#00d294]/10 border border-[#00cc6a]/20 dark:border-[#00d294]/20 rounded-lg px-2 py-0.5"
                   style={{ fontFamily: "'Geist Mono', monospace" }}
                 >
                   Operational
@@ -491,8 +491,8 @@ export default function LandingClient({
 
               {/* Content */}
               <div className="flex">
-                {/* Sidebar — mirrors MonitorSidebar.tsx */}
-                <div className="w-40 border-r border-white/[0.06] p-3 space-y-0.5 flex-shrink-0 pt-4">
+                {/* Sidebar */}
+                <div className="w-40 border-r border-black/[0.06] dark:border-white/[0.06] p-3 space-y-0.5 flex-shrink-0 pt-4">
                   {[
                     { label: "Overview", active: true, pro: false },
                     { label: "Response Time", active: false, pro: false },
@@ -506,24 +506,24 @@ export default function LandingClient({
                     <div
                       key={item.label}
                       className={`flex items-center gap-2 px-2.5 py-2 rounded-xl ${
-                        item.active ? "bg-[#00d294]/10" : ""
+                        item.active ? "bg-[#00cc6a]/10 dark:bg-[#00d294]/10" : ""
                       } ${item.pro && !item.active ? "opacity-35" : ""}`}
                     >
                       <div
                         className={`w-1 h-1 rounded-full flex-shrink-0 ${
-                          item.active ? "bg-[#00d294]" : "bg-white/20"
+                          item.active ? "bg-[#00cc6a] dark:bg-[#00d294]" : "bg-black/20 dark:bg-white/20"
                         }`}
                       />
                       <span
                         className={`text-[10px] flex-1 ${
-                          item.active ? "text-[#00d294]" : "text-neutral-500"
+                          item.active ? "text-[#00cc6a] dark:text-[#00d294]" : "text-neutral-500"
                         }`}
                         style={{ fontFamily: "'Geist Mono', monospace" }}
                       >
                         {item.label}
                       </span>
                       {item.pro && (
-                        <svg className="w-2.5 h-2.5 text-neutral-700 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <svg className="w-2.5 h-2.5 text-neutral-400 dark:text-neutral-700 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                         </svg>
                       )}
@@ -531,23 +531,23 @@ export default function LandingClient({
                   ))}
                 </div>
 
-                {/* Main content — mirrors monitors/[id]/page.tsx overview */}
+                {/* Main content */}
                 <div className="flex-1 p-4 overflow-hidden">
-                  {/* 6 stat cards (2-col grid matching grid-cols-2 lg:grid-cols-3) */}
+                  {/* 6 stat cards */}
                   <div className="grid grid-cols-2 gap-1.5 mb-3">
                     {[
-                      { label: "Status", value: "UP", color: "#00d294" },
-                      { label: "Uptime", value: "99.8%", sub: "100 pings", color: "#00d294" },
-                      { label: "Avg Response", value: "112ms", color: "#00d294" },
-                      { label: "Last Response", value: "89ms", color: "#00d294" },
-                      { label: "Last Checked", value: "2:41 PM" },
-                      { label: "Check Interval", value: "5m", sub: "check interval" },
+                      { label: "Status", value: "UP", color: "#00cc6a" },
+                      { label: "Uptime", value: "99.8%", sub: "100 pings", color: "#00cc6a" },
+                      { label: "Avg Response", value: "112ms", color: "#00cc6a" },
+                      { label: "Last Response", value: "89ms", color: "#00cc6a" },
+                      { label: "Last Checked", value: "2:41 PM", color: undefined },
+                      { label: "Check Interval", value: "5m", sub: "check interval", color: undefined },
                     ].map((stat) => (
                       <div
                         key={stat.label}
-                        className="relative bg-[#0f0f0f] border border-white/[0.06] rounded-xl px-2.5 py-2 overflow-hidden"
+                        className="relative bg-[#f4f4f4] dark:bg-[#0f0f0f] border border-black/[0.06] dark:border-white/[0.06] rounded-xl px-2.5 py-2 overflow-hidden"
                       >
-                        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00d294]/40 to-transparent" />
+                        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00cc6a]/40 dark:via-[#00d294]/40 to-transparent" />
                         <p
                           className="text-[8px] text-neutral-500 uppercase tracking-wider mb-1"
                           style={{ fontFamily: "'Geist Mono', monospace" }}
@@ -556,12 +556,12 @@ export default function LandingClient({
                         </p>
                         <p
                           className="text-sm font-extrabold tabular-nums"
-                          style={{ color: stat.color ?? "white", fontFamily: "'Geist', sans-serif" }}
+                          style={{ color: stat.color ?? "#080808", fontFamily: "'Geist', sans-serif" }}
                         >
                           {stat.value}
                         </p>
                         {stat.sub && (
-                          <p className="text-[8px] text-neutral-600 mt-0.5" style={{ fontFamily: "'Geist Mono', monospace" }}>
+                          <p className="text-[8px] text-neutral-500 mt-0.5" style={{ fontFamily: "'Geist Mono', monospace" }}>
                             {stat.sub}
                           </p>
                         )}
@@ -570,28 +570,28 @@ export default function LandingClient({
                   </div>
 
                   {/* Health Score card */}
-                  <div className="relative bg-[#0f0f0f] border border-white/[0.06] rounded-xl px-3 py-2 mb-2 overflow-hidden">
-                    <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00d294]/40 to-transparent" />
+                  <div className="relative bg-[#f4f4f4] dark:bg-[#0f0f0f] border border-black/[0.06] dark:border-white/[0.06] rounded-xl px-3 py-2 mb-2 overflow-hidden">
+                    <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00cc6a]/40 dark:via-[#00d294]/40 to-transparent" />
                     <p className="text-[8px] text-neutral-500 uppercase tracking-wider mb-1.5" style={{ fontFamily: "'Geist Mono', monospace" }}>
                       Health Score
                     </p>
                     <div className="flex items-baseline gap-2">
-                      <span className="text-xl font-extrabold tabular-nums text-[#00d294]" style={{ fontFamily: "'Geist Mono', monospace" }}>94</span>
-                      <span className="text-[10px] font-semibold text-[#00d294]" style={{ fontFamily: "'Geist Mono', monospace" }}>Healthy</span>
+                      <span className="text-xl font-extrabold tabular-nums text-[#00cc6a] dark:text-[#00d294]" style={{ fontFamily: "'Geist Mono', monospace" }}>94</span>
+                      <span className="text-[10px] font-semibold text-[#00cc6a] dark:text-[#00d294]" style={{ fontFamily: "'Geist Mono', monospace" }}>Healthy</span>
                     </div>
                   </div>
 
                   {/* Uptime bar */}
-                  <div className="relative bg-[#0f0f0f] border border-white/[0.06] rounded-xl px-3 py-2 overflow-hidden">
-                    <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00d294]/40 to-transparent" />
+                  <div className="relative bg-[#f4f4f4] dark:bg-[#0f0f0f] border border-black/[0.06] dark:border-white/[0.06] rounded-xl px-3 py-2 overflow-hidden">
+                    <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00cc6a]/40 dark:via-[#00d294]/40 to-transparent" />
                     <div className="flex items-center gap-2">
                       <p className="text-[8px] text-neutral-500 uppercase tracking-wider whitespace-nowrap" style={{ fontFamily: "'Geist Mono', monospace" }}>
                         Uptime
                       </p>
-                      <div className="flex-1 h-1.5 bg-white/[0.04] rounded-full overflow-hidden">
-                        <div className="h-full bg-[#00d294] rounded-full shadow-[0_0_8px_rgba(0,255,135,0.5)]" style={{ width: "99.8%" }} />
+                      <div className="flex-1 h-1.5 bg-black/[0.06] dark:bg-white/[0.04] rounded-full overflow-hidden">
+                        <div className="h-full bg-[#00cc6a] dark:bg-[#00d294] rounded-full shadow-[0_0_8px_rgba(0,255,135,0.5)]" style={{ width: "99.8%" }} />
                       </div>
-                      <span className="text-[10px] font-bold text-[#00d294] tabular-nums" style={{ fontFamily: "'Geist Mono', monospace" }}>99.8%</span>
+                      <span className="text-[10px] font-bold text-[#00cc6a] dark:text-[#00d294] tabular-nums" style={{ fontFamily: "'Geist Mono', monospace" }}>99.8%</span>
                     </div>
                   </div>
                 </div>

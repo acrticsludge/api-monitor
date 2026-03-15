@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { createClient } from "../lib/supabase";
+import ThemeToggle from "../../components/ThemeToggle";
 
 export default function PrivacyPage() {
   const [mounted, setMounted] = useState(false);
@@ -18,7 +19,7 @@ export default function PrivacyPage() {
 
   return (
     <div
-      className="min-h-screen bg-[#080808] text-white"
+      className="min-h-screen bg-[#f8f8f8] dark:bg-[#080808] text-[#080808] dark:text-white"
       style={{ fontFamily: "'Geist', sans-serif" }}
     >
       <link
@@ -40,10 +41,10 @@ export default function PrivacyPage() {
       </div>
 
       {/* Header */}
-      <header className="sticky top-0 z-50 border-b border-white/[0.06] bg-[#080808]/80 backdrop-blur-xl">
+      <header className="sticky top-0 z-50 border-b border-black/[0.06] dark:border-white/[0.06] bg-[#f8f8f8]/80 dark:bg-[#080808]/80 backdrop-blur-xl">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-lg bg-[#00d294] flex items-center justify-center shadow-[0_0_16px_rgba(0,255,135,0.35)]">
+            <div className="w-7 h-7 rounded-lg bg-[#00cc6a] dark:bg-[#00d294] flex items-center justify-center shadow-[0_0_16px_rgba(0,204,106,0.3)] dark:shadow-[0_0_16px_rgba(0,255,135,0.35)]">
               <svg
                 className="w-3.5 h-3.5 text-black"
                 fill="none"
@@ -63,14 +64,15 @@ export default function PrivacyPage() {
           <div className="flex items-center gap-4">
             <Link
               href="/pricing"
-              className="hidden sm:block text-[11px] font-semibold tracking-[0.08em] uppercase text-neutral-400 hover:text-white transition-colors duration-150"
+              className="hidden sm:block text-[11px] font-semibold tracking-[0.08em] uppercase text-neutral-500 dark:text-neutral-400 hover:text-[#080808] dark:hover:text-white transition-colors duration-150"
               style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               Pricing
             </Link>
+            <ThemeToggle />
             <Link
               href={loggedIn ? "/dashboard" : "/login"}
-              className="text-[11px] font-semibold tracking-[0.08em] uppercase text-neutral-400 border border-white/[0.08] rounded-md px-3 py-1.5 hover:text-white hover:border-white/20 transition-all duration-150"
+              className="text-[11px] font-semibold tracking-[0.08em] uppercase text-neutral-500 dark:text-neutral-400 border border-black/[0.08] dark:border-white/[0.08] rounded-md px-3 py-1.5 hover:text-[#080808] dark:hover:text-white hover:border-black/20 dark:hover:border-white/20 transition-all duration-150"
               style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               {loggedIn ? "Dashboard" : "Sign in"}
@@ -180,13 +182,13 @@ export default function PrivacyPage() {
               >
                 {section.n}
               </span>
-              <h2 className="text-lg font-bold text-white">{section.title}</h2>
+              <h2 className="text-lg font-bold text-[#080808] dark:text-white">{section.title}</h2>
             </div>
             <ul className="space-y-2.5">
               {section.items.map((item) => (
                 <li
                   key={item}
-                  className="flex items-start gap-3 text-neutral-300 text-sm leading-relaxed"
+                  className="flex items-start gap-3 text-neutral-600 dark:text-neutral-300 text-sm leading-relaxed"
                   style={{ fontFamily: "'Geist Mono', monospace" }}
                 >
                   <span className="text-neutral-600 shrink-0 mt-0.5">—</span>
@@ -208,7 +210,7 @@ export default function PrivacyPage() {
             <h2 className="text-lg font-bold text-white">Contact</h2>
           </div>
           <p
-            className="text-neutral-300 text-sm leading-relaxed"
+            className="text-neutral-600 dark:text-neutral-300 text-sm leading-relaxed"
             style={{ fontFamily: "'Geist Mono', monospace" }}
           >
             For privacy-related questions contact us at:{" "}
@@ -227,7 +229,7 @@ export default function PrivacyPage() {
             <h2 className="text-lg font-bold text-white">Governing Law</h2>
           </div>
           <p
-            className="text-neutral-300 text-sm leading-relaxed"
+            className="text-neutral-600 dark:text-neutral-300 text-sm leading-relaxed"
             style={{ fontFamily: "'Geist Mono', monospace" }}
           >
             This policy is governed by the laws of India.
@@ -235,7 +237,7 @@ export default function PrivacyPage() {
         </div>
 
         {/* Footer */}
-        <div className="border-t border-white/[0.06] pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="border-t border-black/[0.06] dark:border-white/[0.06] pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <span
             className="text-[11px] text-neutral-600 tracking-[0.1em] uppercase"
             style={{ fontFamily: "'Geist Mono', monospace" }}
@@ -245,21 +247,21 @@ export default function PrivacyPage() {
           <div className="flex items-center gap-5">
             <Link
               href="/pricing"
-              className="text-[11px] text-neutral-500 hover:text-white transition-colors"
+              className="text-[11px] text-neutral-500 hover:text-[#080808] dark:hover:text-white transition-colors"
               style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               Pricing
             </Link>
             <Link
               href="/terms"
-              className="text-[11px] text-neutral-500 hover:text-white transition-colors"
+              className="text-[11px] text-neutral-500 hover:text-[#080808] dark:hover:text-white transition-colors"
               style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               Terms
             </Link>
             <Link
               href="/docs"
-              className="text-[11px] text-neutral-500 hover:text-white transition-colors"
+              className="text-[11px] text-neutral-500 hover:text-[#080808] dark:hover:text-white transition-colors"
               style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               Docs

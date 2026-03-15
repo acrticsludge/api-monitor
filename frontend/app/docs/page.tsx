@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { createClient } from "../lib/supabase";
+import ThemeToggle from "../../components/ThemeToggle";
 
 const SECTIONS = [
   { id: "getting-started", label: "Getting Started" },
@@ -17,7 +18,7 @@ const SECTIONS = [
 function InlineCode({ children }: { children: React.ReactNode }) {
   return (
     <code
-      className="bg-white/[0.06] border border-white/[0.08] rounded px-1.5 py-0.5 text-[#00d294] text-xs"
+      className="bg-black/[0.06] dark:bg-white/[0.06] border border-black/[0.08] dark:border-white/[0.08] rounded px-1.5 py-0.5 text-[#00cc6a] dark:text-[#00d294] text-xs"
       style={{ fontFamily: "'Geist Mono', monospace" }}
     >
       {children}
@@ -41,7 +42,7 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 function SectionHeading({ children }: { children: React.ReactNode }) {
   return (
     <h2
-      className="text-2xl font-bold text-white mb-4"
+      className="text-2xl font-bold text-[#080808] dark:text-white mb-4"
       style={{ fontFamily: "'Geist', sans-serif" }}
     >
       {children}
@@ -52,7 +53,7 @@ function SectionHeading({ children }: { children: React.ReactNode }) {
 function SubHeading({ children }: { children: React.ReactNode }) {
   return (
     <h3
-      className="text-base font-bold text-white mt-8 mb-3"
+      className="text-base font-bold text-[#080808] dark:text-white mt-8 mb-3"
       style={{ fontFamily: "'Geist', sans-serif" }}
     >
       {children}
@@ -63,7 +64,7 @@ function SubHeading({ children }: { children: React.ReactNode }) {
 function Body({ children }: { children: React.ReactNode }) {
   return (
     <p
-      className="text-sm text-neutral-300 leading-relaxed"
+      className="text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed"
       style={{ fontFamily: "'Geist Mono', monospace" }}
     >
       {children}
@@ -72,7 +73,7 @@ function Body({ children }: { children: React.ReactNode }) {
 }
 
 function Divider() {
-  return <div className="border-t border-white/[0.06] my-10" />;
+  return <div className="border-t border-black/[0.06] dark:border-white/[0.06] my-10" />;
 }
 
 function ComingSoonCard({
@@ -83,9 +84,9 @@ function ComingSoonCard({
   description: string;
 }) {
   return (
-    <div className="border border-dashed border-white/[0.1] rounded-xl p-4">
+    <div className="border border-dashed border-black/[0.1] dark:border-white/[0.1] rounded-xl p-4">
       <p
-        className="text-white font-semibold text-sm"
+        className="text-[#080808] dark:text-white font-semibold text-sm"
         style={{ fontFamily: "'Geist', sans-serif" }}
       >
         {title}
@@ -151,7 +152,7 @@ export default function DocsPage() {
 
   return (
     <div
-      className="min-h-screen bg-[#080808] text-white"
+      className="min-h-screen bg-[#f8f8f8] dark:bg-[#080808] text-[#080808] dark:text-white"
       style={{ fontFamily: "'Geist', sans-serif" }}
     >
       <link
@@ -173,11 +174,11 @@ export default function DocsPage() {
       </div>
 
       {/* Header */}
-      <header className="sticky top-0 z-50 border-b border-white/[0.06] bg-[#080808]/80 backdrop-blur-xl">
+      <header className="sticky top-0 z-50 border-b border-black/[0.06] dark:border-white/[0.06] bg-[#f8f8f8]/80 dark:bg-[#080808]/80 backdrop-blur-xl">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <div className="flex items-center gap-5">
             <Link href="/" className="flex items-center gap-2.5">
-              <div className="w-7 h-7 rounded-lg bg-[#00d294] flex items-center justify-center shadow-[0_0_16px_rgba(0,255,135,0.35)]">
+              <div className="w-7 h-7 rounded-lg bg-[#00cc6a] dark:bg-[#00d294] flex items-center justify-center shadow-[0_0_16px_rgba(0,204,106,0.3)] dark:shadow-[0_0_16px_rgba(0,255,135,0.35)]">
                 <svg
                   className="w-3.5 h-3.5 text-black"
                   fill="none"
@@ -192,7 +193,7 @@ export default function DocsPage() {
                   />
                 </svg>
               </div>
-              <span className="text-sm font-bold tracking-[0.08em] uppercase text-white">
+              <span className="text-sm font-bold tracking-[0.08em] uppercase text-[#080808] dark:text-white">
                 Pulse
               </span>
             </Link>
@@ -209,7 +210,8 @@ export default function DocsPage() {
               Docs
             </span>
           </div>
-          <div>
+          <div className="flex items-center gap-3">
+            <ThemeToggle />
             {loggedIn ? (
               <Link
                 href="/dashboard"
@@ -233,7 +235,7 @@ export default function DocsPage() {
 
       {/* Page hero */}
       <div
-        className="border-b border-white/[0.06] py-12 sm:py-16 relative"
+        className="border-b border-black/[0.06] dark:border-white/[0.06] py-12 sm:py-16 relative"
         style={{
           opacity: mounted ? 1 : 0,
           transform: mounted ? "translateY(0)" : "translateY(16px)",
@@ -249,7 +251,7 @@ export default function DocsPage() {
             Documentation
           </p>
           <h1
-            className="text-3xl sm:text-4xl font-bold text-white mb-3"
+            className="text-3xl sm:text-4xl font-bold text-[#080808] dark:text-white mb-3"
             style={{ fontFamily: "'Geist', sans-serif" }}
           >
             Everything you need to get
@@ -267,7 +269,7 @@ export default function DocsPage() {
 
       {/* Mobile pill nav */}
       <div
-        className="sm:hidden border-b border-white/[0.06] bg-[#080808]/90 sticky top-14 z-40"
+        className="sm:hidden border-b border-black/[0.06] dark:border-white/[0.06] bg-[#f8f8f8]/90 dark:bg-[#080808]/90 sticky top-14 z-40"
         style={{
           opacity: mounted ? 1 : 0,
           transition: "opacity 0.7s 0.1s",
@@ -281,7 +283,7 @@ export default function DocsPage() {
               className={`shrink-0 text-[10px] tracking-[0.1em] uppercase px-3 py-1.5 rounded-full border transition-all ${
                 activeSection === s.id
                   ? "border-[#00d294]/40 text-[#00d294] bg-[#00d294]/[0.08]"
-                  : "border-white/[0.08] text-neutral-500 hover:text-white hover:border-white/[0.16]"
+                  : "border-black/[0.08] dark:border-white/[0.08] text-neutral-500 hover:text-[#080808] dark:hover:text-white hover:border-black/[0.16] dark:hover:border-white/[0.16]"
               }`}
               style={{ fontFamily: "'Geist Mono', monospace" }}
             >
@@ -316,7 +318,7 @@ export default function DocsPage() {
                 className={`w-full text-left px-3 py-1.5 rounded-lg text-xs tracking-[0.05em] uppercase transition-all ${
                   activeSection === s.id
                     ? "text-[#00d294] bg-[#00d294]/[0.06]"
-                    : "text-neutral-500 hover:text-neutral-200 hover:bg-white/[0.03]"
+                    : "text-neutral-500 hover:text-[#080808] dark:hover:text-neutral-200 hover:bg-black/[0.03] dark:hover:bg-white/[0.03]"
                 }`}
                 style={{ fontFamily: "'Geist Mono', monospace" }}
               >
@@ -357,7 +359,7 @@ export default function DocsPage() {
               ].map((step, i) => (
                 <li
                   key={i}
-                  className="flex gap-3 text-sm text-neutral-300 leading-relaxed"
+                  className="flex gap-3 text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed"
                 >
                   <span className="text-[#00d294] shrink-0 text-xs mt-0.5">
                     {String(i + 1).padStart(2, "0")}
@@ -399,12 +401,12 @@ export default function DocsPage() {
               ].map(([title, desc]) => (
                 <div
                   key={title}
-                  className="flex gap-3 items-start bg-white/[0.02] border border-white/[0.06] rounded-xl px-4 py-3"
+                  className="flex gap-3 items-start bg-black/[0.02] dark:bg-white/[0.02] border border-black/[0.06] dark:border-white/[0.06] rounded-xl px-4 py-3"
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-[#00d294] mt-1.5 shrink-0" />
                   <div>
                     <p
-                      className="text-xs font-semibold text-white"
+                      className="text-xs font-semibold text-[#080808] dark:text-white"
                       style={{ fontFamily: "'Geist', sans-serif" }}
                     >
                       {title}
@@ -545,7 +547,7 @@ export default function DocsPage() {
               ].map((item) => (
                 <li
                   key={item}
-                  className="flex gap-3 text-sm text-neutral-300 leading-relaxed"
+                  className="flex gap-3 text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed"
                 >
                   <span className="text-[#00d294] shrink-0">→</span>
                   <span>{item}</span>
@@ -591,12 +593,12 @@ export default function DocsPage() {
               ].map(([title, desc]) => (
                 <div
                   key={title}
-                  className="flex gap-3 items-start bg-white/[0.02] border border-white/[0.06] rounded-xl px-4 py-3"
+                  className="flex gap-3 items-start bg-black/[0.02] dark:bg-white/[0.02] border border-black/[0.06] dark:border-white/[0.06] rounded-xl px-4 py-3"
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-[#00d294] mt-1.5 shrink-0" />
                   <div>
                     <p
-                      className="text-xs font-semibold text-white"
+                      className="text-xs font-semibold text-[#080808] dark:text-white"
                       style={{ fontFamily: "'Geist', sans-serif" }}
                     >
                       {title}
@@ -671,7 +673,7 @@ export default function DocsPage() {
               ].map((item) => (
                 <li
                   key={item}
-                  className="flex gap-3 text-sm text-neutral-300 leading-relaxed"
+                  className="flex gap-3 text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed"
                 >
                   <span className="text-[#00d294] shrink-0">·</span>
                   <span>{item}</span>
@@ -706,7 +708,7 @@ export default function DocsPage() {
               ].map((step, i) => (
                 <li
                   key={i}
-                  className="flex gap-3 text-sm text-neutral-300 leading-relaxed"
+                  className="flex gap-3 text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed"
                 >
                   <span className="text-[#00d294] shrink-0 text-xs mt-0.5">
                     {String(i + 1).padStart(2, "0")}
@@ -728,7 +730,7 @@ export default function DocsPage() {
               ].map(([browser, status, supported]) => (
                 <div
                   key={String(browser)}
-                  className="flex items-center justify-between bg-white/[0.02] border border-white/[0.06] rounded-lg px-3 py-2"
+                  className="flex items-center justify-between bg-black/[0.02] dark:bg-white/[0.02] border border-black/[0.06] dark:border-white/[0.06] rounded-lg px-3 py-2"
                 >
                   <span
                     className="text-xs text-neutral-400"
@@ -797,7 +799,7 @@ export default function DocsPage() {
               ].map((step, i) => (
                 <li
                   key={i}
-                  className="flex gap-3 text-sm text-neutral-300 leading-relaxed"
+                  className="flex gap-3 text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed"
                 >
                   <span className="text-[#00d294] shrink-0 text-xs mt-0.5">
                     {String(i + 1).padStart(2, "0")}
@@ -807,7 +809,7 @@ export default function DocsPage() {
               ))}
             </ol>
             <p
-              className="text-sm text-neutral-400 mt-4 leading-relaxed"
+              className="text-sm text-neutral-600 dark:text-neutral-400 mt-4 leading-relaxed"
               style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               You&apos;ll get a <span className="text-[#fb2c36]">red embed</span>{" "}
@@ -833,7 +835,7 @@ export default function DocsPage() {
               ].map((step, i) => (
                 <li
                   key={i}
-                  className="flex gap-3 text-sm text-neutral-300 leading-relaxed"
+                  className="flex gap-3 text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed"
                 >
                   <span className="text-[#00d294] shrink-0 text-xs mt-0.5">
                     {String(i + 1).padStart(2, "0")}
@@ -848,7 +850,7 @@ export default function DocsPage() {
               For custom servers, Zapier, Make, or any other service, Pulse
               sends a JSON body:
             </Body>
-            <div className="mt-4 bg-[#0a0a0a] border border-white/[0.08] rounded-xl p-4 text-xs text-neutral-300 overflow-x-auto">
+            <div className="mt-4 bg-[#f0f0f0] dark:bg-[#0a0a0a] border border-black/[0.08] dark:border-white/[0.08] rounded-xl p-4 text-xs text-neutral-600 dark:text-neutral-300 overflow-x-auto">
               <pre style={{ fontFamily: "'Geist Mono', monospace" }}>{`{
   "monitor_id": "uuid",
   "monitor_name": "My API",
@@ -873,7 +875,7 @@ export default function DocsPage() {
               ].map((item) => (
                 <li
                   key={item}
-                  className="flex gap-3 text-sm text-neutral-300 leading-relaxed"
+                  className="flex gap-3 text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed"
                 >
                   <span className="text-[#00d294] shrink-0">·</span>
                   <span>{item}</span>
@@ -900,7 +902,7 @@ export default function DocsPage() {
               <InlineCode>Share status page</InlineCode> section. Your URL looks
               like:
             </Body>
-            <div className="mt-4 bg-[#0a0a0a] border border-white/[0.08] rounded-xl p-4 text-xs text-neutral-300 overflow-x-auto">
+            <div className="mt-4 bg-[#f0f0f0] dark:bg-[#0a0a0a] border border-black/[0.08] dark:border-white/[0.08] rounded-xl p-4 text-xs text-neutral-600 dark:text-neutral-300 overflow-x-auto">
               <pre style={{ fontFamily: "'Geist Mono', monospace" }}>
                 {`${origin || ""}/status/[your-user-id]`}
               </pre>
@@ -926,7 +928,7 @@ export default function DocsPage() {
               ].map((item) => (
                 <li
                   key={item}
-                  className="flex gap-3 text-sm text-neutral-300 leading-relaxed"
+                  className="flex gap-3 text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed"
                 >
                   <span className="text-[#00d294] shrink-0">→</span>
                   <span>{item}</span>
@@ -946,7 +948,7 @@ export default function DocsPage() {
               ].map((item) => (
                 <li
                   key={item}
-                  className="flex gap-3 text-sm text-neutral-300 leading-relaxed"
+                  className="flex gap-3 text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed"
                 >
                   <span className="text-[#00d294] shrink-0">·</span>
                   <span>{item}</span>
@@ -1024,7 +1026,7 @@ export default function DocsPage() {
       </div>
 
       {/* Footer */}
-      <div className="border-t border-white/[0.06]">
+      <div className="border-t border-black/[0.06] dark:border-white/[0.06]">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <span
             className="text-[11px] text-neutral-600 tracking-[0.1em] uppercase"
@@ -1035,21 +1037,21 @@ export default function DocsPage() {
           <div className="flex items-center gap-5">
             <Link
               href="/pricing"
-              className="text-[11px] text-neutral-500 hover:text-white transition-colors"
+              className="text-[11px] text-neutral-500 hover:text-[#080808] dark:hover:text-white transition-colors"
               style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               Pricing
             </Link>
             <Link
               href="/privacy"
-              className="text-[11px] text-neutral-500 hover:text-white transition-colors"
+              className="text-[11px] text-neutral-500 hover:text-[#080808] dark:hover:text-white transition-colors"
               style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               Privacy
             </Link>
             <Link
               href="/terms"
-              className="text-[11px] text-neutral-500 hover:text-white transition-colors"
+              className="text-[11px] text-neutral-500 hover:text-[#080808] dark:hover:text-white transition-colors"
               style={{ fontFamily: "'Geist Mono', monospace" }}
             >
               Terms
