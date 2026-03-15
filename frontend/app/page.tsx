@@ -1,4 +1,11 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
+
+export const metadata: Metadata = {
+  title: "Pulse — API Monitor that warns you before things break",
+  description:
+    "Free API uptime monitoring with health scoring, anomaly detection, and root cause analysis. DNS, TCP, TLS, and TTFB breakdown on every incident. No credit card required.",
+};
 import { createClient } from "./lib/supabase-server";
 import { createClient as createAdminClient } from "@supabase/supabase-js";
 import LandingClient from "./LandingClient";

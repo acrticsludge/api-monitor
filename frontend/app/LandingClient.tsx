@@ -10,6 +10,7 @@ export default function LandingClient({
 }: {
   uniqueUsers: number;
 }) {
+  void uniqueUsers;
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
@@ -125,12 +126,12 @@ export default function LandingClient({
                 className="text-5xl sm:text-6xl lg:text-[4.5rem] font-extrabold tracking-tight leading-[1.02] mb-6 fade-up"
                 style={{ animationDelay: "0.08s" }}
               >
-                Know when
+                Most monitors tell you
                 <br />
-                your APIs
+                after it breaks.
                 <br />
                 <span className="text-[#00cc6a] dark:text-[#00d294]">
-                  go down.
+                  Pulse warns you before.
                 </span>
               </h1>
 
@@ -141,24 +142,13 @@ export default function LandingClient({
                   animationDelay: "0.16s",
                 }}
               >
-                Add your endpoints. We ping them every 5 minutes, record
-                response times, and fire an alert the moment something breaks —
-                before your users ever notice.
-              </p>
-
-              <p
-                className="text-xs text-neutral-600 mt-3 mb-8 fade-up"
-                style={{
-                  fontFamily: "'Geist Mono', monospace",
-                  animationDelay: "0.2s",
-                }}
-              >
-                Built by a developer tired of finding out about downtime from
-                users, not alerts.
+                DNS breakdown, TCP timing, TLS handshake — every ping
+                tracks each stage separately. Health scoring catches
+                degradation before it becomes downtime. All free.
               </p>
 
               <div
-                className="flex flex-col sm:flex-row gap-3 fade-up"
+                className="flex flex-col sm:flex-row gap-3 mt-8 fade-up"
                 style={{ animationDelay: "0.24s" }}
               >
                 <Link
@@ -181,46 +171,27 @@ export default function LandingClient({
                   </svg>
                 </Link>
               </div>
-
-              {uniqueUsers > 0 && (
-                <p
-                  className="text-xs text-neutral-500 mt-4 fade-up"
-                  style={{
-                    fontFamily: "'Geist Mono', monospace",
-                    animationDelay: "0.3s",
-                  }}
-                >
-                  <span className="text-[#00cc6a] dark:text-[#00d294] font-medium">
-                    {uniqueUsers} developer{uniqueUsers === 1 ? "" : "s"}
-                  </span>{" "}
-                  already monitoring their APIs
-                </p>
-              )}
-
-              {/* Specs row */}
-              <div
-                className="flex items-center gap-8 mt-10 fade-up"
-                style={{ animationDelay: "0.32s" }}
+              <a
+                href="/docs"
+                className="text-neutral-500 text-xs hover:text-neutral-400 transition-colors mt-2 block"
+                style={{ fontFamily: "'Geist Mono', monospace" }}
               >
-                {[
-                  { val: "5 min", label: "checks" },
-                  { val: "5", label: "monitors free" },
-                  { val: "0s", label: "alert delay" },
-                ].map((s) => (
-                  <div key={s.label}>
-                    <p
-                      className="text-xl font-extrabold text-[#080808] dark:text-white tabular-nums"
-                      style={{ fontFamily: "'Geist Mono', monospace" }}
-                    >
-                      {s.val}
-                    </p>
-                    <p
-                      className="text-[10px] tracking-[0.1em] uppercase text-neutral-400 dark:text-neutral-600 mt-0.5"
-                      style={{ fontFamily: "'Geist Mono', monospace" }}
-                    >
-                      {s.label}
-                    </p>
-                  </div>
+                Read the docs →
+              </a>
+
+              {/* Social proof pills */}
+              <div
+                className="flex items-center gap-3 flex-wrap mt-8 fade-up"
+                style={{ animationDelay: "0.3s" }}
+              >
+                {["Free forever", "No credit card", "60 second setup"].map((tag) => (
+                  <span
+                    key={tag}
+                    className="text-[11px] text-neutral-500 border border-white/[0.06] rounded-full px-3 py-1"
+                    style={{ fontFamily: "'Geist Mono', monospace" }}
+                  >
+                    {tag}
+                  </span>
                 ))}
               </div>
             </div>
@@ -231,6 +202,57 @@ export default function LandingClient({
               style={{ animationDelay: "0.2s" }}
             >
               <FeatureCarousel />
+            </div>
+          </div>
+        </section>
+
+        {/* Differentiator strip */}
+        <section className="border-y border-black/[0.06] dark:border-white/[0.06] py-10 my-10">
+          <div className="max-w-5xl mx-auto px-6">
+            <p
+              className="text-[10px] tracking-[0.2em] uppercase text-neutral-400 dark:text-neutral-600 text-center mb-8 font-medium"
+              style={{ fontFamily: "'Geist Mono', monospace" }}
+            >
+              What makes Pulse different
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {[
+                {
+                  icon: "🔍",
+                  title: "Catches it before it breaks",
+                  body: "Health scoring and anomaly detection flag degradation when response times spike — before your API actually goes down.",
+                },
+                {
+                  icon: "⚡",
+                  title: "Tells you exactly why",
+                  body: "Every incident shows a DNS, TCP, TLS, and TTFB breakdown. You know which stage failed before you open a terminal.",
+                },
+                {
+                  icon: "📋",
+                  title: "Writes the post-mortem for you",
+                  body: "After every recovery, Pulse generates a complete incident report — timeline, impact estimate, response time comparison.",
+                },
+              ].map((card, i) => (
+                <div
+                  key={i}
+                  className="relative bg-[#f0f0f0] dark:bg-[#0f0f0f] border border-black/[0.06] dark:border-white/[0.06] rounded-2xl p-5 overflow-hidden"
+                >
+                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00cc6a]/30 dark:via-[#00d294]/30 to-transparent" />
+                  <span className="text-2xl mb-3 block">{card.icon}</span>
+                  <p
+                    className="text-[#080808] dark:text-white font-bold text-sm mb-2"
+                    style={{ fontFamily: "'Geist', sans-serif" }}
+                  >
+                    {card.title}
+                  </p>
+                  <p
+                    className="text-neutral-500 text-xs leading-relaxed"
+                    style={{ fontFamily: "'Geist Mono', monospace" }}
+                  >
+                    {card.body}
+                  </p>
+                </div>
+              ))}
             </div>
           </div>
         </section>
@@ -255,48 +277,8 @@ export default function LandingClient({
             {[
               {
                 num: "01",
-                title: "Instant Push Notifications",
-                desc: "The moment a monitor goes down, you know. Browser push notifications and webhook POSTs fire immediately on status change.",
-                icon: (
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-                    />
-                  </svg>
-                ),
-              },
-              {
-                num: "02",
-                title: "Response Time Graph",
-                desc: "Every ping records latency. View timeline trends and daily averages in an interactive chart — min, avg, and max included.",
-                icon: (
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-                    />
-                  </svg>
-                ),
-              },
-              {
-                num: "03",
                 title: "Health Score & Anomaly Detection",
-                desc: "Each monitor gets a Healthy / Degraded / Critical score. Pulse also alerts you when response times spike 2x above baseline — before anything actually breaks.",
+                desc: "Every monitor gets a 0-100 health score based on uptime, response time trends, and variance. Anomaly detection fires a warning when response time is 2x the 7-day baseline across 3 consecutive pings — before anything actually goes down.",
                 icon: (
                   <svg
                     className="w-4 h-4"
@@ -314,9 +296,10 @@ export default function LandingClient({
                 ),
               },
               {
-                num: "04",
-                title: "Public Status Pages",
-                desc: "One shareable link. Your users see live status, uptime %, and auto-refreshing data. Zero setup.",
+                num: "02",
+                title: "Root Cause Analysis",
+                pro: true,
+                desc: "When a monitor goes down, Pulse breaks the request into DNS lookup, TCP connect, TLS handshake, and time to first byte — each compared against its historical baseline. Server overload looks different from a DNS failure. Pulse tells you which one it is.",
                 icon: (
                   <svg
                     className="w-4 h-4"
@@ -328,16 +311,16 @@ export default function LandingClient({
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                     />
                   </svg>
                 ),
               },
               {
-                num: "05",
-                title: "Incident Reports",
-                beta: true,
-                desc: "Every outage generates a structured report — start time, duration, response time at failure vs. recovery, and estimated requests affected.",
+                num: "03",
+                title: "Auto Incident Reports",
+                pro: true,
+                desc: "After every recovery, Pulse generates a complete post-mortem automatically. Timeline, response time before and after, pre-incident trend, anomaly lead time, and impact estimate. One button to copy and share with your team.",
                 icon: (
                   <svg
                     className="w-4 h-4"
@@ -355,10 +338,9 @@ export default function LandingClient({
                 ),
               },
               {
-                num: "06",
-                title: "Root Cause Analysis",
-                beta: true,
-                desc: "Pulse reads HTTP error codes and response patterns to surface the likely cause of each incident — with a confidence score. Copy the full post mortem in one click.",
+                num: "04",
+                title: "Response Time Graph",
+                desc: "Every ping records latency. View timeline trends and daily averages in an interactive chart — min, avg, and max included. Pro users get 30 and 90 day history.",
                 icon: (
                   <svg
                     className="w-4 h-4"
@@ -370,7 +352,47 @@ export default function LandingClient({
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                      d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                    />
+                  </svg>
+                ),
+              },
+              {
+                num: "05",
+                title: "Rich Alerts",
+                desc: "Push notifications, Discord, and Slack webhooks include the status code, response time at failure, and a direct link to the incident. 2-ping confirmation means no false alarms from single network hiccups.",
+                icon: (
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+                    />
+                  </svg>
+                ),
+              },
+              {
+                num: "06",
+                title: "Public Status Pages",
+                desc: "One shareable link. Your users see live status, uptime %, and health scores — no login required. Each project gets its own status page.",
+                icon: (
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                     />
                   </svg>
                 ),
@@ -396,7 +418,7 @@ export default function LandingClient({
                   <h3 className="text-base font-extrabold text-[#080808] dark:text-white tracking-tight">
                     {f.title}
                   </h3>
-                  {f.beta && (
+                  {f.pro && (
                     <span
                       className="text-[9px] bg-[#00cc6a]/10 dark:bg-[#00d294]/10 text-[#00cc6a] dark:text-[#00d294] border border-[#00cc6a]/20 dark:border-[#00d294]/20 px-1.5 py-0.5 rounded-full tracking-wider uppercase font-semibold"
                       style={{ fontFamily: "'Geist Mono', monospace" }}
@@ -413,6 +435,168 @@ export default function LandingClient({
                 </p>
               </div>
             ))}
+          </div>
+        </section>
+
+        {/* Screenshot / UI mockup section */}
+        <section className="py-16 px-6">
+          <div className="max-w-5xl mx-auto">
+            <div className="text-center mb-10">
+              <p
+                className="text-[10px] tracking-[0.2em] uppercase text-neutral-400 dark:text-neutral-600 mb-3 font-medium"
+                style={{ fontFamily: "'Geist Mono', monospace" }}
+              >
+                Built for developers
+              </p>
+              <h2 className="text-3xl font-bold text-[#080808] dark:text-white">
+                Everything you need in one place
+              </h2>
+              <p
+                className="text-neutral-500 text-sm mt-3 max-w-md mx-auto"
+                style={{ fontFamily: "'Geist Mono', monospace" }}
+              >
+                Monitor detail page gives you health score, root cause analysis, response time graphs, incident reports and ping history — all in a clean layout.
+              </p>
+            </div>
+
+            {/* UI mockup */}
+            <div className="relative bg-[#0a0a0a] border border-white/[0.08] rounded-2xl overflow-hidden shadow-2xl">
+              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00d294]/40 to-transparent" />
+
+              {/* Top bar */}
+              <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.06]">
+                <div className="flex items-center gap-3">
+                  <div className="flex gap-1.5">
+                    <div className="w-3 h-3 rounded-full bg-white/10" />
+                    <div className="w-3 h-3 rounded-full bg-white/10" />
+                    <div className="w-3 h-3 rounded-full bg-white/10" />
+                  </div>
+                  <div className="flex items-center gap-2 ml-2">
+                    <span className="w-2 h-2 rounded-full bg-[#00d294]" />
+                    <span
+                      className="text-white text-xs font-medium"
+                      style={{ fontFamily: "'Geist Mono', monospace" }}
+                    >
+                      payments.api/status
+                    </span>
+                  </div>
+                </div>
+                <span
+                  className="text-[10px] text-[#00d294] bg-[#00d294]/10 border border-[#00d294]/20 rounded-lg px-2 py-0.5"
+                  style={{ fontFamily: "'Geist Mono', monospace" }}
+                >
+                  Operational
+                </span>
+              </div>
+
+              {/* Content */}
+              <div className="flex">
+                {/* Sidebar — mirrors MonitorSidebar.tsx */}
+                <div className="w-40 border-r border-white/[0.06] p-3 space-y-0.5 flex-shrink-0 pt-4">
+                  {[
+                    { label: "Overview", active: true, pro: false },
+                    { label: "Response Time", active: false, pro: false },
+                    { label: "Incidents", active: false, pro: false },
+                    { label: "Reports", active: false, pro: true },
+                    { label: "Root Cause", active: false, pro: true },
+                    { label: "Ping History", active: false, pro: false },
+                    { label: "SSL & Schema", active: false, pro: true },
+                    { label: "Settings", active: false, pro: false },
+                  ].map((item) => (
+                    <div
+                      key={item.label}
+                      className={`flex items-center gap-2 px-2.5 py-2 rounded-xl ${
+                        item.active ? "bg-[#00d294]/10" : ""
+                      } ${item.pro && !item.active ? "opacity-35" : ""}`}
+                    >
+                      <div
+                        className={`w-1 h-1 rounded-full flex-shrink-0 ${
+                          item.active ? "bg-[#00d294]" : "bg-white/20"
+                        }`}
+                      />
+                      <span
+                        className={`text-[10px] flex-1 ${
+                          item.active ? "text-[#00d294]" : "text-neutral-500"
+                        }`}
+                        style={{ fontFamily: "'Geist Mono', monospace" }}
+                      >
+                        {item.label}
+                      </span>
+                      {item.pro && (
+                        <svg className="w-2.5 h-2.5 text-neutral-700 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                      )}
+                    </div>
+                  ))}
+                </div>
+
+                {/* Main content — mirrors monitors/[id]/page.tsx overview */}
+                <div className="flex-1 p-4 overflow-hidden">
+                  {/* 6 stat cards (2-col grid matching grid-cols-2 lg:grid-cols-3) */}
+                  <div className="grid grid-cols-2 gap-1.5 mb-3">
+                    {[
+                      { label: "Status", value: "UP", color: "#00d294" },
+                      { label: "Uptime", value: "99.8%", sub: "100 pings", color: "#00d294" },
+                      { label: "Avg Response", value: "112ms", color: "#00d294" },
+                      { label: "Last Response", value: "89ms", color: "#00d294" },
+                      { label: "Last Checked", value: "2:41 PM" },
+                      { label: "Check Interval", value: "5m", sub: "check interval" },
+                    ].map((stat) => (
+                      <div
+                        key={stat.label}
+                        className="relative bg-[#0f0f0f] border border-white/[0.06] rounded-xl px-2.5 py-2 overflow-hidden"
+                      >
+                        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00d294]/40 to-transparent" />
+                        <p
+                          className="text-[8px] text-neutral-500 uppercase tracking-wider mb-1"
+                          style={{ fontFamily: "'Geist Mono', monospace" }}
+                        >
+                          {stat.label}
+                        </p>
+                        <p
+                          className="text-sm font-extrabold tabular-nums"
+                          style={{ color: stat.color ?? "white", fontFamily: "'Geist', sans-serif" }}
+                        >
+                          {stat.value}
+                        </p>
+                        {stat.sub && (
+                          <p className="text-[8px] text-neutral-600 mt-0.5" style={{ fontFamily: "'Geist Mono', monospace" }}>
+                            {stat.sub}
+                          </p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Health Score card */}
+                  <div className="relative bg-[#0f0f0f] border border-white/[0.06] rounded-xl px-3 py-2 mb-2 overflow-hidden">
+                    <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00d294]/40 to-transparent" />
+                    <p className="text-[8px] text-neutral-500 uppercase tracking-wider mb-1.5" style={{ fontFamily: "'Geist Mono', monospace" }}>
+                      Health Score
+                    </p>
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-xl font-extrabold tabular-nums text-[#00d294]" style={{ fontFamily: "'Geist Mono', monospace" }}>94</span>
+                      <span className="text-[10px] font-semibold text-[#00d294]" style={{ fontFamily: "'Geist Mono', monospace" }}>Healthy</span>
+                    </div>
+                  </div>
+
+                  {/* Uptime bar */}
+                  <div className="relative bg-[#0f0f0f] border border-white/[0.06] rounded-xl px-3 py-2 overflow-hidden">
+                    <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00d294]/40 to-transparent" />
+                    <div className="flex items-center gap-2">
+                      <p className="text-[8px] text-neutral-500 uppercase tracking-wider whitespace-nowrap" style={{ fontFamily: "'Geist Mono', monospace" }}>
+                        Uptime
+                      </p>
+                      <div className="flex-1 h-1.5 bg-white/[0.04] rounded-full overflow-hidden">
+                        <div className="h-full bg-[#00d294] rounded-full shadow-[0_0_8px_rgba(0,255,135,0.5)]" style={{ width: "99.8%" }} />
+                      </div>
+                      <span className="text-[10px] font-bold text-[#00d294] tabular-nums" style={{ fontFamily: "'Geist Mono', monospace" }}>99.8%</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -434,17 +618,17 @@ export default function LandingClient({
               {
                 n: "01",
                 title: "Add your endpoints",
-                desc: "Paste any URL — REST APIs, health checks, webhooks, staging environments. Takes 10 seconds.",
+                desc: "Paste any URL — REST APIs, health checks, webhooks, staging environments. Name it, set the check interval, add a webhook if you want. Takes 30 seconds.",
               },
               {
                 n: "02",
-                title: "We ping every 5 minutes",
-                desc: "Our worker hits each endpoint on schedule, recording the status code and latency every single time.",
+                title: "Pulse pings it continuously",
+                desc: "Our worker hits each endpoint on schedule, recording status code, response time, and per-stage timing (DNS, TCP, TLS, TTFB) on every single check.",
               },
               {
                 n: "03",
-                title: "Get alerted instantly",
-                desc: "The second something breaks — or recovers — you get an alert. Not a minute later. Not 5 minutes later.",
+                title: "Know before your users do",
+                desc: "Health scoring catches degradation early. Anomaly detection fires before actual downtime. And when something does break, you already know why.",
               },
             ].map((s) => (
               <div key={s.n}>
@@ -491,15 +675,17 @@ export default function LandingClient({
                 Free forever
               </p>
               <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-[#080808] dark:text-white mb-4 leading-tight">
-                Start monitoring
+                Stop finding out
                 <br />
-                in 60 seconds.
+                from your users.
               </h2>
               <p
                 className="text-sm text-neutral-500 dark:text-neutral-500 mb-10"
                 style={{ fontFamily: "'Geist Mono', monospace" }}
               >
-                5 monitors · 5 minute checks · no credit card
+                5 monitors, health scoring, anomaly detection,
+                <br />
+                root cause analysis — all free. No credit card.
               </p>
               <Link
                 href="/signup"
@@ -520,6 +706,12 @@ export default function LandingClient({
                   />
                 </svg>
               </Link>
+              <p
+                className="text-neutral-600 dark:text-neutral-700 text-[11px] mt-3"
+                style={{ fontFamily: "'Geist Mono', monospace" }}
+              >
+                Joins developers monitoring APIs at companies like yours
+              </p>
             </div>
           </div>
         </section>
